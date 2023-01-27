@@ -1,0 +1,157 @@
+.regisWrap {
+	padding: 80px 0;
+	background-image: url(/register.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.inner {
+	@apply grid grid-cols-2 gap-4;
+}
+
+.left {
+	@apply col-span-1;
+}
+
+.right {
+	@apply col-span-1 grid grid-cols-2 gap-[30px];
+	width: fit-content;
+	margin: auto;
+}
+
+.stepContent {
+	@apply shadow-lg;
+	background-color: #fff;
+	min-height: 300px;
+	width: 100%;
+	margin-top: 20px;
+	padding: 20px;
+	position: relative;
+}
+
+.link {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+
+.link:hover {
+	color: #f37021 !important;
+}
+
+.boxRight {
+	@apply col-span-1 shadow-lg;
+	background: #fafafa;
+	padding: 20px;
+	width: 200px;
+	cursor: pointer;
+}
+
+.boxRight:nth-child(odd) {
+	margin-bottom: 15px;
+}
+
+.boxRight:nth-child(even) {
+	margin-top: 15px;
+}
+
+.boxRight.active {
+	background-color: #f37021;
+}
+
+.boxRight.active h3 {
+	color: #fff !important;
+	transition: all 0.3s ease-in-out;
+}
+
+.boxRight.active .img {
+	border: 1px solid #fff;
+	background-color: #fff;
+}
+
+.boxRight h3 {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.img {
+	width: 90px;
+	height: 90px;
+	border-radius: 100%;
+	margin: auto;
+	background-color: #f37021;
+}
+
+.boxRight img {
+	padding: 20px;
+}
+
+@media screen and (max-width: 1024px) {
+	.stepContent {
+		min-height: unset;
+		height: fit-content;
+	}
+
+	.inner {
+		@apply grid grid-cols-1 gap-4;
+	}
+
+	.left {
+		@apply col-span-1;
+	}
+
+	.right {
+		@apply col-span-1 grid grid-cols-3 gap-[30px];
+		width: fit-content;
+		margin: auto;
+	}
+
+	.boxRight:nth-child(even) {
+		margin-top: unset;
+	}
+	.boxRight:nth-child(odd) {
+		margin-bottom: unset;
+	}
+}
+
+@media screen and (max-width: 680px) {
+	.right {
+		@apply col-span-1 grid grid-cols-2;
+	}
+
+	.boxRight:nth-child(even) {
+		margin-top: unset;
+	}
+	.boxRight:nth-child(odd) {
+		margin-bottom: unset;
+	}
+}
+
+@media screen and (max-width: 580px) {
+	.stepContent {
+		display: none;
+	}
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+	.right {
+		@apply gap-1;
+	}
+	.img {
+		width: 50px;
+		height: 50px;
+	}
+	.boxRight img {
+		padding: 8px;
+	}
+	.boxRight {
+		padding: 20px 10px;
+		width: 160px;
+	}
+}
+
+@media screen and (max-width: 320px) {
+	.right {
+		@apply grid-cols-1;
+	}
+}

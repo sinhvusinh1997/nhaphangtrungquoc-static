@@ -1,0 +1,76 @@
+.navbar {
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: 600;
+	background-color: white;
+}
+.navbar ul li a:hover {
+	color: #f14f04;
+}
+
+.MenuList {
+	min-width: 100%;
+	border: 0 !important;
+	display: flex;
+	margin: 0;
+}
+
+.MenuList li {
+	padding: 20px 10px;
+	align-items: center;
+	position: relative;
+}
+
+.MenuList a {
+	color: #fff !important;
+	font-size: 16px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.MenuList span:hover {
+	color: #f14f04;
+}
+
+.MenuList a:hover {
+	color: #f14f04 !important;
+}
+
+.bgColor {
+	background-color: transparent !important;
+	color: #fff !important;
+	font-size: 30px !important;
+	height: auto !important;
+}
+
+.MenuList span {
+	color: black;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.mobileVisible {
+	display: none;
+}
+
+@media screen and (max-width: 1025px) {
+	.mobileVisible {
+		display: block;
+	}
+
+	.mobileHidden .MenuList {
+		display: none;
+	}
+
+	.MenuList {
+		flex-direction: column;
+	}
+
+	.MenuList a {
+		color: #333 !important;
+	}
+}
+
+.mobileHidden ul {
+	background: none !important;
+}

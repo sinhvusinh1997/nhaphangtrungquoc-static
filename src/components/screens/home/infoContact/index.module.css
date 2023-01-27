@@ -1,0 +1,143 @@
+.InfoContact {
+	padding: 80px 0 0 0;
+	background-color: #faf3ef;
+}
+
+.map {
+	@apply col-span-1;
+}
+
+.form {
+	@apply col-span-1 relative;
+	padding: 0 20%;
+}
+
+.innerForm {
+	@apply grid grid-cols-2 gap-4;
+}
+
+.formBox {
+	padding: 12px 16px;
+	border-radius: 4px;
+	border: none;
+}
+
+.button {
+	@apply shadow-xl;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	background: #ff8f4c;
+	margin-left: auto;
+	margin-top: 16px;
+	transition: all 0.3s ease-in-out;
+}
+
+.button a {
+	font-weight: bold;
+	padding: 12px 24px;
+	font-size: 16px;
+	text-align: center;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: #333 !important;
+	transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+	background: #f27304;
+	box-shadow: none;
+}
+
+.button:hover a {
+	color: #fff !important;
+}
+
+.contactDetail {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fafafa;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 30px 30px;
+}
+
+.contactDetail a {
+	display: flex;
+	align-items: center;
+	line-height: initial;
+	font-size: 20px;
+	letter-spacing: 0.02em;
+	color: #4d4d4d;
+}
+
+.contactDetail a img {
+	margin-right: 10px;
+}
+
+.showForm {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	background-color: #c7ae8d;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+	font-size: 28px;
+	color: #fff;
+	border-radius: 100%;
+	transform: translate(-50%, -50%);
+	cursor: pointer;
+}
+
+@media screen and (max-width: 1480px) {
+	.form {
+		padding: 0 10%;
+	}
+}
+
+@media screen and (max-width: 1280px) {
+	.contactDetail a {
+		font-size: 16px;
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	.showForm {
+		display: flex;
+	}
+	.InfoContact > div {
+		@apply grid-cols-1;
+		position: relative;
+	}
+
+	.form {
+		position: absolute;
+		top: 50%;
+		right: 40px;
+		transform: translateY(-50%);
+		background-color: #f8edde;
+		padding: 3%;
+		box-shadow: 0 0 10px 0 #00000059;
+	}
+
+	.contactDetail {
+		position: relative;
+		margin-top: 20px;
+		padding: 20px;
+	}
+}
+
+@media screen and (max-width: 860px) {
+	.form {
+		width: 90vw;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}

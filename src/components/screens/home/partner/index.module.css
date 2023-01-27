@@ -1,0 +1,18 @@
+.partnerWrapper {
+	padding: 20px 40px;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.partnerWrapper img {
+	width: 100px;
+}
+
+@media screen and (max-width: 520px) {
+	.partnerWrapper {
+		flex-wrap: wrap;
+	}
+	.partnerWrapper img {
+		margin: 20px;
+	}
+}
