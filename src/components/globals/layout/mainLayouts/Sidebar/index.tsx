@@ -14,7 +14,6 @@ import styles from "./index.module.css";
 
 type TProps = {
   hover: boolean;
-  ß;
   tabbar: boolean;
   handleHover: (bool: boolean) => void;
   handleTabbar: (bool: boolean) => void;

@@ -30,19 +30,16 @@ export const ComplainListTable: React.FC<TTable<TReport> & TProps> = ({
     {
       dataIndex: "MainOrderId",
       title: "Mã đơn hàng",
-      responsive: ["sm"],
     },
     {
       dataIndex: "Amount",
       title: "Số tiền",
       align: "right",
       render: (money) => _format.getVND(money, " "),
-      responsive: ["md"],
     },
     {
       dataIndex: "ComplainText",
       title: "Nội dung",
-      responsive: ["md"],
     },
     {
       dataIndex: "Status",
@@ -51,7 +48,6 @@ export const ComplainListTable: React.FC<TTable<TReport> & TProps> = ({
         const color = reportStatus.find((x) => x.id === status);
         return <Tag color={color?.color}>{record?.StatusName}</Tag>;
       },
-      responsive: ["lg"],
     },
     {
       dataIndex: "Created",
@@ -64,7 +60,7 @@ export const ComplainListTable: React.FC<TTable<TReport> & TProps> = ({
           </>
         );
       },
-      responsive: ["lg"],
+      responsive: ["xl"],
     },
     {
       dataIndex: "Updated",
@@ -105,64 +101,19 @@ export const ComplainListTable: React.FC<TTable<TReport> & TProps> = ({
           />
         </Space>
       ),
-      responsive: ["xl"],
     },
   ];
 
   const expandable = {
     expandedRowRender: (record) => (
       <ul className="px-2 text-xs">
-        <li className="sm:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Mã đơn hàng:</span>
-          {record.MainOrderId}
+        <li className="justify-between flex py-2">
+          <span className="font-medium mr-4">Ngày tạo - Người tạo:</span>
+          {_format.getVNDate(record.Created)} - {record.CreatedBy}
         </li>
-        <li className="md:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Số tiền:</span>
-          {_format.getVND(record.Amount)}
-        </li>
-        <li className="md:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Nội dung:</span>
-          {record.ComplainText}
-        </li>
-        <li className="lg:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Trạng thái:</span>
-          <Tag color={reportStatusData?.[record.Status + 1]?.color}>
-            {reportStatusData?.[record.Status + 1]?.name}
-          </Tag>
-        </li>
-        <li className="lg:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Ngày tạo:</span>
-          {_format.getVNDate(record.Created)}
-        </li>
-        <li className="xl:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Người duyệt:</span>
-          {record.UpdatedBy}
-        </li>
-        <li className="xl:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Ngày duyệt:</span>
-          {record.Updated}
-        </li>
-        <li className="xl:hidden justify-between flex py-2">
-          <span className="font-medium mr-4">Thao tác:</span>
-          <div>
-            <Space className="flex">
-              <ActionButton
-                onClick={() => handleModal(record)}
-                icon="far fa-info-square"
-                title="Xem"
-              />
-              <ActionButton
-                onClick={() =>
-                  router.push({
-                    pathname: "/manager/order/order-list/detail",
-                    query: { id: record?.MainOrderId },
-                  })
-                }
-                icon="fas fa-info"
-                title="Chi tiết đơn"
-              />
-            </Space>
-          </div>
+        <li className="justify-between flex py-2">
+          <span className="font-medium mr-4">Ngày duyệt - Người duyệt:</span>
+          {_format.getVNDate(record.Updated)} - {record?.UpdatedBy}
         </li>
       </ul>
     ),

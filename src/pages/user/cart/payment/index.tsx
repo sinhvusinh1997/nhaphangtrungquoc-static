@@ -102,11 +102,24 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
         "city"
       )}, ${getValuesAddress("districts")}`
     );
+
+    console.log(getValues("Address"));
+
     if (!data?.IsAgreement) {
       toast.warning("Vui lòng xác nhận trước khi thanh toán");
       return;
     }
+
+    if (
+      getValuesAddress("address") === null ||
+      getValuesAddress("city") === null ||
+      getValuesAddress("districts") === null
+    ) {
+      toast.warning("Vui lòng chọn địa chỉ nhân hàng!");
+      return;
+    }
     setLoadingPayment(true);
+
     mutationPayment
       .mutateAsync({ ...data, Address: getValues("Address") })
       .then(() => {
@@ -141,7 +154,7 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
       {!!ids.length && !!orderShopTempsData?.[0] && (
         <React.Fragment>
           <div className="grid grid-cols-10 gap-4">
-            <div className="sm:col-span-7 col-span-10 flex flex-col gap-4 sm:order-1 order-1">
+            <div className="xl:col-span-7 col-span-10 flex flex-col gap-4 order-1">
               {orderShopTempsData.map((orderShopTempData, index) => (
                 <Fragment key={`${index}-${orderShopTempData?.Id}`}>
                   <PaymentOrderInfo
@@ -157,7 +170,7 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
                 </Fragment>
               ))}
             </div>
-            <div className="sm:col-span-3 col-span-10 flex flex-col sm:order-2 order-2">
+            <div className="xl:col-span-3 col-span-10 flex flex-col order-2">
               <WareHouseInfo />
               <div className="sticky top-4">
                 <StaticUserForm control={control} />

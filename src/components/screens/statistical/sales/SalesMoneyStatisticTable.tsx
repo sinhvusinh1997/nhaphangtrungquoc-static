@@ -1,122 +1,97 @@
-import {Table} from "antd";
-import React from "react";
-import {DataTable} from "~/components/globals/table";
-import {TColumnsType} from "~/types/table";
-import {_format} from "~/utils";
+import { DataTable } from "~/components/globals/table";
+import { TColumnsType } from "~/types/table";
+import { _format } from "~/utils";
 
-export const SalesMoneyStatisticTable = ({data}) => {
-	const columns: TColumnsType<TStatisticalMoney> = [
-		{
-			title: "STT",
-			dataIndex: "Name",
-			render: (_, __, index) => ++index,
-		},
-		{
-			dataIndex: "Name",
-			title: "Mục",
-			render: (title) => <div className="text-[#000] font-medium">{title}</div>,
-		},
-		{
-			dataIndex: "Total",
-			title: "Tổng tiền (VNĐ)",
-			align: "right",
-			render: (money: number) =>
-				money !== null && (
-					<div className="">
-						<span>{_format.getVND(money, " ")}</span>
-						{/* <div className="cursor-pointer ml-4">
-							<i className="fad fa-download text-lg text-orange"></i>
-						</div> */}
-					</div>
-				),
-			responsive: ["lg"],
-		},
-		{
-			dataIndex: "NotPay",
-			title: (
-				<>
-					ĐẶT CỌC &#8594; HÀNG VỀ VN <br /> (VNĐ)
-				</>
-			),
-			render: (money: number) =>
-				money !== null && (
-					<div className="">
-						<span>{_format.getVND(money, " ")}</span>
-						{/* <div className="cursor-pointer ml-4">
-							<i className="fad fa-download text-lg text-orange"></i>
-						</div> */}
-					</div>
-				),
-			responsive: ["lg"],
-			align: "right",
-		},
-		{
-			dataIndex: "Pay",
-			title: (
-				<>
-					ĐÃ THANH TOÁN &#8594; ĐÃ HOÀN THÀNH <br /> (VNĐ)
-				</>
-			),
-			align: "right",
-			render: (money: number) =>
-				money !== null && (
-					<div className="">
-						<span>{_format.getVND(money, " ")}</span>
-						{/* <div className="cursor-pointer ml-4">
-							<i className="fad fa-download text-lg text-orange"></i>
-						</div> */}
-					</div>
-				),
-			responsive: ["xl"],
-		},
-	];
+export const SalesMoneyStatisticTable = ({ data }) => {
+  const columns: TColumnsType<TStatisticalMoney> = [
+    {
+      title: "STT",
+      dataIndex: "Name",
+      render: (_, __, index) => ++index,
+    },
+    {
+      dataIndex: "Name",
+      title: "Mục",
+      render: (title) => <div className="text-[#000] font-medium">{title}</div>,
+    },
+    {
+      dataIndex: "Total",
+      title: "Tổng tiền (VNĐ)",
+      align: "right",
+      render: (money: number) =>
+        money !== null && (
+          <div className="">
+            <span>{_format.getVND(money, " ")}</span>
+          </div>
+        ),
+    },
+    {
+      dataIndex: "NotPay",
+      title: (
+        <>
+          ĐẶT CỌC &#8594; HÀNG VỀ VN <br /> (VNĐ)
+        </>
+      ),
+      render: (money: number) =>
+        money !== null && (
+          <div className="">
+            <span>{_format.getVND(money, " ")}</span>
+          </div>
+        ),
+      responsive: ["xl"],
+      align: "right",
+    },
+    {
+      dataIndex: "Pay",
+      title: (
+        <>
+          ĐÃ THANH TOÁN &#8594; ĐÃ HOÀN THÀNH <br /> (VNĐ)
+        </>
+      ),
+      align: "right",
+      render: (money: number) =>
+        money !== null && (
+          <div className="">
+            <span>{_format.getVND(money, " ")}</span>
+          </div>
+        ),
+      responsive: ["xl"],
+    },
+  ];
 
-	const expandable = {
-		expandedRowRender: (data) => (
-			<ul className="px-2 text-xs">
-				<li className="lg:hidden flex justify-between py-2">
-					<span className="font-medium mr-4">Tất cả:</span>
-					<div className="flex items-center justify-center">
-						<span>{_format.getVND(data.money)}</span>
-						<div className="cursor-pointer ml-4">
-							<i className="fad fa-download text-lg text-orange"></i>
-						</div>
-					</div>
-				</li>
-				<li className="lg:hidden flex justify-between py-2">
-					<span className="font-medium mr-4">Đặt cọc {"->"} Hàng về VN:</span>
-					<div className="flex items-center justify-center">
-						<span>{_format.getVND(data.money)}</span>
-						<div className="cursor-pointer ml-4">
-							<i className="fad fa-download text-lg text-orange"></i>
-						</div>
-					</div>
-				</li>
-				<li className="xl:hidden flex justify-between py-2">
-					<span className="font-medium mr-4">ĐÃ THANH TOÁN {"->"} Đã hoàn thành:</span>
-					<div className="flex items-center justify-center">
-						<span>{_format.getVND(data.money)}</span>
-						<div className="cursor-pointer ml-4">
-							<i className="fad fa-download text-lg text-orange"></i>
-						</div>
-					</div>
-				</li>
-			</ul>
-		),
-	};
+  const expandable = {
+    expandedRowRender: (data) => (
+      <ul className="px-2 text-xs">
+        <li className="flex justify-between py-2">
+          <span className="font-medium mr-4">Đặt cọc &#8594; Hàng về VN:</span>
+          <div className="flex items-center justify-center">
+            <span>{_format.getVND(data.NotPay)}</span>
+          </div>
+        </li>
+        <li className="flex justify-between py-2">
+          <span className="font-medium mr-4">
+            Đã thanh toán &#8594; Đã hoàn thành:
+          </span>
+          <div className="flex items-center justify-center">
+            <span>{_format.getVND(data.Pay)}</span>
+          </div>
+        </li>
+      </ul>
+    ),
+  };
 
-	return (
-		<DataTable
-			{...{
-				columns,
-				data,
-				bordered: true,
-				// summary,
-				rowKey: "Name",
-				expandable: expandable,
-			}}
-		/>
-	);
+  return (
+    <DataTable
+      {...{
+        columns,
+        data,
+        bordered: true,
+        // summary,
+        rowKey: "Name",
+        expandable: expandable,
+      }}
+    />
+  );
 };
 
 // const summary = () => {

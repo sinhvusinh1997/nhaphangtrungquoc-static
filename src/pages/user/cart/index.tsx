@@ -152,7 +152,7 @@ const Index: TNextPageWithLayout = () => {
   return (
     <React.Fragment>
       <div className="titlePageUser">Giỏ hàng</div>
-      <div className="tableBox !w-[70%] bg-[#fff] !mb-[20px] !h-fit m-auto">
+      <div className="tableBox !w-full xl:!w-[70%] bg-[#fff] !mb-[20px] !h-fit m-auto">
         <span className="titlePageUser text-[18px]">Tìm kiếm sản phẩm</span>
         <div className="flex justify-between mt-4">
           <div className="w-[30%] flex items-center">
@@ -236,8 +236,8 @@ const Index: TNextPageWithLayout = () => {
               />
             )}
             {currentCart?.length > 0 && (
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-9">
+              <div className="grid xl:grid-cols-12 gap-4">
+                <div className="md:order-2 xl:col-span-9">
                   <CartOrder
                     currentCart={currentCart}
                     note={note}
@@ -247,7 +247,7 @@ const Index: TNextPageWithLayout = () => {
                     refetchCart={refetchCart}
                   />
                 </div>
-                <div className="col-span-3">
+                <div className="md:order-1 xl:col-span-3">
                   <CardAmount
                     currentCart={currentCart}
                     allShopIds={chosenShopIds}

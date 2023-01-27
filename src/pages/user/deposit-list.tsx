@@ -1,148 +1,162 @@
-import React, {useRef, useState} from "react";
-import {useQuery} from "react-query";
-import {transportationOrder} from "~/api";
-import {showToast, UserAnotherOrderInfo, UserDepositListFilter, UserDepositListTable, UserLayout} from "~/components";
-import {EOrderStatusData, orderDataNumberOfOrder, orderMoneyOfOrdersData, transportStatus} from "~/configs/appConfigs";
-import {SEOHomeConfigs} from "~/configs/SEOConfigs";
-import {selectUser, useAppSelector} from "~/store";
-import {TNextPageWithLayout} from "~/types/layout";
-import {_format} from "~/utils";
+import React, { useRef, useState } from "react";
+import { useQuery } from "react-query";
+import { transportationOrder } from "~/api";
+import {
+  showToast,
+  UserAnotherOrderInfo,
+  UserDepositListFilter,
+  UserDepositListTable,
+  UserLayout,
+} from "~/components";
+import { orderMoneyOfOrdersData, transportStatus } from "~/configs/appConfigs";
+import { SEOHomeConfigs } from "~/configs/SEOConfigs";
+import { selectUser, useAppSelector } from "~/store";
+import { TNextPageWithLayout } from "~/types/layout";
+import { _format } from "~/utils";
 
 const Index: TNextPageWithLayout = () => {
-	const {user} = useAppSelector(selectUser);
-	if (!user) return null;
+  const { user } = useAppSelector(selectUser);
+  if (!user) return null;
 
-	const [filter, setFilter] = useState({
-		PageIndex: 1,
-		PageSize: 20,
-		TotalItems: null,
-		TypeSearch: null,
-		SearchContent: null,
-		Status: null,
-		FromDate: null,
-		ToDate: null,
-		UID: user?.UserId,
-		OrderBy: "Id desc",
-	});
+  const [filter, setFilter] = useState({
+    PageIndex: 1,
+    PageSize: 20,
+    TotalItems: null,
+    TypeSearch: null,
+    SearchContent: null,
+    Status: null,
+    FromDate: null,
+    ToDate: null,
+    UID: user?.UserId,
+    OrderBy: "Id desc",
+  });
 
-	const [ids, setIds] = useState<number[]>([]);
-	const isAll = useRef(false);
-	const item = useRef<TUserDeposit>();
-	const [modal, setModal] = useState(false);
-	const [moneyOfOrders, setMoneyOfOrders] = useState(orderMoneyOfOrdersData);
+  const [ids, setIds] = useState<number[]>([]);
+  const isAll = useRef(false);
+  const item = useRef<TUserDeposit>();
+  const [modal, setModal] = useState(false);
+  const [moneyOfOrders, setMoneyOfOrders] = useState(orderMoneyOfOrdersData);
 
-	const handleFilter = (newFilter) => {
-		setFilter({...filter, ...newFilter});
-	};
+  const handleFilter = (newFilter) => {
+    setFilter({ ...filter, ...newFilter });
+  };
 
-	const {isFetching, data} = useQuery(
-		["userDepositList", {...filter}],
-		() => transportationOrder.getList(filter).then((res) => res.Data),
-		{
-			keepPreviousData: true,
-			onSuccess: (data) =>
-				setFilter({...filter, TotalItems: data?.TotalItem, PageIndex: data?.PageIndex, PageSize: data?.PageSize}),
-			onError: (error) => {
-				showToast({
-					title: "Đã xảy ra lỗi!",
-					message: (error as any)?.response?.data?.ResultMessage,
-					type: "error",
-				});
-			},
-			enabled: !!user,
-		}
-	);
+  const { isFetching, data } = useQuery(
+    ["userDepositList", { ...filter }],
+    () => transportationOrder.getList(filter).then((res) => res.Data),
+    {
+      keepPreviousData: true,
+      onSuccess: (data) =>
+        setFilter({
+          ...filter,
+          TotalItems: data?.TotalItem,
+          PageIndex: data?.PageIndex,
+          PageSize: data?.PageSize,
+        }),
+      onError: (error) => {
+        showToast({
+          title: "Đã xảy ra lỗi!",
+          message: (error as any)?.response?.data?.ResultMessage,
+          type: "error",
+        });
+      },
+      enabled: !!user,
+    }
+  );
 
-	// modal delete
-	const handleModal = (itemSelected: TUserDeposit = undefined) => {
-		item.current = itemSelected;
-		setModal(!modal);
-	};
+  // modal delete
+  const handleModal = (itemSelected: TUserDeposit = undefined) => {
+    item.current = itemSelected;
+    setModal(!modal);
+  };
 
-	const handleSelectIds = (item: TUserDeposit) => {
-		if (!!ids.find((x) => x === item.Id)) {
-			setIds(ids.filter((x) => x !== item.Id));
-		} else {
-			setIds([...ids, item.Id]);
-		}
-		isAll.current = false;
-	};
+  const handleSelectIds = (item: TUserDeposit) => {
+    if (!!ids.find((x) => x === item.Id)) {
+      setIds(ids.filter((x) => x !== item.Id));
+    } else {
+      setIds([...ids, item.Id]);
+    }
+    isAll.current = false;
+  };
 
-	useQuery(["deposit-amount-list"], () => transportationOrder.getAmountList(), {
-		onSuccess: (res) => {
-			const data = res.Data;
-			console.log(data);
-			for (let key in data) {
-				moneyOfOrders.forEach((item) => {
-					if (item.key === key) {
-						item.value = _format.getVND(data[key], " ");
-					}
-				});
-			}
-			setMoneyOfOrders(moneyOfOrders);
-		},
-		onError: (error) => {
-			showToast({
-				title: "Đã xảy ra lỗi!",
-				message: (error as any)?.response?.data?.ResultMessage,
-				type: "error",
-			});
-		},
-		retry: false,
-		enabled: !!user,
-	});
+  useQuery(["deposit-amount-list"], () => transportationOrder.getAmountList(), {
+    onSuccess: (res) => {
+      const data = res.Data;
+      console.log(data);
+      for (let key in data) {
+        moneyOfOrders.forEach((item) => {
+          if (item.key === key) {
+            item.value = _format.getVND(data[key], " ");
+          }
+        });
+      }
+      setMoneyOfOrders(moneyOfOrders);
+    },
+    onError: (error) => {
+      showToast({
+        title: "Đã xảy ra lỗi!",
+        message: (error as any)?.response?.data?.ResultMessage,
+        type: "error",
+      });
+    },
+    retry: false,
+    enabled: !!user,
+  });
 
-	useQuery(
-		["deposit-infor-list"],
-		() =>
-			transportationOrder.getAmountInfo({
-				UID: user?.UserId,
-			}),
-		{
-			onSuccess: (res) => {
-				const data = res.Data;
-				data?.forEach((x) => {
-					const target = transportStatus.find((i) => i.id === x?.Status);
-					if (target) {
-						target.value = x?.Quantity;
-					}
-				});
-			},
-			onError: (error) => {
-				showToast({
-					title: "Đã xảy ra lỗi!",
-					message: (error as any)?.response?.data?.ResultMessage,
-					type: "error",
-				});
-			},
-			retry: false,
-			enabled: !!user,
-		}
-	);
+  useQuery(
+    ["deposit-infor-list"],
+    () =>
+      transportationOrder.getAmountInfo({
+        UID: user?.UserId,
+      }),
+    {
+      onSuccess: (res) => {
+        const data = res.Data;
+        data?.forEach((x) => {
+          const target = transportStatus.find((i) => i.id === x?.Status);
+          if (target) {
+            target.value = x?.Quantity;
+          }
+        });
+      },
+      onError: (error) => {
+        showToast({
+          title: "Đã xảy ra lỗi!",
+          message: (error as any)?.response?.data?.ResultMessage,
+          type: "error",
+        });
+      },
+      retry: false,
+      enabled: !!user,
+    }
+  );
 
-	return (
-		<React.Fragment>
-			<div className="titlePageUser">Danh sách yêu cầu kiện ký gửi</div>
-			<div className="tableBox py-2">
-				<UserAnotherOrderInfo numberOfOrder={transportStatus} moneyOfOrders={moneyOfOrders} />
-				<UserDepositListFilter
-					numberOfOrder={transportStatus}
-					handleFilter={handleFilter}
-					isSelectSomeItems={!!ids.length}
-				/>
-				<UserDepositListTable
-					{...{
-						loading: isFetching,
-						data: data?.Items,
-						handleModal,
-						handleSelectIds,
-						filter,
-						handleFilter,
-					}}
-				/>
-			</div>
-		</React.Fragment>
-	);
+  return (
+    <React.Fragment>
+      <div className="titlePageUser">Danh sách yêu cầu kiện ký gửi</div>
+      <div className="tableBox py-2">
+        <UserAnotherOrderInfo
+          numberOfOrder={transportStatus}
+          moneyOfOrders={moneyOfOrders}
+        />
+        <UserDepositListFilter
+          numberOfOrder={transportStatus}
+          handleFilter={handleFilter}
+          isSelectSomeItems={!!ids.length}
+        />
+        <UserDepositListTable
+          {...{
+            loading: isFetching,
+            data: data?.Items,
+            handleModal,
+            handleSelectIds,
+            filter,
+            handleFilter,
+          }}
+        />
+      </div>
+    </React.Fragment>
+  );
 };
 
 Index.displayName = SEOHomeConfigs.consignmentShipping.listOderDeposit;

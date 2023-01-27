@@ -274,8 +274,10 @@ const Header: React.FC<TProps> = ({
               title="Thông báo"
               placement="right"
               visible={visible}
-              width={"25vw"}
-              maskStyle={{ backgroundColor: "#00000070" }}
+              width={"30vw"}
+              maskStyle={{
+                backgroundColor: "#00000070",
+              }}
               onClose={() => setVisible(false)}
               extra={
                 <Link

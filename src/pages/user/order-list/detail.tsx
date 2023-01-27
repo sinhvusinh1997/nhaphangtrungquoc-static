@@ -1,7 +1,6 @@
 import router, { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
-import { useToast } from "react-toastify";
 import { mainOrder } from "~/api";
 import {
   MessageControlUser,
@@ -66,7 +65,6 @@ const Index: TNextPageWithLayout = () => {
             />
           </div>
         </div>
-
         <OrderTransportList data={data?.Data?.SmallPackages} />
         <OrderIDProductList data={data?.Data?.Orders} />
         <OrderIDPaymentHistory data={data?.Data?.PayOrderHistories} />
