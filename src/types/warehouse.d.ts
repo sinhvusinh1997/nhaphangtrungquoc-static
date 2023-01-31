@@ -173,3 +173,13 @@ type TFilterWareHouseFee = {
   ShippingTypeToWareHouseId: number;
   IsHelpMoving: number;
 };
+
+type TFilterVolumeFee = {
+  PageIndex: number;
+  PageSize: number;
+  OrderBy: string;
+  WarehouseFromId: number;
+  WarehouseId: number;
+  ShippingTypeToWareHouseId: number;
+  IsHelpMoving: number;
+};

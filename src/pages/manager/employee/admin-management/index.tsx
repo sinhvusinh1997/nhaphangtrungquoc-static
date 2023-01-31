@@ -26,7 +26,7 @@ const Index: TNextPageWithLayout = () => {
     TotalItems: null,
     UserName: null,
     RoleID: newUser?.UserGroupId,
-    IsEmployee: 1,
+    IsEmployee: 2,
   });
 
   const handleFilter = (newFilter) => {

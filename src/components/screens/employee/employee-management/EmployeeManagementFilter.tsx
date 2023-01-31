@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { FC, useRef } from "react";
 import { FilterInput, FilterSelect } from "~/components";
 import { IconButton } from "~/components/globals/button/IconButton";
@@ -15,8 +16,10 @@ export const EmployeeManagementFilter: FC<TProps> = ({
   userGroupCatalogue,
   onExportExcel,
 }) => {
+  const router = useRouter();
   const UserName = useRef("");
   const UserGroupId = useRef<number | null>(null);
+
   return (
     <>
       <div className="grid grid-cols-5 gap-4 pb-4">
@@ -31,21 +34,28 @@ export const EmployeeManagementFilter: FC<TProps> = ({
             }}
           />
         </div>
-        <div className="col-span-1 mb-0 ">
-          <FilterSelect
-            data={userGroupCatalogue?.filter(
-              (x) => x.Code !== "USER" && x.Code !== "STOREKEEPERS"
-            )}
-            placeholder="Quyền hạn"
-            label="Quyền hạn"
-            isClearable
-            select={{ value: "Id", label: "Description" }}
-            handleSearch={(val: number) => {
-              UserGroupId.current = val;
-            }}
-          />
-        </div>
-        <div className="col-span-3 mb-0 flex justify-between items-end">
+        {!router.asPath.includes("admin-management") && (
+          <div className="col-span-1 mb-0 ">
+            <FilterSelect
+              data={userGroupCatalogue?.filter(
+                (x) => x.Code !== "USER" && x.Code !== "STOREKEEPERS"
+              )}
+              placeholder="Quyền hạn"
+              label="Quyền hạn"
+              isClearable
+              select={{ value: "Id", label: "Description" }}
+              handleSearch={(val: number) => {
+                UserGroupId.current = val;
+              }}
+            />
+          </div>
+        )}
+
+        <div
+          className={`col-span-${
+            router.asPath.includes("admin-management") ? "4" : "3"
+          } mb-0 flex justify-between items-end`}
+        >
           <IconButton
             onClick={() =>
               handleFilter({

@@ -42,6 +42,10 @@ export const adminRouter = [
             name: "Phí thanh toán hộ",
           },
           {
+            path: "/manager/settings/volume",
+            name: "Phí thể tích",
+          },
+          {
             path: "/manager/settings/warehouse",
             name: "Kho vận chuyển",
           },
@@ -65,6 +69,10 @@ export const adminRouter = [
         name: "Người dùng",
         icon: "fas fa-users",
         childrens: [
+          {
+            path: "/manager/employee/admin-management",
+            name: "Danh sách admin",
+          },
           {
             path: "/manager/employee/employee-management",
             name: "Danh sách nhân viên",

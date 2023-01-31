@@ -150,7 +150,9 @@ const Header: React.FC<TProps> = ({
                 <div className={`${styles.img} w-[50px]`}>
                   <Image
                     src={
-                      configData?.LogoIMG ? configData?.LogoIMG : "/Panda.png"
+                      configData?.LogoIMG
+                        ? configData?.LogoIMG
+                        : "/new_logo.png"
                     }
                     width={"20rem"}
                     height={"100%"}

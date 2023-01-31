@@ -58,6 +58,8 @@ export * from "./screens/settings/tariff-china-vietnam";
 export * from "./screens/settings/tariff-price-change";
 export * from "./screens/settings/tariff-user";
 export * from "./screens/settings/tariff-goods-checking";
+export * from "./screens/settings/volume-fee";
+
 // ++ statistical
 export * from "./screens/statistical/order";
 export * from "./screens/statistical/payment-profit";
@@ -116,7 +118,7 @@ export * from "./screens/status/Finding";
 // globals
 export * from "./globals/authContainer";
 // ++ label
-export {default as Label} from "./globals/label";
+export { default as Label } from "./globals/label";
 // ++ breadcrumb
 export * from "./globals/layout/homeLayouts/Breadcrumb";
 // ++ button
@@ -126,13 +128,13 @@ export * from "./globals/button/IconButton";
 // ++ table
 export * from "./globals/table";
 // ++ modal
-export {default as Modal} from "./globals/modal";
+export { default as Modal } from "./globals/modal";
 export * from "./globals/modal/ModalDelete";
 // form
 export * from "./globals/formBase";
 // filter
 export * from "./globals/filterBase";
 // menu of button dropdown
-export {default as Menu} from "./globals/menu";
+export { default as Menu } from "./globals/menu";
 // transfer
 export * from "./globals/transfer";

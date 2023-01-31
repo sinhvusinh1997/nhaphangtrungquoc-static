@@ -17,11 +17,11 @@ export const InfoUserForm: React.FC<any> = ({
   oriEmail,
   oriPhone,
 }) => {
-  const { warehouseVN, shippingTypeToWarehouse, warehouseTQ } = useCatalogue({
-    warehouseVNEnabled: true,
-    shippingTypeToWarehouseEnabled: true,
-    warehouseTQEnabled: true,
-  });
+  // const { warehouseVN, shippingTypeToWarehouse, warehouseTQ } = useCatalogue({
+  //   warehouseVNEnabled: true,
+  //   shippingTypeToWarehouseEnabled: true,
+  //   warehouseTQEnabled: true,
+  // });
 
   const [changePass, setChangePass] = useState(false);
 

@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import { FilterInput, FilterRangeDate, FilterSelect } from "~/components";
 import { IconButton } from "~/components/globals/button/IconButton";
@@ -24,6 +25,7 @@ export const TransactionCodeManagementFilter: React.FC<TProps> = ({
   handleFilter,
   handleExporTExcel,
 }) => {
+  const router = useRouter();
   const SearchType = useRef<ESearchSmallPackageStatusData>(null);
   const SearchContent = useRef<string>(null);
   const Status = useRef<ESmallPackageStatusData>(null);
@@ -32,9 +34,13 @@ export const TransactionCodeManagementFilter: React.FC<TProps> = ({
 
   return (
     <div className="grid md:grid-cols-2 xl:grid-cols-5 gap-4 w-full pb-4">
-      <div className="col-span-1 xl:mb-0 xl:mb-4">
+      <div className="col-span-1 xl:mb-0">
         <FilterSelect
-          data={searchSmallPackageStatusData}
+          data={
+            router.asPath.includes("user")
+              ? searchSmallPackageStatusData.slice(0, 3)
+              : searchSmallPackageStatusData
+          }
           placeholder="Chọn tìm kiếm theo"
           label="Tìm kiếm theo"
           isClearable
@@ -43,13 +49,13 @@ export const TransactionCodeManagementFilter: React.FC<TProps> = ({
           }
         />
       </div>
-      <div className="col-span-1 xl:mb-0 xl:mb-4">
+      <div className="col-span-1 xl:mb-0">
         <FilterInput
           {...inputProps}
           handleSearch={(val: string) => (SearchContent.current = val.trim())}
         />
       </div>
-      <div className="col-span-1 xl:mb-0 xl:mb-4">
+      <div className="col-span-1 xl:mb-0">
         <FilterSelect
           data={smallPackageStatusData}
           placeholder="Chọn trạng thái"
@@ -61,7 +67,7 @@ export const TransactionCodeManagementFilter: React.FC<TProps> = ({
           closeMenuOnSelect={false}
         />
       </div>
-      <div className="col-span-1 xl:mb-0 xl:mb-4">
+      <div className="col-span-1 xl:mb-0">
         <FilterRangeDate
           handleDate={(val: string[]) => {
             FromDate.current = val[0];
@@ -71,7 +77,7 @@ export const TransactionCodeManagementFilter: React.FC<TProps> = ({
           format="DD/MM/YYYY"
         />
       </div>
-      <div className="col-span-1 flex xl:justify-end justify-start items-end pb-2 xl:mb-0 mb-4">
+      <div className="col-span-1 flex xl:justify-end justify-start items-end ">
         <IconButton
           onClick={() =>
             handleFilter({

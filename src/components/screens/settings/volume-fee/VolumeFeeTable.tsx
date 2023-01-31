@@ -1,7 +1,7 @@
 import { Modal, Tag } from "antd";
 import { FC } from "react";
 import { toast } from "react-toastify";
-import { warehouseFee } from "~/api";
+import { feeVolume } from "~/api";
 import { ActionButton, DataTable } from "~/components";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
@@ -17,7 +17,7 @@ type TProps = {
   handleFilter: (newFiter) => void;
 };
 
-export const TariffChinaVietNamTable: FC<TTable<TTariffTQVN> & TProps> = ({
+export const VolumeFeeTable: FC<TTable<TVolumeFee | any> & TProps> = ({
   handleModal,
   filter,
   handleFilter,
@@ -27,7 +27,7 @@ export const TariffChinaVietNamTable: FC<TTable<TTariffTQVN> & TProps> = ({
   handleUpdate,
   handleGetID,
 }) => {
-  const columns: TColumnsType<TTariffTQVN> = [
+  const columns: TColumnsType<TVolumeFee> = [
     {
       dataIndex: "Id",
       title: "ID",
@@ -55,16 +55,16 @@ export const TariffChinaVietNamTable: FC<TTable<TTariffTQVN> & TProps> = ({
       title: "Đến kho",
     },
     {
-      dataIndex: "WeightFrom",
-      title: "Cân nặng từ",
+      dataIndex: "VolumeFrom",
+      title: "Thể tích từ",
       align: "right",
-      render: (_, record) => _format.getVND(record?.WeightFrom, ""),
+      render: (_, record) => _format.getVND(record?.VolumeFrom, ""),
     },
     {
-      dataIndex: "WeightTo",
-      title: "Cân nặng đến",
+      dataIndex: "VolumeTo",
+      title: "Thể tích đến",
       align: "right",
-      render: (_, record) => _format.getVND(record?.WeightTo, ""),
+      render: (_, record) => _format.getVND(record?.VolumeTo, ""),
     },
     {
       dataIndex: "Price",
@@ -98,7 +98,7 @@ export const TariffChinaVietNamTable: FC<TTable<TTariffTQVN> & TProps> = ({
                 Modal.confirm({
                   title: "Xác nhận xóa cấu hình này?",
                   onOk: () => {
-                    warehouseFee.delete(record.Id);
+                    feeVolume.delete(record.Id);
                     toast.success("Xóa thành công!");
                     refetch();
                   },

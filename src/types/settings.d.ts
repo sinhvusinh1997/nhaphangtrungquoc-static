@@ -108,6 +108,30 @@ type TTariffTQVN = {
   Name: string;
 };
 
+type TVolumeFee = {
+  Active: boolean;
+  Created: Date;
+  CreatedBy: string;
+  Deleted: boolean;
+  HelpMovingName: string;
+  Id: number;
+  IsHelpMoving: boolean;
+  Price: number;
+  RowNumber: number;
+  ShippingType: number;
+  ShippingTypeToWareHouseId: number;
+  ShippingTypeToWareHouseName: string;
+  Updated: Date;
+  UpdatedBy: string;
+  WareHouseFromName: string;
+  WareHouseToName: string;
+  WarehouseFromId: number;
+  WarehouseId: number;
+  VolumeFrom: number;
+  VolumeTo: number;
+  Name: string;
+};
+
 type TTariffBuyPro = {
   Id: number;
   PriceFrom: number;

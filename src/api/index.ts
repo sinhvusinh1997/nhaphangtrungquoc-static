@@ -61,3 +61,4 @@ export * from "./warehouseTo";
 export * from "./shippingType";
 export * from "./fee-check-product";
 export * from "./customerTalk";
+export * from "./fee-volume";

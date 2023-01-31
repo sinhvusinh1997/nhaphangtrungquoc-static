@@ -1,7 +1,7 @@
 import { Pagination, Tag } from "antd";
 import React from "react";
 import { DataTable } from "~/components";
-import { packageStatus, smallPackageStatusData } from "~/configs/appConfigs";
+import { packageStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 type TProps = {
@@ -84,7 +84,7 @@ export const TransactionCodeManagementTable: React.FC<
         const color = packageStatus.find((x) => x.id === status);
         return <Tag color={color?.color}>{record?.StatusName}</Tag>;
       },
-      width: 160,
+      width: 140,
     },
   ];
 
