@@ -17,6 +17,7 @@ import { selectUser, useAppSelector } from "~/store";
 const Index: TNextPageWithLayout = () => {
   const { user: userStore } = useAppSelector(selectUser);
   if (!userStore) return null;
+
   const [filter, setFilter] = useState({
     SearchType: null,
     SearchContent: null,
@@ -28,6 +29,7 @@ const Index: TNextPageWithLayout = () => {
     PageSize: 20,
     PageIndex: 1,
     Menu: 2,
+    UID: userStore.UserId,
   });
 
   const handleFilter = (newFilter) => {
@@ -47,6 +49,7 @@ const Index: TNextPageWithLayout = () => {
           PageSize: data?.PageSize,
         }),
       onError: toast.error,
+      enabled: !!userStore,
     }
   );
 

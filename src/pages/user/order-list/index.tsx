@@ -25,12 +25,10 @@ import { TDepositType, TModalType } from "~/types/table";
 
 const Index: TNextPageWithLayout = () => {
   const { user } = useAppSelector(selectUser);
-  if (!user) return null;
-
   const { query } = useRouter();
-  const UserId = user?.UserId;
   const [items, setItems] = useState<TOrder[]>([]);
   const type = useRef<"deposit" | "payment">("deposit");
+  const queryClient = useQueryClient();
 
   const [filter, setFilter] = useState({
     TypeSearch: null,
@@ -40,7 +38,7 @@ const Index: TNextPageWithLayout = () => {
     ToDate: null,
     PageIndex: 1,
     PageSize: 20,
-    UID: UserId,
+    UID: user?.UserId,
     OrderType: query?.q === "3" ? 3 : 1,
     TotalItems: null,
   });
@@ -62,18 +60,17 @@ const Index: TNextPageWithLayout = () => {
       ToDate: null,
       PageIndex: 1,
       PageSize: 20,
-      UID: UserId,
+      UID: user?.UserId,
       OrderType: query?.q === "3" ? 3 : 1,
       TotalItems: null,
     });
     setMoneyOfOrders(createdMoneyOfOrdersData);
-  }, [query?.q]);
+  }, [query?.q, user]);
 
   const { data, isFetching, refetch } = useQuery(
-    ["orderList", { ...filter }],
+    ["orderList", filter],
     () => mainOrder.getList(filter).then((res) => res.Data),
     {
-      retry: false,
       onSuccess: (data) =>
         setFilter({
           ...filter,
@@ -88,11 +85,11 @@ const Index: TNextPageWithLayout = () => {
           type: "error",
         });
       },
-      enabled: !!user,
+      retry: true,
+      enabled: !!user?.UserId,
     }
   );
 
-  const queryClient = useQueryClient();
   const mutationUpdateDeposit = useMutation(
     (data: TOrder[]) =>
       mainOrder.updateOrder(
@@ -178,15 +175,18 @@ const Index: TNextPageWithLayout = () => {
           type: "error",
         });
       },
-      enabled: !!user,
+      enabled: !!user?.UserId,
     }
   );
 
   useQuery(
-    ["number-of-order", { UID: UserId, orderType: query?.q === "3" ? 3 : 1 }],
+    [
+      "number-of-order",
+      { UID: user?.UserId, orderType: query?.q === "3" ? 3 : 1 },
+    ],
     () =>
       mainOrder.getNumberOfOrder({
-        UID: UserId,
+        UID: user?.UserId,
         orderType: query?.q === "3" ? 3 : 1,
       }),
     {
@@ -206,7 +206,7 @@ const Index: TNextPageWithLayout = () => {
           type: "error",
         });
       },
-      enabled: !!user,
+      enabled: !!user?.UserId,
     }
   );
 

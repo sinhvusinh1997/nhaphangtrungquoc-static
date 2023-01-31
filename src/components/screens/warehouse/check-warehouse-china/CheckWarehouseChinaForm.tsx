@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { bigPackage, smallPackage } from "~/api";
 import { FormInput, FormSelect, HookWrapper, IconButton } from "~/components";
-import { toast } from "~/components/toast";
+import { showToast, toast } from "~/components/toast";
 import { ESmallPackageStatusData } from "~/configs/appConfigs";
 import { usePressKeyboard } from "~/hooks";
 import {
@@ -50,9 +50,8 @@ export const CheckWarehouseChinaForm = () => {
     });
 
   const [modalPackage, setModalPackage] = useState(false);
-
-  const newOrderTransactionCode = useRef<string>();
   const [modalCode, setModalCode] = useState(false);
+  const newOrderTransactionCode = useRef<string>();
 
   const {
     control: controlArray,
@@ -75,6 +74,10 @@ export const CheckWarehouseChinaForm = () => {
     if (!Object.keys(watchArray()).length) {
       setValueArray(key, newData);
     } else {
+      console.log(
+        "watchArray().hasOwnProperty(key): ",
+        watchArray().hasOwnProperty(key)
+      );
       if (watchArray().hasOwnProperty(key)) {
         const diffData = differenceWith(
           [...newData.map((item) => item.Id)],
@@ -153,16 +156,28 @@ export const CheckWarehouseChinaForm = () => {
     );
   };
 
-  const mutationUpdate = useMutation(smallPackage.update, {
-    onSuccess: () => toast.success("Cập nhật đơn kiện thành công"),
-    onError: toast.error,
-  });
+  const mutationUpdate = useMutation(smallPackage.update);
 
   const _onPress = async (data: TWarehouseCN[]) => {
+    data.forEach((d) => {
+      if (!d.VolumePayment) {
+        d.VolumePayment = 0;
+      }
+    });
+
     if (Object.keys(data).length) {
-      try {
-        await mutationUpdate.mutateAsync(data);
-      } catch (error) {}
+      mutationUpdate
+        .mutateAsync(data)
+        .then((res) => {
+          toast.success("Cập nhật đơn kiện thành công");
+        })
+        .catch((error) => {
+          showToast({
+            title: "Lỗi server!",
+            message: (error as any)?.response?.data?.ResultMessage,
+            type: "error",
+          });
+        });
     } else {
       toast.warning("Hiện tại chưa có mã kiện, vui lòng quét mã kiện trước");
     }
@@ -181,8 +196,6 @@ export const CheckWarehouseChinaForm = () => {
       }
     }
   };
-
-  // console.log(bigPackages);
 
   return (
     <Spin

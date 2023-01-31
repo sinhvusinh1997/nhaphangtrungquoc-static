@@ -1,5 +1,5 @@
-import { Card } from "antd";
-import React from "react";
+import { Card, Image, Modal, Tooltip } from "antd";
+import React, { useState } from "react";
 
 export const BankCard = ({ item }) => {
   return (
@@ -9,7 +9,20 @@ export const BankCard = ({ item }) => {
         title={""}
         extra={
           <div className="flex justify-between items-center w-full">
-            <p className="font-semibold text-[#595857]">{item?.BankName}</p>
+            <span className="flex items-center relative">
+              <Tooltip title="Click để quét mã QR">
+                <i
+                  className="fas fa-qrcode mr-4 text-[16px] text-red cursor-pointer"
+                  onClick={() =>
+                    Modal.info({
+                      title: "Vui lòng kiểm tra kỹ thông tin!",
+                      content: <img src={item?.IMGQR} />,
+                    })
+                  }
+                ></i>
+              </Tooltip>
+              <p className="font-semibold text-[#595857]">{item?.BankName}</p>
+            </span>
             <a href="#">
               <img src={item?.IMG} alt="" className="h-[30px]" />
             </a>

@@ -56,12 +56,16 @@ export const RechargeContent = ({ newUser }) => {
                 data?.data?.Data.Address,
                 data?.data?.Data.Address2,
                 data?.data?.Data.Address3,
-              ].map((address) => {
-                if (!address) return <></>;
-                return (
-                  <li className="border inline-block p-2 border-dotted mr-4 my-4">
+              ].map((address, index) => {
+                return address ? (
+                  <li
+                    key={`${index}-${address}`}
+                    className="border inline-block p-2 border-dotted mr-4 my-4"
+                  >
                     <p dangerouslySetInnerHTML={{ __html: address }}></p>
                   </li>
+                ) : (
+                  <span key={`${index}-${address}`}></span>
                 );
               })}
             </ul>

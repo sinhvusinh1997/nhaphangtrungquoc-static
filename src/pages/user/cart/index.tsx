@@ -237,7 +237,7 @@ const Index: TNextPageWithLayout = () => {
             )}
             {currentCart?.length > 0 && (
               <div className="grid xl:grid-cols-12 gap-4">
-                <div className="md:order-2 xl:col-span-9">
+                <div className="md:order-2 xl:order-1 xl:col-span-9">
                   <CartOrder
                     currentCart={currentCart}
                     note={note}
@@ -247,7 +247,7 @@ const Index: TNextPageWithLayout = () => {
                     refetchCart={refetchCart}
                   />
                 </div>
-                <div className="md:order-1 xl:col-span-3">
+                <div className="md:order-1 xl:order-2 xl:col-span-3">
                   <CardAmount
                     currentCart={currentCart}
                     allShopIds={chosenShopIds}

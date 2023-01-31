@@ -1,5 +1,5 @@
 import { TablePaginationConfig } from "antd";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { adminSendUserWallet } from "~/api";
 import {
@@ -20,13 +20,11 @@ import { _format } from "~/utils";
 
 const Index: TNextPageWithLayout = () => {
   const { current: newUser } = useAppSelector((state) => state.user);
-  if (!newUser) return null;
-
   const { bank } = useCatalogue({ bankEnabled: !!newUser });
   const [pagination, setPagination] =
-    React.useState<TablePaginationConfig>(defaultPagination);
-  const item = React.useRef<TUserHistoryRechargeVND>();
-  const [modal, setModal] = React.useState(false);
+    useState<TablePaginationConfig>(defaultPagination);
+  const item = useRef<TUserHistoryRechargeVND>();
+  const [modal, setModal] = useState(false);
   const queryClient = useQueryClient();
 
   const { isFetching, data } = useQuery(
@@ -44,7 +42,7 @@ const Index: TNextPageWithLayout = () => {
           PageIndex: pagination.current,
           PageSize: pagination.pageSize,
           OrderBy: "Id desc",
-          // UID: newUser?.UserId,
+          UID: newUser?.UserId,
         })
         .then((res) => res.Data),
     {
@@ -108,7 +106,7 @@ const Index: TNextPageWithLayout = () => {
           <RechargeContent newUser={newUser} />
         </div>
         <div className="tableBox px-5 mb-4">
-          <RechargeVNDForm bankCatalogue={bank ?? []} />
+          <RechargeVNDForm bankCatalogue={bank ?? []} newUser={newUser} />
         </div>
         <div className="tableBox">
           <HistoryRechargeVNDTable

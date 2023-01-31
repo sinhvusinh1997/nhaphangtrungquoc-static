@@ -23,7 +23,7 @@ function handleCheckAccessPage(userGroupId: number) {
   const pathname = router.pathname;
   const pagePush = firstPageDirect.find((item) => item.id === userGroupId);
 
-  if (pathname.includes("/user")) return;
+  if (pathname.includes("/user") || pathname.includes("/notification")) return;
 
   switch (userGroupId) {
     case 2:

@@ -50,16 +50,6 @@ export const CheckWarehouseChinaTable: React.FC<
   type = "china",
   setValue,
 }) => {
-  // const {fields, update} = useFieldArray({
-  // 	name,
-  // 	control,
-  // 	keyName: "Id",
-  // });
-
-  // console.log("bigPackageList: ", bigPackageList);
-  // console.log("defaultIdBigPackageSelected: ", defaultIdBigPackageSelected);
-  // console.log(bigPackageList.filter((x) => x?.Id === defaultIdBigPackageSelected));
-
   const componentRef = useRef<ReactToPrint>(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -167,6 +157,22 @@ export const CheckWarehouseChinaTable: React.FC<
       responsive: ["md"],
     },
     {
+      dataIndex: "VolumePayment",
+      title: "Số khối",
+      align: "right",
+      width: 80,
+      render: (_, record, index) => {
+        return (
+          <FormInputNumber
+            control={control}
+            name={`${name}.${index}.VolumePayment` as any}
+            placeholder=""
+            defaultValue={!_ ? 0 : _}
+          />
+        );
+      },
+    },
+    {
       dataIndex: "Weight",
       title: "Cân nặng (kg)",
       align: "right",
@@ -222,6 +228,7 @@ export const CheckWarehouseChinaTable: React.FC<
     {
       dataIndex: "BigPackageId",
       title: () => <div className="text-center">Bao lớn</div>,
+      width: 200,
       render: (_, record, index) => {
         return (
           <FormSelect
@@ -241,7 +248,7 @@ export const CheckWarehouseChinaTable: React.FC<
             styles={{
               control: (base) => ({
                 ...base,
-                // width: 135,
+                width: 160,
                 height: 30,
                 minHeight: 30,
                 borderRadius: 0,
@@ -339,6 +346,7 @@ export const CheckWarehouseChinaTable: React.FC<
     {
       dataIndex: "Status",
       title: "Trạng thái",
+      width: 140,
       render: (Status, __, index) => (
         <FormSelect
           control={control}
@@ -357,7 +365,7 @@ export const CheckWarehouseChinaTable: React.FC<
           styles={{
             control: (base) => ({
               ...base,
-              width: 115,
+              width: 140,
               height: 30,
               minHeight: 30,
               borderRadius: 0,
@@ -618,6 +626,22 @@ export const CheckWarehouseChinaTable: React.FC<
       width: 70,
     },
     {
+      dataIndex: "VolumePayment",
+      title: "Số khối",
+      align: "right",
+      width: 80,
+      render: (_, record, index) => {
+        return (
+          <FormInputNumber
+            control={control}
+            name={`${name}.${index}.VolumePayment` as any}
+            placeholder=""
+            defaultValue={!_ ? 0 : _}
+          />
+        );
+      },
+    },
+    {
       dataIndex: "Weight",
       title: "Cân nặng (kg)",
       align: "right",
@@ -717,7 +741,7 @@ export const CheckWarehouseChinaTable: React.FC<
     {
       dataIndex: "Status",
       title: "Trạng thái",
-      width: 140,
+      width: 150,
       render: (Status, __, index) => (
         <FormSelect
           control={control}
@@ -736,6 +760,7 @@ export const CheckWarehouseChinaTable: React.FC<
           styles={{
             control: (base) => ({
               ...base,
+              width: 140,
               height: 32,
               minHeight: 32,
               borderRadius: 0,
@@ -1163,7 +1188,7 @@ export const CheckWarehouseChinaTable: React.FC<
           <div className="mr-2">
             {data?.[0]?.UserName || ""} | {data?.[0]?.Phone || ""}
           </div>
-          <span className="">{`(${data.length})`}</span>
+          <span className="">{`hey: (${data?.length})`}</span>
         </div>
       </div>
       <DataTable

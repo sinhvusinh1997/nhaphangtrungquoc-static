@@ -10,16 +10,16 @@ import {
   FormTextarea,
 } from "~/components";
 import { IconButton } from "~/components/globals/button/IconButton";
-import { useAppSelector } from "~/store";
 
 type TProps = {
   bankCatalogue: TBankCatalogue[];
+  newUser: any;
 };
 
-export const RechargeVNDForm: React.FC<TProps> = ({ bankCatalogue }) => {
-  const { current: newUser } = useAppSelector((state) => state.user);
-
-  if (!newUser) return null;
+export const RechargeVNDForm: React.FC<TProps> = ({
+  bankCatalogue,
+  newUser,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const { control, handleSubmit, reset, resetField } =
