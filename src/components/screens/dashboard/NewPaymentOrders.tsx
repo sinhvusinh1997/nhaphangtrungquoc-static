@@ -15,6 +15,7 @@ export const NewPaymentOrders = () => {
         PageCurrent: 1,
         PageSize: 10,
         OrderBy: "",
+        Status: 1,
       },
     ],
     () =>
@@ -23,6 +24,7 @@ export const NewPaymentOrders = () => {
           PageIndex: 1,
           PageSize: 10,
           OrderBy: "",
+          Status: 1,
         })
         .then((res) => res.Data.Items),
     {

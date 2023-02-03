@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { transportationOrder } from "~/api";
 import {
@@ -16,7 +16,10 @@ import { _format } from "~/utils";
 
 const Index: TNextPageWithLayout = () => {
   const { user } = useAppSelector(selectUser);
-  if (!user) return null;
+
+  useEffect(() => {
+    setFilter({ ...filter, UID: user?.UserId });
+  }, [user]);
 
   const [filter, setFilter] = useState({
     PageIndex: 1,
@@ -82,7 +85,6 @@ const Index: TNextPageWithLayout = () => {
   useQuery(["deposit-amount-list"], () => transportationOrder.getAmountList(), {
     onSuccess: (res) => {
       const data = res.Data;
-      console.log(data);
       for (let key in data) {
         moneyOfOrders.forEach((item) => {
           if (item.key === key) {

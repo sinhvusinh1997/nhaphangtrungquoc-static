@@ -1,8 +1,7 @@
 import { Checkbox, Tag } from "antd";
-import Link from "next/link";
 import React from "react";
-import { ActionButton, DataTable } from "~/components";
-import { orderStatus2Data, orderStatusData } from "~/configs/appConfigs";
+import { DataTable } from "~/components";
+import { transportStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 
@@ -42,35 +41,47 @@ export const DepositDetail: React.FC<TTable<TUserDeposit>> = ({ data }) => {
       render: (weight) => _format.getVND(weight, " "),
     },
     {
+      dataIndex: "VolumePayment",
+      title: (
+        <>
+          Số khối <br /> (m3)
+        </>
+      ),
+      align: "right",
+      render: (weight) => _format.getVND(weight, " "),
+    },
+    {
       dataIndex: "IsCheckProduct",
       title: "Kiểm đếm",
       align: "center",
-      render: (_, record) => (
-        <Checkbox disabled defaultChecked={record?.IsCheckProduct} />
-      ),
+      render: (_, record) => {
+        return <Checkbox disabled checked={record?.IsCheckProduct} />;
+      },
     },
     {
       dataIndex: "IsPacked",
       title: "Đóng gỗ",
       align: "center",
-      render: (_, record) => (
-        <Checkbox disabled defaultChecked={record?.IsPacked} />
-      ),
+      render: (_, record) => <Checkbox disabled checked={record?.IsPacked} />,
     },
     {
       dataIndex: "IsInsurance",
       title: "Bảo hiểm",
       align: "center",
       render: (_, record) => (
-        <Checkbox disabled defaultChecked={record?.IsInsurance} />
+        <Checkbox disabled checked={record?.IsInsurance} />
       ),
     },
     {
       dataIndex: "Status",
       title: "Trạng thái",
-      render: (status, record) => {
-        const orderStatus = orderStatus2Data.find((x) => x.id === status);
-        return <Tag color={orderStatus?.color}>{record?.StatusName}</Tag>;
+      render: (status, _) => {
+        const color = transportStatus.find((x) => x.id === status);
+        return (
+          <Tag color={color?.color} key={status}>
+            {_?.StatusName}
+          </Tag>
+        );
       },
     },
   ];
@@ -155,7 +166,7 @@ export const DepositDetail: React.FC<TTable<TUserDeposit>> = ({ data }) => {
       {...{
         columns,
         data: data,
-        // bordered: true,
+        bordered: true,
         // expandable: expandable,
       }}
     />

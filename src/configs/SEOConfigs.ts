@@ -17,6 +17,7 @@ export const SEOConfigs = {
     decentralization: "Quản lý phân quyền",
     infoAccount: "Thông tin tài khoản",
     commissionManager: "Quản lý hoa hồng",
+    adminManagement: "Quản lý admin",
   },
   listCustomer: "Danh sách khách hàng",
   createNewClient: "Thêm mới khách hàng",

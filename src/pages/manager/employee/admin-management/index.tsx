@@ -44,7 +44,7 @@ const Index: TNextPageWithLayout = () => {
   // ===== END =====
 
   const { isFetching, data, refetch } = useQuery(
-    ["employeeData", { ...filter }],
+    ["employeeData", filter],
     () => user.getList(filter).then((res) => res.Data),
     {
       keepPreviousData: true,
@@ -61,6 +61,7 @@ const Index: TNextPageWithLayout = () => {
       enabled: !!newUser,
     }
   );
+
   const userDataCatalog = userGroup?.map((item) => {
     const userGroupData = {
       text: item?.Description,
@@ -117,8 +118,8 @@ const Index: TNextPageWithLayout = () => {
   );
 };
 
-Index.displayName = SEOConfigs?.staff?.employeeManager;
-Index.breadcrumb = breadcrumb.employee.employeeManagement.main;
+Index.displayName = SEOConfigs?.staff?.adminManagement;
+Index.breadcrumb = breadcrumb.employee.adminManagement;
 Index.Layout = Layout;
 
 export default Index;

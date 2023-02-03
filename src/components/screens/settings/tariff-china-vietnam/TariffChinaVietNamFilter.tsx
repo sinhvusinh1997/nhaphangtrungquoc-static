@@ -67,7 +67,7 @@ export const TariffChinaVietNamFilter: FC<TProps> = (props) => {
             data={wareHouseFrom}
             control={control}
             name="WarehouseFromId"
-            placeholder="Kho TQ"
+            placeholder="Kho Trung Quốc"
             select={{ label: "Name", value: "Id" }}
             label="Kho Trung Quốc"
             required={false}
@@ -79,7 +79,7 @@ export const TariffChinaVietNamFilter: FC<TProps> = (props) => {
             data={wareHouse}
             control={control}
             name="WarehouseId"
-            placeholder="Kho VN"
+            placeholder="Kho Việt Nam"
             select={{ label: "Name", value: "Id" }}
             label="Kho Việt Nam"
             required={false}

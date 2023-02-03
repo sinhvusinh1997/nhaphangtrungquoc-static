@@ -61,7 +61,7 @@ export const TheMostBalance = () => {
       dataIndex: "action",
       align: "center",
       render: (_, record) => (
-        <Link href={`/manager/client/transaction-history/${record?.Id}`}>
+        <Link href={`/manager/client/transaction-history/?id=${record?.Id}`}>
           <a>
             <ActionButton
               onClick={undefined}

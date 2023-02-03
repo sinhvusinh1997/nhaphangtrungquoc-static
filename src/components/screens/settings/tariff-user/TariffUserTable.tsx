@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { ActionButton, DataTable } from "~/components";
 import { TColumnsType, TTable } from "~/types/table";
+import { _format } from "~/utils";
 
 export const TariffUserTable: FC<TTable<TTariffUser>> = ({
   handleModal,
@@ -30,6 +31,22 @@ export const TariffUserTable: FC<TTable<TTariffUser>> = ({
       align: "right",
       render: (_, record) => {
         return <span>{record?.FeeWeight}</span>;
+      },
+    },
+    {
+      dataIndex: "Money",
+      title: "Tích luỹ tối thiểu",
+      align: "right",
+      render: (_, record) => {
+        return <span>{_format.getVND(record?.Money, " ")}</span>;
+      },
+    },
+    {
+      dataIndex: "MoneyTo",
+      title: "Tích luỹ tối đa",
+      align: "right",
+      render: (_, record) => {
+        return <span>{_format.getVND(record?.MoneyTo, " ")}</span>;
       },
     },
     {
@@ -87,7 +104,7 @@ export const TariffUserTable: FC<TTable<TTariffUser>> = ({
         columns,
         loading,
         data,
-        bordered: true,
+        // bordered: true,
         // expandable: expandable,
       }}
     />

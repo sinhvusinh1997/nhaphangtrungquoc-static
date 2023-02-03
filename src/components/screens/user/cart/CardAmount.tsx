@@ -1,6 +1,10 @@
 import { Checkbox } from "antd";
 import { isEqual } from "lodash";
-import { IconButton } from "~/components";
+import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import { toast } from "react-toastify";
+import { orderShopTemp } from "~/api";
+import { IconButton, showToast } from "~/components";
 import { _format } from "~/utils";
 
 export const CardAmount = ({
@@ -8,10 +12,31 @@ export const CardAmount = ({
   allShopIds,
   chosenShopIds,
   toggleAllShopId,
-  totalSelectPrice,
+  // totalSelectPrice,
+  refetchCart,
   onPress,
 }) => {
-  console.log("totalSelectPrice: ", totalSelectPrice);
+  const [totalSelectPrice, setTotalSelectPrice] = useState(0);
+  const mutationDeleteShop = useMutation(orderShopTemp.delete);
+  const [disabledDel, setdisabledDel] = useState(false);
+
+  useEffect(() => {
+    const handleCountMoney = () => {
+      const newArr = currentCart.filter((x) => {
+        for (let i in chosenShopIds) {
+          if (chosenShopIds[i] === x.Id) {
+            return x;
+          }
+        }
+      });
+      setTotalSelectPrice(newArr.reduce((a, b) => a + b?.PriceVND, 0));
+    };
+
+    if (chosenShopIds.length >= 0) {
+      handleCountMoney();
+    }
+  }, [chosenShopIds, currentCart]);
+
   return (
     <div className="cartAmountContainer">
       <div className="tableBox !py-2 md:w-[calc(4/12*100%)] xl:w-full !max-w-none statistic !mb-4 flex-col !items-baseline">
@@ -36,16 +61,50 @@ export const CardAmount = ({
               {_format.getVND(totalSelectPrice, " VNĐ")}
             </span>
           </div>
-          <div className="flex flex-col ml-auto items-end">
-            {/* <IconButton
-							onClick={() => onPress("all")}
-							icon="fas fa-bags-shopping"
-							title="Đặt hàng"
-							disabled={totalSelectPrice ? false : true}
-							showLoading
-							toolip=""
-							btnClass="!bg-orange !text-white !mb-2"
-						/> */}
+          <div className="flex ml-auto justify-between">
+            <IconButton
+              onClick={() => {
+                const id = toast.loading("Đang xử lý ...");
+                setdisabledDel(true);
+                for (let i in chosenShopIds) {
+                  mutationDeleteShop
+                    .mutateAsync(chosenShopIds[i])
+                    .then(() => {
+                      const target = chosenShopIds.indexOf(chosenShopIds[i]);
+                      chosenShopIds.splice(target, 1);
+                      if (chosenShopIds.length <= 0) {
+                        refetchCart();
+                        toast.update(id, {
+                          render: "Xoá giỏ hàng ",
+                          type: "success",
+                          isLoading: false,
+                          autoClose: 1000,
+                        });
+                        setdisabledDel(false);
+                      }
+                    })
+                    .catch((error) => {
+                      toast.update(id, {
+                        render: (error as any)?.response?.data?.ResultMessage,
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 1000,
+                      });
+                      setdisabledDel(false);
+                    });
+                }
+              }}
+              // icon={loading ? "fas fa-sync fa-spin" : "fas fa-trash-alt"}
+              icon={"fas fa-trash-alt"}
+              title=""
+              showLoading
+              toolip="Xóa giỏ hàng đã chọn!"
+              btnClass={`!bg-orange !text-white ${
+                chosenShopIds.length !== 0 ? "" : "hidden"
+              }`}
+              btnIconClass="!mr-0"
+              disabled={disabledDel}
+            />
             <IconButton
               showLoading
               onClick={() => onPress("some")}

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { mainOrder } from "~/api";
 import { FormSelect } from "~/components";
 import { IconButton } from "~/components/globals/button/IconButton";
-import { statusData } from "~/configs/appConfigs";
+import { orderStatus, statusData } from "~/configs/appConfigs";
 import { useCatalogue } from "~/hooks/useCatalogue";
 import { _format } from "~/utils";
 
@@ -125,8 +125,8 @@ const ComponentAffix: React.FC<TProps> = ({
                 name="Status"
                 label="Trang thái"
                 placeholder=""
-                data={statusData}
-                defaultValue={statusData.find((x) => x.id === data?.Status)}
+                data={orderStatus}
+                defaultValue={orderStatus.find((x) => x.id === data?.Status)}
               />
             </div>
             <div className={clsx(contentItem, "border-none")}>

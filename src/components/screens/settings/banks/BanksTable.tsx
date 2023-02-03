@@ -51,7 +51,7 @@ export const BanksTable: FC<TTable<TBank>> = ({
       align: "right",
       render: (_, record) => {
         return (
-          <Tag color={record?.Active ? "green" : "red"}>
+          <Tag color={record?.Active ? "blue" : "red"}>
             {record?.Active ? "Hiện" : "Ẩn"}
           </Tag>
         );

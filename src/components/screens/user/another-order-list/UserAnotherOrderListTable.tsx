@@ -91,7 +91,7 @@ export const UserAnotherOrderListTable: React.FC<
     },
     {
       dataIndex: "DepositDate",
-      title: "Ngày đặt cọc",
+      title: "TimeLine",
       width: 240,
       render: (_, record) => (
         <React.Fragment>

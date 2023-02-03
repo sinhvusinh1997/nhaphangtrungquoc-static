@@ -71,11 +71,7 @@ const Index: TNextPageWithLayout = () => {
 
   const _onExportExcel = async () => {
     try {
-      const res = await user.exportExcel({
-        RoleID: newUser?.UserGroupId,
-        UID: newUser?.UserId,
-        IsEmployee: 1,
-      });
+      const res = await user.exportExcel({ ...filter, PageSize: 99999 });
       router.push(`${res.Data}`);
     } catch (error) {
       toast.error(error);
@@ -87,7 +83,7 @@ const Index: TNextPageWithLayout = () => {
       <div className="">
         <EmployeeManagementFilter
           handleFilter={(newFilter) => handleFilter(newFilter)}
-          userGroupCatalogue={userGroup}
+          userGroupCatalogue={userGroup?.filter((x) => x.Id !== 1)}
           handleAddStaff={() => setModal(true)}
           onExportExcel={_onExportExcel}
         />

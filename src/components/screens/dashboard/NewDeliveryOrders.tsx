@@ -13,7 +13,8 @@ export const NewDeliveryOrders = () => {
       {
         Current: 1,
         PageSize: 10,
-        Status: 1,
+        Status: 2,
+        OrderBy: "Id desc",
       },
     ],
     () =>
@@ -21,8 +22,8 @@ export const NewDeliveryOrders = () => {
         .getList({
           PageIndex: 1,
           PageSize: 10,
-          Status: 1,
-          OrderBy: "Created desc",
+          OrderBy: "Id desc",
+          Status: 2,
         })
         .then((res) => res?.Data?.Items),
     {
@@ -35,6 +36,7 @@ export const NewDeliveryOrders = () => {
         }),
     }
   );
+
   const columns: TColumnsType<TNewDeliveryOrders> = [
     {
       title: "ID",

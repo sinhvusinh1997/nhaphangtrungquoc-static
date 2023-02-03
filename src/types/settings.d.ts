@@ -45,12 +45,16 @@ type TConfig3 = {
   InsurancePercentTransport: number;
   AgentCurrency: number;
   NumberLinkOfOrder: number;
+  SaleTranportationPersent: number;
+  SalePayHelpPersent: numnber;
+  RemoveCartDay: numner;
 };
 
 type TConfig4 = {
   NotiPopupTitle: string;
   NotiPopupEmail: string;
   NotiPopup: string;
+  NotiRun: string;
 };
 
 type TConfig5 = {
@@ -146,6 +150,8 @@ type TTariffUser = {
   FeeBuyPro: number;
   FeeWeight: number;
   LessDeposit: number;
+  Money: number;
+  MoneyTo: number;
 };
 
 type TBank = TBaseReponseParams & {

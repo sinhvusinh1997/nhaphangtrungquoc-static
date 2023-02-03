@@ -38,19 +38,14 @@ export const OutStockForm = () => {
     }
   }, [filter.UID, filter.OrderType]);
 
-  const { isFetching, data } = useQuery(
-    ["users"],
-    () =>
-      user
-        .getList({
-          PageIndex: 1,
-          PageSize: 1000000,
-          OrderBy: "Id desc",
-        })
-        .then((res) => res.Data),
-    {
-      retry: false,
-    }
+  const { isFetching, data } = useQuery(["users"], () =>
+    user
+      .getList({
+        PageIndex: 1,
+        PageSize: 1000000,
+        OrderBy: "Id desc",
+      })
+      .then((res) => res.Data)
   );
 
   return (
@@ -109,7 +104,7 @@ export const OutStockForm = () => {
             }
             icon="fas fa-hand-holding-box"
             btnIconClass="!mr-2"
-            title="Lấy đơn vận chuyện hộ!"
+            title="Lấy đơn vận chuyển hộ!"
             toolip=""
           />
         </div>

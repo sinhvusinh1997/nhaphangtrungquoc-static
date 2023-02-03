@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { mainOrder } from "~/api";
 import { ActionButton, DataTable, toast } from "~/components";
 import { FilterSelect } from "~/components/globals/filterBase";
-import { employeeData, orderStatus } from "~/configs/appConfigs";
+import { orderStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 
@@ -182,7 +182,7 @@ export const OrderListTable: React.FC<
                     type: 2,
                   })
                 }
-                handleSearch={(val) => console.log(val)}
+                handleSearch={(val) => val}
                 menuPortalTarget={document.querySelector(
                   "div.ant-table-wrapper"
                 )}
@@ -244,141 +244,143 @@ export const OrderListTable: React.FC<
     },
     {
       dataIndex: "DepositDate",
-      title: "Ngày",
+      title: "TimeLine",
       render: (_, record) => {
-        if (record?.Status === 1) {
-          return (
-            <div className="flex flex-col">
-              <span>{_format.getVNDate(record?.CancelDate)}</span>
-              <Tag color="#000" className="w-fit">
-                {record?.StatusName}
-              </Tag>
-            </div>
-          );
-        } else {
-          return (
-            <div className="text-left">
-              {record.Created && (
-                <p
-                  className={clsx(
-                    !record.DepositDate &&
-                      !record.DateBuy &&
-                      !record.DateTQ &&
-                      !record.DateVN &&
-                      !record.PayDate &&
-                      !record.CompleteDate &&
-                      " text-warning ",
-                    "flex justify-between px-2"
-                  )}
-                >
-                  <span>Lên đơn:</span>{" "}
-                  <span>
-                    {" "}
-                    {_format.getVNDate(record.Created, "HH:mm")} -
-                    {_format.getVNDate(record.Created, "DD/MM/YYYY")}
-                  </span>
-                </p>
-              )}
-              {record.DepositDate && (
-                <p
-                  className={clsx(
+        // if (record?.Status === 1) {
+        //   return (
+        //     <div className="flex flex-col">
+        //       <span>{_format.getVNDate(record?.CancelDate)}</span>
+        //       <Tag color="#000" className="w-fit">
+        //         {record?.StatusName}
+        //       </Tag>
+        //     </div>
+        //   );
+        // } else {
+        return (
+          <div className="text-left">
+            {record.Created && (
+              <p
+                className={clsx(
+                  !record.DepositDate &&
                     !record.DateBuy &&
-                      !record.DateTQ &&
-                      !record.DateVN &&
-                      !record.PayDate &&
-                      !record.CompleteDate &&
-                      " text-warning ",
-                    "flex justify-between px-2"
-                  )}
-                >
-                  <span>Đặt cọc:</span>{" "}
-                  <span>
-                    {" "}
-                    {_format.getVNDate(record.DepositDate, "HH:mm")} -
-                    {_format.getVNDate(record.DepositDate, "DD/MM/YYYY")}
-                  </span>
-                </p>
-              )}
-              {record.DateBuy && (
-                <p
-                  className={clsx(
                     !record.DateTQ &&
-                      !record.DateVN &&
-                      !record.PayDate &&
-                      !record.CompleteDate &&
-                      " text-warning ",
-                    "flex justify-between px-2"
-                  )}
-                >
-                  <span>Đặt hàng:</span>
-                  <span>
-                    {" "}
-                    {_format.getVNDate(record.DateBuy, "HH:mm")} -
-                    {_format.getVNDate(record.DateBuy, "DD/MM/YYYY")}
-                  </span>
-                </p>
-              )}
-              {record.DateTQ && (
-                <p
-                  className={clsx(
                     !record.DateVN &&
-                      !record.PayDate &&
-                      !record.CompleteDate &&
-                      " text-warning ",
-                    "flex justify-between px-2"
-                  )}
-                >
-                  <span>Đã về kho TQ:</span>{" "}
-                  <span>
-                    {" "}
-                    {_format.getVNDate(record.DateTQ, "HH:mm")} -
-                    {_format.getVNDate(record.DateTQ, "DD/MM/YYYY")}
-                  </span>
-                </p>
-              )}
-              {record.DateVN && (
-                <p
-                  className={clsx(
-                    !record.PayDate && !record.CompleteDate && "text-warning",
-                    "flex justify-between px-2 "
-                  )}
-                >
-                  <span>Đã về kho VN:</span>
-                  <span>
-                    {" "}
-                    {_format.getVNDate(record.DateVN, "HH:mm")} -
-                    {_format.getVNDate(record.DateVN, "DD/MM/YYYY")}
-                  </span>
-                </p>
-              )}
-              {record.PayDate && (
-                <p
-                  className={clsx(
-                    !record.CompleteDate && "text-warning ",
-                    "flex justify-between px-2"
-                  )}
-                >
-                  <span>Thanh toán:</span>
-                  <span>
-                    {" "}
-                    {_format.getVNDate(record.PayDate, "HH:mm")} -
-                    {_format.getVNDate(record.PayDate, "DD/MM/YYYY")}
-                  </span>
-                </p>
-              )}
-              {record.CompleteDate && (
-                <p className=" text-warning flex justify-between px-2">
-                  <span>Hoàn thành:</span>{" "}
-                  <span>
-                    {" "}
-                    {_format.getVNDate(record.CompleteDate, "HH:mm")} -
-                    {_format.getVNDate(record.CompleteDate, "DD/MM/YYYY")}
-                  </span>
-                </p>
-              )}
-            </div>
-          );
-        }
+                    !record.PayDate &&
+                    !record.CompleteDate &&
+                    " text-warning ",
+                  "flex justify-between px-2"
+                )}
+              >
+                <span>Lên đơn:</span>
+                <span>
+                  {_format.getVNDate(record.Created, "HH:mm")} -
+                  {_format.getVNDate(record.Created, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+            {record.DepositDate && (
+              <p
+                className={clsx(
+                  !record.DateBuy &&
+                    !record.DateTQ &&
+                    !record.DateVN &&
+                    !record.PayDate &&
+                    !record.CompleteDate &&
+                    " text-warning ",
+                  "flex justify-between px-2"
+                )}
+              >
+                <span>Đặt cọc:</span>
+                <span>
+                  {_format.getVNDate(record.DepositDate, "HH:mm")} -
+                  {_format.getVNDate(record.DepositDate, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+            {record.DateBuy && (
+              <p
+                className={clsx(
+                  !record.DateTQ &&
+                    !record.DateVN &&
+                    !record.PayDate &&
+                    !record.CompleteDate &&
+                    " text-warning ",
+                  "flex justify-between px-2"
+                )}
+              >
+                <span>Đặt hàng:</span>
+                <span>
+                  {_format.getVNDate(record.DateBuy, "HH:mm")} -
+                  {_format.getVNDate(record.DateBuy, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+            {record.DateTQ && (
+              <p
+                className={clsx(
+                  !record.DateVN &&
+                    !record.PayDate &&
+                    !record.CompleteDate &&
+                    " text-warning ",
+                  "flex justify-between px-2"
+                )}
+              >
+                <span>Đã về kho TQ:</span>
+                <span>
+                  {_format.getVNDate(record.DateTQ, "HH:mm")} -
+                  {_format.getVNDate(record.DateTQ, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+            {record.DateVN && (
+              <p
+                className={clsx(
+                  !record.PayDate && !record.CompleteDate && "text-warning",
+                  "flex justify-between px-2 "
+                )}
+              >
+                <span>Đã về kho VN:</span>
+                <span>
+                  {_format.getVNDate(record.DateVN, "HH:mm")} -
+                  {_format.getVNDate(record.DateVN, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+            {record.PayDate && (
+              <p
+                className={clsx(
+                  !record.CompleteDate && "text-warning ",
+                  "flex justify-between px-2"
+                )}
+              >
+                <span>Thanh toán:</span>
+                <span>
+                  {_format.getVNDate(record.PayDate, "HH:mm")} -
+                  {_format.getVNDate(record.PayDate, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+            {record.CompleteDate && (
+              <p className=" text-warning flex justify-between px-2">
+                <span>Hoàn thành:</span>
+                <span>
+                  {_format.getVNDate(record.CompleteDate, "HH:mm")} -
+                  {_format.getVNDate(record.CompleteDate, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+            {record.CancelDate && (
+              <p className="text-warning font-bold flex justify-between px-2">
+                <span>Huỷ:</span>
+                <span>
+                  {_format.getVNDate(record.CancelDate, "HH:mm")} -
+                  {_format.getVNDate(record.CancelDate, "DD/MM/YYYY")}
+                </span>
+              </p>
+            )}
+          </div>
+        );
+        // }
       },
       width: 280,
       responsive: ["xl"],

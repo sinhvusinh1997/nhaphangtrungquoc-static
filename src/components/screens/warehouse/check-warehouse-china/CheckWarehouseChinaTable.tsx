@@ -1,7 +1,7 @@
-import { Popconfirm } from "antd";
+import { Input, Popconfirm, Tooltip } from "antd";
 import JsBarcode from "jsbarcode";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import {
   ActionButton,
@@ -48,16 +48,14 @@ export const CheckWarehouseChinaTable: React.FC<
   handleAssign,
   onIsLost,
   type = "china",
+  getValues,
   setValue,
 }) => {
   const componentRef = useRef<ReactToPrint>(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-
-  // function handleSetDefaultId(id: number) {
-  // 	return bigPackageList.filter((item) => item.Id === id);
-  // }
+  const [VolumePaymentView, setVolumePaymentView] = useState(0);
 
   // của trung quốc
   const columns: TColumnsType<TWarehouseCN> = [
@@ -76,16 +74,7 @@ export const CheckWarehouseChinaTable: React.FC<
         }
         return (
           <Link href={url}>
-            <a
-              target={"_blank"}
-              // onClick={() =>
-              // 	router.push({
-              // 		pathname:
-              // 			record?.OrderType === 1 ? "/manager/order/order-list/detail" : "/manager/deposit/deposit-list/detail",
-              // 		query: {id: record?.OrderType === 1 ? record?.MainOrderId : record?.TransportationOrderId},
-              // 	})
-              // }
-            >
+            <a target={"_blank"}>
               {record?.MainOrderId
                 ? record?.MainOrderId
                 : record?.TransportationOrderId}
@@ -148,6 +137,15 @@ export const CheckWarehouseChinaTable: React.FC<
       align: "right",
       width: 70,
       responsive: ["sm"],
+      render: (_, record) => {
+        return (
+          <Input
+            value={_}
+            className="max-w-[60px] h-[30px] text-center"
+            disabled
+          />
+        );
+      },
     },
     {
       dataIndex: "TotalOrderQuantity",
@@ -155,19 +153,29 @@ export const CheckWarehouseChinaTable: React.FC<
       align: "right",
       width: 70,
       responsive: ["md"],
+      render: (_, record) => {
+        return (
+          <Input
+            value={_}
+            className="max-w-[60px] h-[30px] text-center"
+            disabled
+          />
+        );
+      },
     },
     {
       dataIndex: "VolumePayment",
       title: "Số khối",
       align: "right",
       width: 80,
-      render: (_, record, index) => {
+      render: (_, record) => {
         return (
-          <FormInputNumber
-            control={control}
-            name={`${name}.${index}.VolumePayment` as any}
-            placeholder=""
-            defaultValue={!_ ? 0 : _}
+          <Input
+            value={
+              !VolumePaymentView ? record?.VolumePayment : VolumePaymentView
+            }
+            className="max-w-[60px] h-[30px] text-center"
+            disabled
           />
         );
       },
@@ -190,40 +198,66 @@ export const CheckWarehouseChinaTable: React.FC<
       dataIndex: "Width",
       title: "Kích thước",
       align: "right",
-      render: (_, __, index) => (
-        <React.Fragment>
-          <div className="flex items-center">
-            d:
-            <FormInputNumber
-              control={control}
-              name={`${name}.${index}.Length` as any}
-              placeholder=""
-              inputClassName="max-w-[60px] h-[30px] text-center"
-              onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-            />
-          </div>
-          <div className="flex items-center my-2">
-            r:
-            <FormInputNumber
-              control={control}
-              name={`${name}.${index}.Width` as any}
-              placeholder=""
-              inputClassName="max-w-[60px] h-[30px] text-center"
-              onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-            />
-          </div>
-          <div className="flex items-center">
-            c:
-            <FormInputNumber
-              control={control}
-              name={`${name}.${index}.Height` as any}
-              placeholder=""
-              inputClassName="max-w-[60px] h-[30px] text-center"
-              onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-            />
-          </div>
-        </React.Fragment>
-      ),
+      render: (_, __, index) => {
+        return (
+          <React.Fragment>
+            <div className="flex items-center">
+              d:
+              <FormInputNumber
+                control={control}
+                name={`${name}.${index}.Length` as any}
+                placeholder=""
+                defaultValue={_?.Length || 0}
+                inputClassName="max-w-[60px] h-[30px] text-center"
+                onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+                callback={(val) => {
+                  if (val !== _?.Length) {
+                    setVolumePaymentView(
+                      (__?.Length * __?.Width * __?.Height) / 1000000
+                    );
+                  }
+                }}
+              />
+            </div>
+            <div className="flex items-center my-2">
+              r:
+              <FormInputNumber
+                control={control}
+                name={`${name}.${index}.Width` as any}
+                placeholder=""
+                defaultValue={_?.Width || 0}
+                inputClassName="max-w-[60px] h-[30px] text-center"
+                onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+                callback={(val) => {
+                  if (val !== _?.Width) {
+                    setVolumePaymentView(
+                      (__?.Length * __?.Width * __?.Height) / 1000000
+                    );
+                  }
+                }}
+              />
+            </div>
+            <div className="flex items-center">
+              c:
+              <FormInputNumber
+                control={control}
+                name={`${name}.${index}.Height` as any}
+                placeholder=""
+                defaultValue={_?.Height || 0}
+                inputClassName="max-w-[60px] h-[30px] text-center"
+                onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+                callback={(val) => {
+                  if (val !== _?.Length) {
+                    setVolumePaymentView(
+                      (__?.Length * __?.Width * __?.Height) / 1000000
+                    );
+                  }
+                }}
+              />
+            </div>
+          </React.Fragment>
+        );
+      },
     },
     {
       dataIndex: "BigPackageId",
@@ -618,25 +652,44 @@ export const CheckWarehouseChinaTable: React.FC<
       title: "Số loại",
       align: "right",
       width: 70,
+      render: (_) => {
+        return (
+          <Input
+            value={_}
+            disabled
+            className="max-w-[60px] h-[30px] text-center"
+          />
+        );
+      },
     },
     {
       dataIndex: "TotalOrderQuantity",
       title: "Số lượng",
       align: "right",
       width: 70,
+      render: (_) => {
+        return (
+          <Input
+            value={_}
+            disabled
+            className="max-w-[60px] h-[30px] text-center"
+          />
+        );
+      },
     },
     {
       dataIndex: "VolumePayment",
       title: "Số khối",
       align: "right",
       width: 80,
-      render: (_, record, index) => {
+      render: (_, record) => {
         return (
-          <FormInputNumber
-            control={control}
-            name={`${name}.${index}.VolumePayment` as any}
-            placeholder=""
-            defaultValue={!_ ? 0 : _}
+          <Input
+            value={
+              !VolumePaymentView ? record?.VolumePayment : VolumePaymentView
+            }
+            className="max-w-[60px] h-[30px] text-center"
+            disabled
           />
         );
       },
@@ -671,6 +724,13 @@ export const CheckWarehouseChinaTable: React.FC<
               placeholder=""
               inputClassName="max-w-[60px] h-[30px] text-center"
               onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+              callback={(val) => {
+                if (val !== _?.Length) {
+                  setVolumePaymentView(
+                    (__?.Length * __?.Width * __?.Height) / 1000000
+                  );
+                }
+              }}
             />
           </div>
           <div className="flex items-center my-2">
@@ -681,6 +741,13 @@ export const CheckWarehouseChinaTable: React.FC<
               placeholder=""
               inputClassName="max-w-[60px] h-[30px] text-center"
               onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+              callback={(val) => {
+                if (val !== _?.Width) {
+                  setVolumePaymentView(
+                    (__?.Length * __?.Width * __?.Height) / 1000000
+                  );
+                }
+              }}
             />
           </div>
           <div className="flex items-center">
@@ -691,10 +758,46 @@ export const CheckWarehouseChinaTable: React.FC<
               placeholder=""
               inputClassName="max-w-[60px] h-[30px] text-center"
               onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+              callback={(val) => {
+                if (val !== _?.Height) {
+                  setVolumePaymentView(
+                    (__?.Length * __?.Width * __?.Height) / 1000000
+                  );
+                }
+              }}
             />
           </div>
         </React.Fragment>
       ),
+    },
+    {
+      dataIndex: "ProductType",
+      title: "Loại sản phẩm",
+      width: 120,
+      render: (_, __, index) => (
+        <FormInput
+          control={control}
+          name={`${name}.${index}.ProductType` as any}
+          placeholder=""
+          inputClassName="max-w-[120px] h-[30px]"
+          onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+        />
+      ),
+    },
+    {
+      dataIndex: "StaffNoteCheck",
+      title: "NV Kho KD",
+      width: 120,
+      render: (_, __, index) => (
+        <FormInput
+          control={control}
+          name={`${name}.${index}.StaffNoteCheck` as any}
+          placeholder=""
+          inputClassName="max-w-[120px] h-[30px]"
+          onEnter={handleSubmit((data) => onPress([data[name][index]]))}
+        />
+      ),
+      responsive: ["xl"],
     },
     {
       dataIndex: "Description",
@@ -703,7 +806,7 @@ export const CheckWarehouseChinaTable: React.FC<
       render: (_, __, index) => (
         <FormTextarea
           control={control}
-          name={`${name}.${index}.UserNote` as any}
+          name={`${name}.${index}.Description` as any}
           placeholder=""
           rows={2}
           onEnter={handleSubmit((data) => onPress([data[name][index]]))}
@@ -1188,7 +1291,7 @@ export const CheckWarehouseChinaTable: React.FC<
           <div className="mr-2">
             {data?.[0]?.UserName || ""} | {data?.[0]?.Phone || ""}
           </div>
-          <span className="">{`hey: (${data?.length})`}</span>
+          <span className="">{`(${data?.length})`}</span>
         </div>
       </div>
       <DataTable

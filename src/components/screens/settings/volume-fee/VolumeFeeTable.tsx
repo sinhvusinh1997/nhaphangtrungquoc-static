@@ -56,13 +56,13 @@ export const VolumeFeeTable: FC<TTable<TVolumeFee | any> & TProps> = ({
     },
     {
       dataIndex: "VolumeFrom",
-      title: "Thể tích từ",
+      title: "Thể tích từ (m3)",
       align: "right",
       render: (_, record) => _format.getVND(record?.VolumeFrom, ""),
     },
     {
       dataIndex: "VolumeTo",
-      title: "Thể tích đến",
+      title: "Thể tích đến (m3)",
       align: "right",
       render: (_, record) => _format.getVND(record?.VolumeTo, ""),
     },

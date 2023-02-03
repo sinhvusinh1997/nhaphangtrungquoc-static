@@ -18,45 +18,48 @@ export const SalesMoneyStatisticTable = ({ data }) => {
       dataIndex: "Total",
       title: "Tổng tiền (VNĐ)",
       align: "right",
-      render: (money: number) =>
-        money !== null && (
-          <div className="">
-            <span>{_format.getVND(money, " ")}</span>
-          </div>
-        ),
+      render: (money: number) => {
+        return (
+          money !== null && (
+            <div className="">
+              <span>{_format.getVND(money, " ")}</span>
+            </div>
+          )
+        );
+      },
     },
-    {
-      dataIndex: "NotPay",
-      title: (
-        <>
-          ĐẶT CỌC &#8594; HÀNG VỀ VN <br /> (VNĐ)
-        </>
-      ),
-      render: (money: number) =>
-        money !== null && (
-          <div className="">
-            <span>{_format.getVND(money, " ")}</span>
-          </div>
-        ),
-      responsive: ["xl"],
-      align: "right",
-    },
-    {
-      dataIndex: "Pay",
-      title: (
-        <>
-          ĐÃ THANH TOÁN &#8594; ĐÃ HOÀN THÀNH <br /> (VNĐ)
-        </>
-      ),
-      align: "right",
-      render: (money: number) =>
-        money !== null && (
-          <div className="">
-            <span>{_format.getVND(money, " ")}</span>
-          </div>
-        ),
-      responsive: ["xl"],
-    },
+    // {
+    //   dataIndex: "NotPay",
+    //   title: (
+    //     <>
+    //       ĐẶT CỌC &#8594; HÀNG VỀ VN <br /> (VNĐ)
+    //     </>
+    //   ),
+    //   render: (money: number) =>
+    //     money !== null && (
+    //       <div className="">
+    //         <span>{_format.getVND(money, " ")}</span>
+    //       </div>
+    //     ),
+    //   responsive: ["xl"],
+    //   align: "right",
+    // },
+    // {
+    //   dataIndex: "Pay",
+    //   title: (
+    //     <>
+    //       ĐÃ THANH TOÁN &#8594; ĐÃ HOÀN THÀNH <br /> (VNĐ)
+    //     </>
+    //   ),
+    //   align: "right",
+    //   render: (money: number) =>
+    //     money !== null && (
+    //       <div className="">
+    //         <span>{_format.getVND(money, " ")}</span>
+    //       </div>
+    //     ),
+    //   responsive: ["xl"],
+    // },
   ];
 
   const expandable = {
@@ -81,16 +84,20 @@ export const SalesMoneyStatisticTable = ({ data }) => {
   };
 
   return (
-    <DataTable
-      {...{
-        columns,
-        data,
-        bordered: true,
-        // summary,
-        rowKey: "Name",
-        expandable: expandable,
-      }}
-    />
+    <>
+      {
+        <DataTable
+          {...{
+            columns,
+            data,
+            bordered: true,
+            // summary,
+            rowKey: "Name",
+            expandable: expandable,
+          }}
+        />
+      }
+    </>
   );
 };
 

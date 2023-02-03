@@ -80,6 +80,13 @@ export const OutstockPaymentDetail: React.FC<
     },
     {
       dataIndex: "SmallPackage",
+      title: "Số khối (m3)",
+      align: "right",
+      render: (smallPackage: TSmallPackage) =>
+        _format.getVND(smallPackage?.VolumePayment, ""),
+    },
+    {
+      dataIndex: "SmallPackage",
       title: "Trạng thái kiện",
       render: (smallPackage: TSmallPackage) => (
         <Tag
@@ -156,7 +163,7 @@ export const OutstockPaymentDetail: React.FC<
     return (
       <React.Fragment>
         <Table.Summary.Row>
-          <Table.Summary.Cell index={0} colSpan={6}>
+          <Table.Summary.Cell index={0} colSpan={7}>
             Tổng cân nặng
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} align="right">
@@ -172,7 +179,7 @@ export const OutstockPaymentDetail: React.FC<
 					</Table.Summary.Cell>
 				</Table.Summary.Row> */}
         <Table.Summary.Row>
-          <Table.Summary.Cell index={0} colSpan={6}>
+          <Table.Summary.Cell index={0} colSpan={7}>
             Tiền cần thanh toán
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} align="right">
@@ -265,21 +272,10 @@ export const OutstockPaymentDetail: React.FC<
             <tr>
               <th>Stt</th>
               <th>Mã kiện</th>
-              <th>
-                Cân thực <br /> (kg)
-              </th>
-              <th>
-                Cân quy đổi <br /> (kg)
-              </th>
-              <th>
-                Cân tính tiền <br /> (kg)
-              </th>
-              <th>
-                Kích thước <br /> (D x R x C)
-              </th>
-              <th>
-                Phí cân nặng <br /> (VNĐ)
-              </th>
+              <th>Cân thực (kg)</th>
+              <th>Số khối (m3)</th>
+              <th>Kích thước (D x R x C)</th>
+              <th>Phí cân nặng (VNĐ)</th>
             </tr>
           </thead>
           <tbody>
@@ -289,15 +285,14 @@ export const OutstockPaymentDetail: React.FC<
                   <td>{++index}</td>
                   <td>{item?.OrderTransactionCode}</td>
                   <td>{item?.SmallPackage?.Weight}</td>
-                  <td>{item?.SmallPackage?.Volume}</td>
-                  <td>{item?.SmallPackage?.PayableWeight}</td>
+                  <td>{item?.SmallPackage?.VolumePayment}</td>
                   <td>{item?.SmallPackage?.LWH}</td>
                   <td>{_format.getVND(item?.SmallPackage?.PriceWeight, "")}</td>
                 </tr>
               );
             })}
             <tr>
-              <td colSpan={6}>Tổng tiền cần thanh toán</td>
+              <td colSpan={5}>Tổng tiền cần thanh toán</td>
               <td>
                 {_format.getVND(
                   Number(

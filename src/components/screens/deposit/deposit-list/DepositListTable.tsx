@@ -3,8 +3,8 @@ import router from "next/router";
 import React from "react";
 import { useMutation } from "react-query";
 import { transportationOrder } from "~/api";
-import { ActionButton, DataTable, toast } from "~/components";
-import { orderStatusData, transportStatus } from "~/configs/appConfigs";
+import { ActionButton, DataTable, FilterSelect, toast } from "~/components";
+import { transportStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 
@@ -15,6 +15,7 @@ type TProps = {
   saleList?: any;
   filter;
   handleFilter: (newFilter) => void;
+  userSale;
 };
 
 export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
@@ -24,6 +25,7 @@ export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
   RoleID,
   filter,
   handleFilter,
+  userSale,
 }) => {
   const mutationUpdate = useMutation(transportationOrder.update, {
     onSuccess: () => {
@@ -45,12 +47,87 @@ export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
     },
     {
       dataIndex: "UserName",
-      title: (
-        <>
-          User <br /> đặt hàng
-        </>
-      ),
+      title: <>UserName</>,
       width: 120,
+    },
+    {
+      dataIndex: "WareHouseFrom",
+      title: <>Thông tin</>,
+      responsive: ["xl"],
+      width: 250,
+      render: (_, record) => {
+        return (
+          <>
+            <div className="">
+              <span className="font-semibold">Kho Trung Quốc: </span>
+              <span>{record?.WareHouseFrom}</span>
+            </div>
+            <div className="">
+              <span className="font-semibold">Kho Việt Nam: </span>
+              <span>{record?.WareHouseTo}</span>
+            </div>
+            <div className="">
+              <span className="font-semibold">Phương thức: </span>
+              <span>{record?.ShippingTypeName}</span>
+            </div>
+          </>
+        );
+      },
+    },
+    {
+      dataIndex: "TotalPriceVND",
+      title: <>Thông tin phí</>,
+      responsive: ["xl"],
+      width: 250,
+      render: (_, record) => {
+        return (
+          <>
+            <div className="">
+              <span className="font-semibold">Phí cần nặng: </span>
+              <span>{_format.getVND(record?.PayableWeight)}</span>
+            </div>
+            <div className="">
+              <span className="font-semibold">Phí khối: </span>
+              <span>{_format.getVND(record?.VolumePayment)}</span>
+            </div>
+            <div className="">
+              <span className="font-semibold">Phí vận chuyển: </span>
+              <span>{_format.getVND(record?.TotalPriceVND)}</span>
+            </div>
+          </>
+        );
+      },
+    },
+    {
+      dataIndex: "SalerID",
+      title: <>Nhân viên</>,
+      render: (_, record) => {
+        return (
+          <FilterSelect
+            placeholder="Kinh doanh"
+            data={userSale}
+            defaultValue={{
+              Id: userSale?.find((x) => x.Id === record?.SalerID)?.Id,
+              UserName: userSale?.find((x) => x.Id === record?.SalerID)
+                ?.UserName,
+            }}
+            select={{ label: "UserName", value: "Id" }}
+            callback={async (value) => {
+              transportationOrder
+                .updateStaff({ SalerID: value, Id: record?.Id })
+                .then(() => {
+                  toast.success("Cập nhật nhân viên thành công!");
+                  refetch();
+                });
+            }}
+            handleSearch={(val) => val}
+          />
+        );
+      },
+    },
+    {
+      dataIndex: "OrderTransactionCode",
+      title: <>Mã vận đơn</>,
     },
     {
       dataIndex: "Created",
@@ -59,62 +136,54 @@ export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
       render: (date) => date && _format.getVNDate(date),
       responsive: ["xl"],
     },
-    {
-      dataIndex: "OrderTransactionCode",
-      title: (
-        <>
-          Mã <br /> vận đơn
-        </>
-      ),
-      width: 240,
-    },
-    {
-      dataIndex: "WareHouseFrom",
-      title: (
-        <>
-          Kho <br /> Trung Quốc
-        </>
-      ),
-      responsive: ["xl"],
-    },
-    {
-      dataIndex: "WareHouseTo",
-      title: (
-        <>
-          Kho <br /> Việt Nam
-        </>
-      ),
-      responsive: ["xl"],
-    },
-    {
-      dataIndex: "ShippingTypeName",
-      title: (
-        <>
-          Phương thức <br /> vận chuyển
-        </>
-      ),
-      responsive: ["xl"],
-    },
-    {
-      dataIndex: "TotalPriceVND",
-      title: (
-        <>
-          Tổng tiền <br /> (VNĐ)
-        </>
-      ),
-      align: "right",
-      render: (fee) => _format.getVND(fee, " "),
-    },
-    {
-      dataIndex: "PayableWeight",
-      align: "right",
-      title: (
-        <>
-          Cân nặng <br /> (KG)
-        </>
-      ),
-      render: (weight) => _format.getVND(weight, " "),
-    },
+    // {
+    //   dataIndex: "WareHouseTo",
+    //   title: (
+    //     <>
+    //       Kho <br /> Việt Nam
+    //     </>
+    //   ),
+    //   responsive: ["xl"],
+    // },
+    // {
+    //   dataIndex: "ShippingTypeName",
+    //   title: (
+    //     <>
+    //       Phương thức <br /> vận chuyển
+    //     </>
+    //   ),
+    //   responsive: ["xl"],
+    // },
+    // {
+    //   dataIndex: "TotalPriceVND",
+    //   title: (
+    //     <>
+    //       Tổng tiền <br /> (VNĐ)
+    //     </>
+    //   ),
+    //   align: "right",
+    //   render: (fee) => _format.getVND(fee, " "),
+    // },
+    // {
+    //   dataIndex: "PayableWeight",
+    //   align: "right",
+    //   title: (
+    //     <>
+    //       Cân nặng <br /> (KG)
+    //     </>
+    //   ),
+    //   render: (_) => _format.getVND(_, " "),
+    // },
+    // {
+    //   dataIndex: "VolumePayment",
+    //   align: "right",
+    //   title: (
+    //     <>
+    //       Cân nặng <br /> (KG)
+    //     </>
+    //   ),
+    //   render: (_) => _format.getVND(_, " "),
+    // },
     {
       dataIndex: "Status",
       title: "Trạng thái",

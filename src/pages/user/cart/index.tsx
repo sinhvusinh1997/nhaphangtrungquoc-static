@@ -105,15 +105,15 @@ const Index: TNextPageWithLayout = () => {
     retry: false,
   });
 
-  function handleCalTotalPriceSelect(arr) {
-    return arr.map((itemId) => {
-      for (let i in currentCart) {
-        if (itemId === currentCart[i]?.Id) {
-          return currentCart[i]?.PriceVND;
-        }
-      }
-    });
-  }
+  // function handleCalTotalPriceSelect(arr) {
+  //   return arr.map((itemId) => {
+  //     for (let i in currentCart) {
+  //       if (itemId === currentCart[i]?.Id) {
+  //         return currentCart[i]?.PriceVND;
+  //       }
+  //     }
+  //   });
+  // }
 
   const toggleAllShopId = () => {
     setChosenShopIds(
@@ -138,8 +138,8 @@ const Index: TNextPageWithLayout = () => {
       } else {
         newState = oldState.filter((id) => id !== shopId);
       }
-      const totalPrice = handleCalTotalPriceSelect(newState);
-      setTotalSelectPrice(totalPrice.reduce((a, b) => a + b, 0));
+      // const totalPrice = handleCalTotalPriceSelect(newState);
+      // setTotalSelectPrice(totalPrice.reduce((a, b) => a + b, 0));
       return newState;
     });
   };
@@ -253,8 +253,9 @@ const Index: TNextPageWithLayout = () => {
                     allShopIds={chosenShopIds}
                     chosenShopIds={chosenShopIds}
                     toggleAllShopId={toggleAllShopId}
-                    totalSelectPrice={totalSelectPrice}
+                    // totalSelectPrice={totalSelectPrice}
                     onPress={onPress}
+                    refetchCart={refetchCart}
                   />
                 </div>
               </div>

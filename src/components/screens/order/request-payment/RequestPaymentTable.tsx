@@ -2,18 +2,19 @@ import { Pagination, Tag } from "antd";
 import router from "next/router";
 import React from "react";
 import { ActionButton, DataTable } from "~/components";
-import { paymentData, paymentStatus } from "~/configs/appConfigs";
+import { paymentStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 
 type TProps = {
   filter;
   handleFilter: (newFilter) => void;
+  userSale;
 };
 
 export const RequestPaymentTable: React.FC<
   TTable<TRequestPaymentOrder> & TProps
-> = ({ data, filter, handleFilter, loading }) => {
+> = ({ data, filter, handleFilter, loading, userSale }) => {
   const columns: TColumnsType<TRequestPaymentOrder> = [
     {
       dataIndex: "Id",
@@ -24,8 +25,18 @@ export const RequestPaymentTable: React.FC<
       title: "Username",
     },
     {
-      dataIndex: "Note",
-      title: "Ghi chú khách hàng",
+      dataIndex: "SalerID",
+      title: (
+        <>
+          Nhân viên <br /> kinh doanh
+        </>
+      ),
+      render: (_, record) => {
+        const salerName = userSale.find(
+          (x) => x.Id === record?.SalerID
+        )?.UserName;
+        return <>{salerName || "-"}</>;
+      },
     },
     {
       dataIndex: "TotalPrice",
@@ -44,6 +55,10 @@ export const RequestPaymentTable: React.FC<
       title: "Tỷ giá",
       align: "right",
       render: (currency) => _format.getVND(currency, " "),
+    },
+    {
+      dataIndex: "Note",
+      title: "Ghi chú khách hàng",
     },
     {
       dataIndex: "Status",

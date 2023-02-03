@@ -4,12 +4,14 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { transportationOrder } from "~/api";
-import { ActionButton, DataTable, FormInput, toast } from "~/components";
 import {
-  EOrderStatusData,
-  orderStatusData,
-  transportStatus,
-} from "~/configs/appConfigs";
+  ActionButton,
+  DataTable,
+  FormInput,
+  showToast,
+  toast,
+} from "~/components";
+import { EOrderStatusData, transportStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 type TProps = {
@@ -82,6 +84,16 @@ const DetailInfo = (record) => {
         </div>
         <div className={divStyle}>
           Phí cân nặng:{" "}
+          <span>{_format.getVND(record?.record?.FeeWeightPerKg)}</span>
+        </div>
+        <div className={divStyle}>
+          Số khối: <span>{record?.record?.VolumePayment ?? 0} m3</span>
+        </div>
+        <div className={divStyle}>
+          Phí khối: <span>{_format.getVND(record?.record?.FeePerVolume)}</span>
+        </div>
+        <div className={divStyle}>
+          Phí vận chuyển:{" "}
           <span>{_format.getVND(record?.record?.DeliveryPrice)}</span>
         </div>
         <div className={divStyle}>
@@ -204,9 +216,19 @@ export const UserDepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
                       </b>
                     ),
                     onOk: () =>
-                      transportationOrder.makePayment([record.Id]).then(() => {
-                        queryClient.invalidateQueries("userDepositList");
-                      }),
+                      transportationOrder
+                        .makePayment([record.Id])
+                        .then(() => {
+                          queryClient.invalidateQueries("userDepositList");
+                        })
+                        .catch((error) => {
+                          showToast({
+                            title: "Đã xảy ra lỗi!",
+                            message: (error as any)?.response?.data
+                              ?.ResultMessage,
+                            type: "error",
+                          });
+                        }),
                   })
                 }
                 icon="fas fa-money-check"
@@ -244,7 +266,7 @@ export const UserDepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
                 Modal.info({
                   title: (
                     <div className="text-[20px] font-bold">
-                      Thông tin chi tiết
+                      Thông tin chi tiết đơn #{record?.Id}
                     </div>
                   ),
                   className: "!w-fit",

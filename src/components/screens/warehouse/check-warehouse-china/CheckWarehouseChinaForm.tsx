@@ -57,6 +57,7 @@ export const CheckWarehouseChinaForm = () => {
     control: controlArray,
     handleSubmit: handleSubmitArray,
     setValue: setValueArray,
+    getValues: getValuesArray,
     watch: watchArray,
     unregister: unregisterArray,
   } = useForm<TForm>({
@@ -159,13 +160,10 @@ export const CheckWarehouseChinaForm = () => {
   const mutationUpdate = useMutation(smallPackage.update);
 
   const _onPress = async (data: TWarehouseCN[]) => {
-    data.forEach((d) => {
-      if (!d.VolumePayment) {
-        d.VolumePayment = 0;
-      }
-    });
-
     if (Object.keys(data).length) {
+      data.forEach((d) => {
+        d.VolumePayment = (d.Height * d.Width * d.Length) / 1000000;
+      });
       mutationUpdate
         .mutateAsync(data)
         .then((res) => {

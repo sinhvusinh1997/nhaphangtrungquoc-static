@@ -1,5 +1,5 @@
 import router from "next/router";
-import React, { useRef, useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { transportationOrder } from "~/api";
@@ -36,59 +36,55 @@ export const DepositListForm: React.FC<TProps> = ({
       defaultValues,
     });
 
-  const TotalPriceVNDRef = useRef(0);
-
   useDeepEffect(() => {
-    if (defaultValues) {
-      reset(defaultValues);
-      TotalPriceVNDRef.current =
-        getValues("TotalPriceVND") -
-        getValues("IsPackedPrice") -
-        getValues("InsuranceMoney") -
-        getValues("IsCheckProductPrice") -
-        getValues("CODFee") -
-        getValues("DeliveryPrice");
-    }
+    if (defaultValues) reset(defaultValues);
   }, [defaultValues]);
 
   const mutationUpdate = useMutation(transportationOrder.update, {
     onSuccess: () => {
       toast.success("Cập nhật ký gửi thành công");
-      router.push("/manager/deposit/deposit-list");
     },
     onError: toast.error,
   });
 
   const _onPress = (data: TUserDeposit) => {
-    // console.log(JSON.stringify(data));
     mutationUpdate.mutateAsync(data);
   };
 
-  const { warehouseTQ, warehouseVN, shippingTypeToWarehouse } = useCatalogue({
+  const { warehouseTQ, warehouseVN } = useCatalogue({
     warehouseTQEnabled: true,
     warehouseVNEnabled: true,
-    shippingTypeToWarehouseEnabled: true,
   });
 
-  const handleSetValue = useCallback(
-    (key: keyof TUserDeposit, value: any) => setValue(key, value),
-    []
-  );
-  // const formValue = useMemo(() => watch(), [watch() as TUserDeposit]);
+  const handleSetValue = useCallback((key: keyof TUserDeposit, value: any) => {
+    setValue(key, value);
+  }, []);
 
-  const handleSetNewTotal = () => {
-    const newTotal =
-      TotalPriceVNDRef.current +
-      (getValues("CODFee") ?? 0) +
-      (getValues("DeliveryPrice") ?? 0) +
-      (getValues("IsPackedPrice") ?? 0) +
-      (getValues("InsuranceMoney") ?? 0) +
-      (getValues("IsCheckProductPrice") ?? 0);
+  const handleCount = (key: keyof TUserDeposit, value: number) => {
+    const countValueWeight =
+      getValues("PayableWeight") * getValues("FeeWeightPerKg");
+    const countValueVolume =
+      getValues("VolumePayment") * getValues("FeePerVolume");
 
-    handleSetValue("TotalPriceVND", newTotal);
     handleSetValue(
-      "TotalPriceCNY",
-      Math.round((newTotal / defaultValues.Currency) * 100) / 100
+      "DeliveryPrice",
+      countValueVolume > countValueWeight ? countValueVolume : countValueWeight
+    );
+    const countValueCODFee = getValues("CODFeeTQ") * defaultValues?.Currency;
+    handleSetValue("CODFee", countValueCODFee);
+
+    const countValueTotal = [
+      "DeliveryPrice",
+      "IsCheckProductPrice",
+      "IsPackedPrice",
+      "InsuranceMoney",
+      "CODFee",
+    ].reduce((a, b: any) => a + getValues(b), 0);
+
+    handleSetValue(
+      "TotalPriceVND",
+      countValueTotal *
+        (!defaultValues?.FeeWeightCK ? 1 : defaultValues?.FeeWeightCK / 100)
     );
   };
 
@@ -190,7 +186,7 @@ export const DepositListForm: React.FC<TProps> = ({
             disabled
           />
         </div>
-        <div className="col-span-2 md:col-span-3 pt-4 border-t border-main md:hidden">
+        <div className="col-span-2 md:col-span-3 pt-4 border-t border-main">
           {(RoleID === 1 || RoleID === 3) && (
             <IconButton
               onClick={handleSubmit(_onPress)}
@@ -224,15 +220,65 @@ export const DepositListForm: React.FC<TProps> = ({
           <div className="col-span-2 text-base font-bold py-2 uppercase border-b border-main">
             Chi tiết đơn hàng
           </div>
-          <div className="col-span-2 pb-2">
+          <div className="col-span-1 pb-2">
             <FormInputNumber
               control={control}
               name="PayableWeight"
               suffix=" Kg"
-              label="Cân nặng"
+              label="Cân nặng (Kg)"
               placeholder=""
               required={false}
               disabled
+            />
+          </div>
+          <div className="col-span-1 pb-4">
+            <FormInputNumber
+              suffix=" VNĐ"
+              control={control}
+              name="FeeWeightPerKg"
+              label="Đơn giá cân nặng (VNĐ) "
+              placeholder=""
+              required={false}
+              callback={(val) => {
+                handleCount("FeeWeightPerKg", val);
+              }}
+            />
+          </div>
+          <div className="col-span-1 pb-2">
+            <FormInputNumber
+              control={control}
+              name="VolumePayment"
+              suffix=" &#x33A5;"
+              label="Thể tích (&#x33A5;)"
+              placeholder=""
+              required={false}
+              disabled
+            />
+          </div>
+          <div className="col-span-1 pb-4">
+            <FormInputNumber
+              suffix=" VNĐ"
+              control={control}
+              name="FeePerVolume"
+              label={`Đơn giá thể tích (VNĐ)`}
+              placeholder=""
+              required={false}
+              callback={(val) => {
+                handleCount("FeePerVolume", val);
+              }}
+            />
+          </div>
+          <div className="col-span-2 pb-4">
+            <FormInputNumber
+              suffix=" VNĐ"
+              control={control}
+              name="DeliveryPrice"
+              label={`Phí vận chuyển (VNĐ) (CK: ${
+                defaultValues?.FeeWeightCK ?? 0
+              }%)`}
+              placeholder=""
+              disabled
+              required={false}
             />
           </div>
           <div className="col-span-1 pb-4">
@@ -244,10 +290,7 @@ export const DepositListForm: React.FC<TProps> = ({
               placeholder=""
               required={false}
               callback={(val) => {
-                const getCur = getValues("Currency");
-                const value = Math.ceil(getCur * val);
-                handleSetValue("CODFee", value);
-                handleSetNewTotal();
+                handleCount("CODFeeTQ", val);
               }}
             />
           </div>
@@ -262,40 +305,6 @@ export const DepositListForm: React.FC<TProps> = ({
               required={false}
             />
           </div>
-          <div className="col-span-1 pb-4">
-            <FormInputNumber
-              suffix=" VNĐ"
-              control={control}
-              name="FeeWeightPerKg"
-              label={`Đơn giá cân nặng (VNĐ) (CK: ${
-                defaultValues?.FeeWeightCK ?? 0
-              }%)`}
-              placeholder=""
-              required={false}
-              callback={(val) => {
-                const weight = getValues("PayableWeight");
-                const value = Math.ceil(val * weight);
-                handleSetValue(
-                  "DeliveryPrice",
-                  defaultValues?.FeeWeightCK > 0
-                    ? value * ((100 - defaultValues?.FeeWeightCK) / 100)
-                    : value
-                );
-                handleSetNewTotal();
-              }}
-            />
-          </div>
-          <div className="col-span-1 pb-4">
-            <FormInputNumber
-              suffix=" VNĐ"
-              control={control}
-              name="DeliveryPrice"
-              label="Phí cân nặng (VNĐ)"
-              placeholder=""
-              disabled
-              required={false}
-            />
-          </div>
           <div className="col-span-2 pb-2">
             <FormInputNumber
               control={control}
@@ -305,8 +314,8 @@ export const DepositListForm: React.FC<TProps> = ({
               placeholder=""
               required={false}
               callback={(val) => {
+                handleCount("IsCheckProductPrice", val);
                 handleSetValue("IsCheckProduct", val > 0 ? true : false);
-                handleSetNewTotal();
               }}
             />
           </div>
@@ -319,8 +328,8 @@ export const DepositListForm: React.FC<TProps> = ({
               placeholder=""
               required={false}
               callback={(val) => {
+                handleCount("IsPackedPrice", val);
                 handleSetValue("IsPacked", val > 0 ? true : false);
-                handleSetNewTotal();
               }}
             />
           </div>
@@ -333,8 +342,8 @@ export const DepositListForm: React.FC<TProps> = ({
               placeholder=""
               required={false}
               callback={(val) => {
+                handleCount("InsuranceMoney", val);
                 handleSetValue("IsInsurance", val > 0 ? true : false);
-                handleSetNewTotal();
               }}
             />
           </div>

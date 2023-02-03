@@ -200,6 +200,16 @@ const Index: TNextPageWithLayout = () => {
         <p className="mb-4 text-base font-bold py-2 uppercase">Chi tiết</p>
         <SalesMoneyStatisticTable data={totalOverviewData?.Data} />
       </div>
+      <div className={`${styleBorder}`}>
+        <SalesOrderStatisticTable
+          pagination={orderPagination}
+          handlePagination={setOrderPagination}
+          loading={isFetchingOrder}
+          data={userOrderReportData?.Items}
+          exportExcel={handleExportExcelOrder}
+          RoleID={newUser?.UserGroupId}
+        />
+      </div>
 
       {/* <div className={`${styleBorder}`}>
 				<SalesPaymentStatisticTable
@@ -211,17 +221,6 @@ const Index: TNextPageWithLayout = () => {
 					RoleID={newUser?.UserGroupId}
 				/>
 			</div> */}
-
-      <div className={`${styleBorder}`}>
-        <SalesOrderStatisticTable
-          pagination={orderPagination}
-          handlePagination={setOrderPagination}
-          loading={isFetchingOrder}
-          data={userOrderReportData?.Items}
-          exportExcel={handleExportExcelOrder}
-          RoleID={newUser?.UserGroupId}
-        />
-      </div>
     </div>
   );
 };

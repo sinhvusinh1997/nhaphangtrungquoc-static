@@ -66,12 +66,12 @@ export const managerRouter = [
         icon: "fas fa-users",
         childrens: [
           {
-            path: "/manager/employee/employee-management",
-            name: "Danh sách nhân viên",
+            path: "/manager/employee/admin-management",
+            name: "Danh sách admin",
           },
           {
-            path: "/manager/employee/bonus-management",
-            name: "Quản lý hoa hồng",
+            path: "/manager/employee/employee-management",
+            name: "Danh sách nhân viên",
           },
           {
             path: "/manager/client/client-list",
@@ -79,7 +79,19 @@ export const managerRouter = [
           },
           {
             path: "/manager/client/contact",
-            name: "Danh sách khách mới",
+            name: "Danh sách khách liên hệ",
+          },
+          {
+            path: "/manager/employee/bonus-order",
+            name: "Hoa hồng mua hộ",
+          },
+          {
+            path: "/manager/employee/bonus-deposit",
+            name: "Hoa hồng ký gửi",
+          },
+          {
+            path: "/manager/employee/bonus-payment",
+            name: "Hoa hồng thanh toán hộ",
           },
           // {
           // 	path: "manager/employee/decentralization-management",

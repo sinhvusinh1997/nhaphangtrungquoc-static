@@ -1,11 +1,9 @@
-import Link from "next/link";
 import router from "next/router";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { user } from "~/api";
 import {
-  FormAsyncSelect,
   FormDate,
   FormInput,
   FormInputNumber,
@@ -33,6 +31,7 @@ type TProps = {
 
 type TForm = TEmployee & {
   UserGroupId: number;
+  FeeTQVNPerVolume: number;
 };
 
 export const EmployeeManagementDetailForm: React.FC<TProps> = ({
@@ -64,7 +63,6 @@ export const EmployeeManagementDetailForm: React.FC<TProps> = ({
   const mutationUpdate = useMutation(user.update, {
     onSuccess: () => {
       toast.success("Cập nhật nhân viên thành công");
-      router.back();
     },
     onError: (error) => {
       showToast({
@@ -259,146 +257,167 @@ export const EmployeeManagementDetailForm: React.FC<TProps> = ({
           </div>
         </div>
         <div className="tableBox md:col-span-2 xl:col-span-1">
-          <div className="grid grid-cols-4 gap-4">
-            <div className="col-span-4 font-bold text-[22px]">Cấu hình giá</div>
-            <div className="col-span-2">
-              <FormInputNumber
-                control={control}
-                name="Currency"
-                // defaultValue={defaultValues?.Currency}
-                label="Tỉ giá riêng (VNĐ)"
-                placeholder="Tỉ giá riêng (VNĐ)"
-                required={false}
-              />
+          <div className="grid grid-cols-1 gap-4">
+            <div className="col-span-1 font-bold text-[22px]">Cấu hình giá</div>
+            <div className="col-span-1 grid grid-cols-2 gap-4">
+              <div className="col-span-1">
+                <div className="mb-3">
+                  <FormInputNumber
+                    control={control}
+                    name="Currency"
+                    // defaultValue={defaultValues?.Currency}
+                    suffix=" VNĐ"
+                    label="Tỉ giá riêng (VNĐ)"
+                    placeholder="Tỉ giá riêng (VNĐ)"
+                    required={false}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormInputNumber
+                    control={control}
+                    name="FeeBuyPro"
+                    // defaultValue={defaultValues?.FeeBuyPro ?? 0}
+                    label="Phí mua hàng riêng (%)"
+                    suffix=" %"
+                    placeholder="Phí mua hàng riêng (%)"
+                    required={false}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormInputNumber
+                    control={control}
+                    name="Deposit"
+                    suffix=" %"
+                    label="Phí đặt cọc riêng (%)"
+                    placeholder="Phí đặt cọc riêng (%)"
+                    required={false}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormInputNumber
+                    control={control}
+                    name="FeeTQVNPerWeight"
+                    label="Phí cân nặng riêng (VNĐ/Kg)"
+                    suffix=" VNĐ/Kg"
+                    placeholder="Phí cân nặng riêng (VNĐ/Kg)"
+                    required={false}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormInputNumber
+                    control={control}
+                    name="FeeTQVNPerVolume"
+                    label="Phí thể tích riêng (VNĐ/m3)"
+                    placeholder="Phí thể tích riêng (VNĐ/m3)"
+                    suffix=" VNĐ/m3"
+                    required={false}
+                  />
+                </div>
+              </div>
+              <div className="col-span-1">
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    placeholder=""
+                    name="SaleId"
+                    label="Nhân viên kinh doanh"
+                    data={userSaleCatalogue}
+                    required={false}
+                    select={{ label: "UserName", value: "Id" }}
+                    isClearable={true}
+                    defaultValue={{
+                      UserName:
+                        userSaleCatalogue?.find(
+                          (item) => item.Id === defaultValues?.SaleId
+                        )?.UserName ?? "Chọn nhân viên kinh doanh",
+                      Id: defaultValues?.SaleId ?? 0,
+                    }}
+                    // callback={(val) => {
+                    // 	console.log(userSaleCatalogue?.find((item) => item.Id === val)?.UserName);
+                    // }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    placeholder=""
+                    name="DatHangId"
+                    label="Nhân viên đặt hàng"
+                    isClearable={true}
+                    data={userOrderCatalogue}
+                    required={false}
+                    select={{ label: "UserName", value: "Id" }}
+                    defaultValue={{
+                      UserName:
+                        userOrderCatalogue?.find(
+                          (item) => item.Id === defaultValues?.DatHangId
+                        )?.UserName ?? "Chọn nhân viên đặt hàng",
+                      Id: defaultValues?.DatHangId ?? 0,
+                    }}
+                    // callback={(val) => {
+                    // 	console.log(userOrderCatalogue?.find((item) => item.Id === val)?.UserName);
+                    // }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    placeholder=""
+                    name="LevelId"
+                    required={false}
+                    label="Cấp người dùng"
+                    data={userLevelCatalogue}
+                    select={{ label: "Name", value: "Id" }}
+                    defaultValue={{
+                      Name:
+                        userLevelCatalogue?.find(
+                          (item) => item.Id === defaultValues?.LevelId
+                        )?.Name ?? "Chọn cấp người dùng",
+                      Id: defaultValues?.LevelId,
+                    }}
+                    // callback={(val) => {
+                    // 	console.log(userLevelCatalogue?.find((item) => item.Id === val)?.Name);
+                    // }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    placeholder=""
+                    name="UserGroupId"
+                    label="Quyền hạn"
+                    data={userGroupCatalogue}
+                    select={{ label: "Name", value: "Id" }}
+                    defaultValue={{
+                      Name: defaultValues?.UserGroupName,
+                      Id: defaultValues?.UserGroupId,
+                    }}
+                    callback={(val) => {
+                      UserGroupNameCur.current = userGroupCatalogue.find(
+                        (item) => item.Id === val
+                      )?.Name;
+                    }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    name="Status"
+                    data={activeData.slice(1)}
+                    defaultValue={{
+                      id: defaultValues?.Status,
+                      name: defaultValues?.StatusName,
+                    }}
+                    label="Trạng thái tài khoản"
+                    placeholder="Chọn trạng thái tài khoản"
+                    required={false}
+                    menuPlacement="bottom"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="col-span-2">
-              <FormInputNumber
-                control={control}
-                name="FeeBuyPro"
-                defaultValue={defaultValues?.FeeBuyPro ?? 0}
-                label="Phí mua hàng riêng (%)"
-                placeholder="Phí mua hàng riêng (%)"
-                required={false}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormInputNumber
-                control={control}
-                name="Deposit"
-                label="Phí đặt cọc riêng (%)"
-                placeholder="Phí đặt cọc riêng (%)"
-                required={false}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormInputNumber
-                control={control}
-                name="FeeTQVNPerWeight"
-                label="Phí cân nặng riêng (VND/Kg)"
-                placeholder="Phí cân nặng riêng (VND/Kg)"
-                required={false}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormSelect
-                control={control}
-                placeholder=""
-                name="SaleId"
-                label="Nhân viên kinh doanh"
-                data={userSaleCatalogue}
-                required={false}
-                select={{ label: "UserName", value: "Id" }}
-                isClearable={true}
-                defaultValue={{
-                  UserName:
-                    userSaleCatalogue?.find(
-                      (item) => item.Id === defaultValues?.SaleId
-                    )?.UserName ?? "Chọn nhân viên kinh doanh",
-                  Id: defaultValues?.SaleId ?? 0,
-                }}
-                // callback={(val) => {
-                // 	console.log(userSaleCatalogue?.find((item) => item.Id === val)?.UserName);
-                // }}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormSelect
-                control={control}
-                placeholder=""
-                name="DatHangId"
-                label="Nhân viên đặt hàng"
-                isClearable={true}
-                data={userOrderCatalogue}
-                required={false}
-                select={{ label: "UserName", value: "Id" }}
-                defaultValue={{
-                  UserName:
-                    userOrderCatalogue?.find(
-                      (item) => item.Id === defaultValues?.DatHangId
-                    )?.UserName ?? "Chọn nhân viên đặt hàng",
-                  Id: defaultValues?.DatHangId ?? 0,
-                }}
-                // callback={(val) => {
-                // 	console.log(userOrderCatalogue?.find((item) => item.Id === val)?.UserName);
-                // }}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormSelect
-                control={control}
-                placeholder=""
-                name="LevelId"
-                required={false}
-                label="Cấp người dùng"
-                data={userLevelCatalogue}
-                select={{ label: "Name", value: "Id" }}
-                defaultValue={{
-                  Name:
-                    userLevelCatalogue?.find(
-                      (item) => item.Id === defaultValues?.LevelId
-                    )?.Name ?? "Chọn cấp người dùng",
-                  Id: defaultValues?.LevelId,
-                }}
-                // callback={(val) => {
-                // 	console.log(userLevelCatalogue?.find((item) => item.Id === val)?.Name);
-                // }}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormSelect
-                control={control}
-                placeholder=""
-                name="UserGroupId"
-                label="Quyền hạn"
-                data={userGroupCatalogue}
-                select={{ label: "Name", value: "Id" }}
-                defaultValue={{
-                  Name: defaultValues?.UserGroupName,
-                  Id: defaultValues?.UserGroupId,
-                }}
-                callback={(val) => {
-                  UserGroupNameCur.current = userGroupCatalogue.find(
-                    (item) => item.Id === val
-                  )?.Name;
-                }}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormSelect
-                control={control}
-                name="Status"
-                data={activeData.slice(1)}
-                defaultValue={{
-                  id: defaultValues?.Status,
-                  name: defaultValues?.StatusName,
-                }}
-                label="Trạng thái tài khoản"
-                placeholder="Chọn trạng thái tài khoản"
-                required={false}
-                menuPlacement="bottom"
-              />
-            </div>
-            <div className="col-span-4 pt-3 mt-3 border-t border-[#ccc]">
+
+            <div className="col-span-1 pt-3 mt-3 border-t border-[#ccc]">
               <div className="flex justify-end items-end">
                 <IconButton
                   icon="fas fa-edit"

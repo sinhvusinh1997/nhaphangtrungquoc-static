@@ -63,7 +63,7 @@ export const mainOrder = {
 
   updateNotiPrice: (data: TOrder) => put("/update-notiprice", data),
 
-  exportExcel: (params: Partial<TPaginationParams & TFilterParams>) =>
+  exportExcel: (params: Partial<TPaginationParams & TFilterParams> | any) =>
     post("/export-excel", undefined, { params }),
 
   getNumberOfOrder: (params: {

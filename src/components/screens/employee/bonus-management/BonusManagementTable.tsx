@@ -14,6 +14,7 @@ type TProps = {
   handleFilter: (newFilter) => void;
   handlePayment: (id: number) => void;
   RoleID: number;
+  type: number;
 };
 
 export const BonusManagementTable: React.FC<TTable<TBonus> & TProps> = ({
@@ -23,12 +24,28 @@ export const BonusManagementTable: React.FC<TTable<TBonus> & TProps> = ({
   loading,
   handlePayment,
   RoleID,
+  type,
 }) => {
   const columns: TColumnsType<TBonus> = [
     {
-      dataIndex: "MainOrderId",
+      dataIndex: "PayHelpOrderId",
       title: "ID Đơn",
       width: 80,
+      render: (_, record) => {
+        let mainID = null;
+        switch (type) {
+          case 0:
+            mainID = record?.MainOrderId;
+            break;
+          case 1:
+            mainID = record?.TransportationOrderId;
+            break;
+          default:
+            mainID = record?.PayHelpOrderId;
+            break;
+        }
+        return <>{mainID}</>;
+      },
     },
     {
       dataIndex: "PercentReceive",
@@ -61,28 +78,24 @@ export const BonusManagementTable: React.FC<TTable<TBonus> & TProps> = ({
     },
     {
       dataIndex: "Created",
-      title: "Ngày tạo",
-      render: (_, record) => {
-        return (
-          <>
-            <div>{_format.getVNDate(record.Created)}</div>
-            <div>{record.CreatedBy}</div>
-          </>
-        );
-      },
+      title: "Ngày tạo - người tạo",
+      render: (_, record) => (
+        <>
+          {_format.getVNDate(record.Created)} - {record.CreatedBy}
+        </>
+      ),
+      width: 250,
       responsive: ["xl"],
     },
     {
       dataIndex: "Updated",
-      title: "Ngày cập nhật",
-      render: (_, record) => {
-        return (
-          <>
-            <div className="">{_format.getVNDate(record.Updated)}</div>
-            <div className="">{record.UpdatedBy}</div>
-          </>
-        );
-      },
+      title: "Ngày cập nhật - người cập nhật",
+      render: (_, record) => (
+        <>
+          {_format.getVNDate(record.Updated)} - {record.UpdatedBy}
+        </>
+      ),
+      width: 250,
       responsive: ["xl"],
     },
     {
@@ -131,12 +144,30 @@ export const BonusManagementTable: React.FC<TTable<TBonus> & TProps> = ({
               />
             )}
             <ActionButton
-              onClick={() =>
-                router.push({
-                  pathname: "/manager/order/order-list/detail",
-                  query: { id: record.MainOrderId },
-                })
-              }
+              onClick={() => {
+                let routerPush = {};
+                switch (type) {
+                  case 0:
+                    routerPush = {
+                      pathname: "/manager/order/order-list/detail",
+                      query: { id: record?.MainOrderId },
+                    };
+                    break;
+                  case 1:
+                    routerPush = {
+                      pathname: "/manager/deposit/deposit-list/detail",
+                      query: { id: record?.TransportationOrderId },
+                    };
+                    break;
+                  default:
+                    routerPush = {
+                      pathname: "/manager/order/request-payment/detail",
+                      query: { id: record?.PayHelpOrderId },
+                    };
+                    break;
+                }
+                router.push(routerPush);
+              }}
               icon="fas fa-info"
               title="Xem chi tiết đơn"
               iconContainerClassName=" iconYellow"

@@ -7,7 +7,7 @@ type TProps = {
   handleFilter: (newFilter: {}) => void;
   userGroupCatalogue: TUserGroupCatalogue[];
   handleAddStaff: () => void;
-  onExportExcel: (data: any) => void;
+  onExportExcel?: (data: any) => void;
 };
 
 export const EmployeeManagementFilter: FC<TProps> = ({

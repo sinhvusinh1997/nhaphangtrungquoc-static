@@ -17,19 +17,22 @@ const usernameProps = {
 type TProps = {
   handleFilter: (newFilter) => void;
   handleExporTExcel: () => void;
+  userSale;
 };
 
 export const RequestPaymentFilter: FC<TProps> = ({
   handleFilter,
   handleExporTExcel,
+  userSale,
 }) => {
   const SearchContent = useRef<string>(null);
   const FromDate = useRef<string>(null);
   const ToDate = useRef<string>(null);
   const Status = useRef<number>(null);
+  const SalerId = useRef<number>(null);
 
   return (
-    <div className="grid grid-cols-4 md:gap-1 xl:gap-4 w-full pb-6">
+    <div className="grid grid-cols-5 md:gap-1 xl:gap-4 w-full pb-6">
       <div className="col-span-1 pb-0 pb-4">
         <FilterInput
           {...usernameProps}
@@ -55,6 +58,16 @@ export const RequestPaymentFilter: FC<TProps> = ({
           handleSearch={(val: number) => (Status.current = val)}
         />
       </div>
+      <div className="col-span-1 pb-0 pb-4">
+        <FilterSelect
+          data={userSale}
+          label="Nhân viên kinh doanh"
+          isClearable
+          select={{ label: "UserName", value: "Id" }}
+          placeholder="Nhân viên kinh doanh"
+          handleSearch={(val: number) => (SalerId.current = val)}
+        />
+      </div>
       <div className="col-span-1 flex justify-between items-end">
         <IconButton
           onClick={() =>
@@ -63,6 +76,7 @@ export const RequestPaymentFilter: FC<TProps> = ({
               FromDate: FromDate.current,
               ToDate: ToDate.current,
               Status: Status.current,
+              SalerId: SalerId.current,
               PageIndex: 1,
             })
           }

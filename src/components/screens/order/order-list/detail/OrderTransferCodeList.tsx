@@ -33,11 +33,8 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
   RoleID,
 }) => {
   const { control, watch, handleSubmit } = useFormContext<TOrder>();
-
   const formValue = useMemo(() => watch(), [watch() as TOrder]);
-
   const SmallPackages = data?.SmallPackages;
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "SmallPackages",
@@ -47,7 +44,6 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
     {
       dataIndex: "OrderTransactionCode",
       title: "Mã vận đơn",
-      width: 200,
       render: (_, __, index) => {
         return (
           <>
@@ -58,25 +54,15 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
               hideError
               disabled={!(RoleID === 1 || RoleID === 3 || RoleID === 4)}
               rules={{ required: "This field is required" }}
-              // inputContainerClassName="max-w-[150px]"
             />
-            {/* <FormInput
-							control={control}
-							name={`SmallPackages.${index}.MainOrderId` as const}
-							placeholder=""
-							hideError
-							disabled={!(RoleID === 1 || RoleID === 3 || RoleID === 4)}
-							rules={{required: "This field is required"}}
-							inputContainerClassName="hidden"
-						/> */}
           </>
         );
       },
+      width: 160,
     },
     {
       dataIndex: "MainOrderCodeId",
       title: "Mã đơn hàng",
-      width: 200,
       render: (_, __, index) => (
         <FormSelect
           control={control}
@@ -101,21 +87,19 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
           }}
         />
       ),
+      width: 160,
     },
     {
       dataIndex: "Weight",
       align: "center",
-      title: () => (
-        <React.Fragment>
-          Cân thực <br /> (kg)
-        </React.Fragment>
-      ),
+      title: () => <>Cân thực (kg)</>,
       render: (_, __, index) => (
         <FormInputNumber
           control={control}
           name={`SmallPackages.${index}.Weight` as const}
           placeholder=""
-          disabled={!(RoleID === 1 || RoleID === 3 || RoleID === 4)}
+          disabled
+          // disabled={!(RoleID === 1 || RoleID === 3 || RoleID === 4)}
           allowNegative={false}
           hideError
           rules={{ required: "This field is required" }}
@@ -124,18 +108,38 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
         />
       ),
       responsive: ["md"],
-      width: 70,
+      width: 100,
+    },
+    {
+      dataIndex: "VolumePayment",
+      align: "center",
+      title: () => <>Thể tích</>,
+      render: (_, __, index) => (
+        <FormInputNumber
+          control={control}
+          name={`SmallPackages.${index}.VolumePayment` as const}
+          placeholder=""
+          disabled
+          // disabled={!(RoleID === 1 || RoleID === 3 || RoleID === 4)}
+          allowNegative={false}
+          hideError
+          rules={{ required: "This field is required" }}
+          // inputContainerClassName="max-w-[50px] mx-auto"
+          inputClassName="text-center"
+        />
+      ),
+      responsive: ["md"],
+      width: 100,
     },
     {
       dataIndex: "LWH",
       align: "center",
-      width: 90,
       title: () => (
-        <React.Fragment>
+        <>
           Kích thước
           <br />
           (D x R x C)
-        </React.Fragment>
+        </>
       ),
       render: (_, __, index) => (
         <FormInput
@@ -149,54 +153,54 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
         />
       ),
     },
-    {
-      dataIndex: "Volume",
-      align: "center",
-      title: () => (
-        <React.Fragment>
-          Cân quy
-          <br />
-          đổi (kg)
-        </React.Fragment>
-      ),
-      render: (_, __, index) => (
-        <FormInputNumber
-          control={control}
-          disabled
-          name={`SmallPackages.${index}.Volume` as const}
-          placeholder=""
-          allowNegative={false}
-          hideError
-          inputContainerClassName="max-w-[70px] mx-auto"
-          inputClassName="text-center"
-        />
-      ),
-      width: 70,
-    },
-    {
-      dataIndex: "PayableWeight",
-      align: "center",
-      title: () => (
-        <React.Fragment>
-          Cân tính
-          <br />
-          tiền (kg)
-        </React.Fragment>
-      ),
-      render: (_, __, index) => (
-        <FormInputNumber
-          control={control}
-          disabled
-          name={`SmallPackages.${index}.PayableWeight` as const}
-          placeholder=""
-          allowNegative={false}
-          hideError
-          inputContainerClassName="max-w-[50px] mx-auto"
-          inputClassName="text-center"
-        />
-      ),
-      width: 70,
-    },
+    // {
+    //   dataIndex: "Volume",
+    //   align: "center",
+    //   title: () => (
+    //     <React.Fragment>
+    //       Cân quy
+    //       <br />
+    //       đổi (kg)
+    //     </React.Fragment>
+    //   ),
+    //   render: (_, __, index) => (
+    //     <FormInputNumber
+    //       control={control}
+    //       disabled
+    //       name={`SmallPackages.${index}.Volume` as const}
+    //       placeholder=""
+    //       allowNegative={false}
+    //       hideError
+    //       inputContainerClassName="max-w-[70px] mx-auto"
+    //       inputClassName="text-center"
+    //     />
+    //   ),
+    //   width: 70,
+    // },
+    // {
+    //   dataIndex: "PayableWeight",
+    //   align: "center",
+    //   title: () => (
+    //     <React.Fragment>
+    //       Cân tính
+    //       <br />
+    //       tiền (kg)
+    //     </React.Fragment>
+    //   ),
+    //   render: (_, __, index) => (
+    //     <FormInputNumber
+    //       control={control}
+    //       disabled
+    //       name={`SmallPackages.${index}.PayableWeight` as const}
+    //       placeholder=""
+    //       allowNegative={false}
+    //       hideError
+    //       inputContainerClassName="max-w-[50px] mx-auto"
+    //       inputClassName="text-center"
+    //     />
+    //   ),
+    //   width: 70,
+    // },
     {
       dataIndex: "Status",
       title: "Trạng thái",
@@ -226,7 +230,6 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
           }}
         />
       ),
-      width: 150,
     },
     {
       dataIndex: "Description",
@@ -240,7 +243,6 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
           hideError
         />
       ),
-      width: 120,
     },
     {
       dataIndex: "action",
@@ -281,7 +283,7 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
           </Popconfirm>
         );
       },
-      width: 50,
+      width: 70,
     },
   ];
 
@@ -435,6 +437,7 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
                   MainOrderCodeId: data?.MainOrderCodes?.[0]?.Id,
                   MainOrderId: data?.Id,
                   Weight: 0,
+                  VolumePayment: 0,
                 });
               }}
               showLoading

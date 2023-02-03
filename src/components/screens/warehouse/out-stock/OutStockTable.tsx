@@ -43,6 +43,9 @@ export const OutStockTable: React.FC<
     {
       dataIndex: "OrderTypeName",
       title: "Loại ĐH",
+      render: (_) => {
+        return <Tag color={_ === "Đơn ký gửi" ? "blue" : "green"}>{_}</Tag>;
+      },
     },
     {
       dataIndex: "IsPackged",
@@ -83,6 +86,11 @@ export const OutStockTable: React.FC<
     {
       dataIndex: "Weight",
       title: "Cân nặng (kg)",
+      align: "right",
+    },
+    {
+      dataIndex: "VolumePayment",
+      title: "Khối (m3)",
       align: "right",
     },
     {

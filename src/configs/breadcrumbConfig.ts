@@ -72,13 +72,18 @@ export const breadcrumb = {
     },
   },
   employee: {
-    bonusManagement: "Quản lý hoa hồng",
+    bonusManagement: {
+      order: "Quản lý hoa hồng mua hộ",
+      deposit: "Quản lý hoa hồng ký gửi",
+      payment: "Quản lý hoa hồng thanh toán hộ",
+    },
     employeeManagement: {
       main: "Danh sách nhân viên",
       detail: "Thông tin tài khoản",
     },
     decentralization: "Quản lý phân quyền",
     groupUser: "Danh sách nhóm user",
+    adminManagement: "Danh sách admin",
   },
   deposit: {
     depositList: {

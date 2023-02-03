@@ -1,115 +1,130 @@
 import router from "next/router";
-import {useState} from "react";
-import {useQuery} from "react-query";
-import {transportationOrder} from "~/api";
-import {breadcrumb} from "~/configs";
-import {DepositListFilter, DepositListTable, Layout, showToast} from "~/components";
-import {transportStatus} from "~/configs/appConfigs";
-import {SEOConfigs} from "~/configs/SEOConfigs";
-import {selectUser, useAppSelector} from "~/store";
-import {TNextPageWithLayout} from "~/types/layout";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { transportationOrder } from "~/api";
+import { breadcrumb } from "~/configs";
+import {
+  DepositListFilter,
+  DepositListTable,
+  Layout,
+  showToast,
+} from "~/components";
+import { transportStatus } from "~/configs/appConfigs";
+import { SEOConfigs } from "~/configs/SEOConfigs";
+import { selectUser, useAppSelector } from "~/store";
+import { TNextPageWithLayout } from "~/types/layout";
+import { useCatalogue } from "~/hooks";
 
 const Index: TNextPageWithLayout = () => {
-	const {user} = useAppSelector(selectUser);
+  const { user } = useAppSelector(selectUser);
+  if (!user) return null;
 
-	if (!user) return null;
+  const { userSale } = useCatalogue({
+    userSaleEnabled: true,
+  });
 
-	const [filter, setFilter] = useState({
-		TypeSearch: null,
-		SearchContent: null,
-		FromDate: null,
-		ToDate: null,
-		Status: null,
-		TotalItems: null,
-		PageIndex: 1,
-		PageSize: 20,
-		UID: user?.UserId,
-		RoleID: user?.UserGroupId,
-	});
+  const [filter, setFilter] = useState({
+    TypeSearch: null,
+    SearchContent: null,
+    FromDate: null,
+    ToDate: null,
+    Status: null,
+    TotalItems: null,
+    PageIndex: 1,
+    PageSize: 20,
+    UID: user?.UserId,
+    RoleID: user?.UserGroupId,
+    SalerID: null,
+  });
 
-	// const [numberOfOrder, setNumberOfOrder] = useState(transportStatus);
+  const handleFilter = (newFilter) => {
+    setFilter({ ...filter, ...newFilter });
+  };
 
-	const handleFilter = (newFilter) => {
-		setFilter({...filter, ...newFilter});
-	};
+  const { isFetching, data, isLoading, refetch } = useQuery(
+    ["depositList", { ...filter }],
+    () => transportationOrder.getList(filter).then((res) => res.Data),
+    {
+      onSuccess: (data) =>
+        setFilter({
+          ...filter,
+          TotalItems: data?.TotalItem,
+          PageIndex: data?.PageIndex,
+          PageSize: data?.PageSize,
+        }),
+      onError: (error) => {
+        showToast({
+          title: "Lỗi!",
+          message: (error as any)?.response?.data?.ResultMessage,
+          type: "error",
+        });
+      },
+    }
+  );
 
-	const {isFetching, data, isLoading, refetch} = useQuery(
-		["depositList", {...filter}],
-		() => transportationOrder.getList(filter).then((res) => res.Data),
-		{
-			onSuccess: (data) =>
-				setFilter({...filter, TotalItems: data?.TotalItem, PageIndex: data?.PageIndex, PageSize: data?.PageSize}),
-			onError: (error) => {
-				showToast({
-					title: "Lỗi!",
-					message: (error as any)?.response?.data?.ResultMessage,
-					type: "error",
-				});
-			},
-		}
-	);
+  const handleExporTExcel = async () => {
+    try {
+      const res = await transportationOrder.exportExcel({
+        ...filter,
+        PageSize: 99999,
+      });
+      router.push(`${res.Data}`);
+    } catch (error) {
+      showToast({
+        title: "Lỗi!",
+        message: "Đường truyền kết nối server bị lỗi! Vui lòng thử lại!",
+        type: "error",
+      });
+    }
+  };
 
-	const handleExporTExcel = async () => {
-		try {
-			const res = await transportationOrder.exportExcel({
-				UID: user?.UserId,
-				RoleID: user?.UserGroupId,
-			});
-			router.push(`${res.Data}`);
-		} catch (error) {
-			showToast({
-				title: "Lỗi!",
-				message: "Đường truyền kết nối server bị lỗi! Vui lòng thử lại!",
-				type: "error",
-			});
-		}
-	};
+  useQuery(
+    ["deposit-infor-list"],
+    () =>
+      transportationOrder.getAmountInfo({
+        UID: user?.UserId,
+        RoleID: user?.UserGroupId,
+      }),
+    {
+      onSuccess: (res) => {
+        const data = res.Data;
+        data?.forEach((x) => {
+          const target = transportStatus.find((i) => i.id === x?.Status);
+          if (target) {
+            target.value = x?.Quantity;
+          }
+        });
+      },
+      onError: (error) => {
+        showToast({
+          title: "Lỗi kết nối máy chủ!",
+          message: "Vui lòng tải lại trang!",
+          type: "error",
+        });
+      },
+      retry: false,
+    }
+  );
 
-	useQuery(
-		["deposit-infor-list"],
-		() =>
-			transportationOrder.getAmountInfo({
-				UID: user?.UserId,
-				RoleID: user?.UserGroupId,
-			}),
-		{
-			onSuccess: (res) => {
-				const data = res.Data;
-				data?.forEach((x) => {
-					const target = transportStatus.find((i) => i.id === x?.Status);
-					if (target) {
-						target.value = x?.Quantity;
-					}
-				});
-			},
-			onError: (error) => {
-				showToast({
-					title: "Lỗi kết nối máy chủ!",
-					message: "Vui lòng tải lại trang!",
-					type: "error",
-				});
-			},
-			retry: false,
-		}
-	);
-
-	return (
-		<div className="tableBox">
-			<DepositListFilter
-				numberOfOrder={transportStatus}
-				handleFilter={(newFilter) => handleFilter(newFilter)}
-				handleExporTExcel={handleExporTExcel}
-			/>
-			<DepositListTable
-				refetch={refetch}
-				data={data?.Items}
-				loading={isFetching}
-				filter={filter}
-				handleFilter={handleFilter}
-				RoleID={user?.UserGroupId}
-			/>
-		</div>
-	);
+  return (
+    <div className="tableBox">
+      <DepositListFilter
+        userSale={userSale}
+        numberOfOrder={transportStatus}
+        handleFilter={(newFilter) => handleFilter(newFilter)}
+        handleExporTExcel={handleExporTExcel}
+      />
+      <DepositListTable
+        userSale={userSale}
+        refetch={refetch}
+        data={data?.Items}
+        loading={isFetching}
+        filter={filter}
+        handleFilter={handleFilter}
+        RoleID={user?.UserGroupId}
+      />
+    </div>
+  );
 };
 
 Index.displayName = SEOConfigs.deposit.listDeposit;

@@ -128,8 +128,34 @@ export const EmployeeManagementTable: FC<TTable<TEmployee> & TProps> = ({
                 query: { id: record?.Id },
               })
             }
-            icon="fas fa-badge-dollar"
+            icon="fas fa-funnel-dollar"
             title="Nạp tiền"
+            iconContainerClassName="iconBlue"
+            btnBlue
+          />
+
+          <ActionButton
+            onClick={() =>
+              router.push({
+                pathname: "/manager/money/vietnam-withdrawal",
+                query: { id: record?.Id },
+              })
+            }
+            icon="fas fa-money-check-edit-alt"
+            title="Rút tiền"
+            iconContainerClassName="iconBlue"
+            btnBlue
+          />
+
+          <ActionButton
+            onClick={() =>
+              router.push({
+                pathname: "/manager/client/transaction-history/",
+                query: { id: record?.Id },
+              })
+            }
+            icon="fas fa-usd-square"
+            title="Lịch sử giao dịch"
             iconContainerClassName="iconBlue"
             btnBlue
           />

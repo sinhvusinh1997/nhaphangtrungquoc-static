@@ -78,16 +78,24 @@ export const adminRouter = [
             name: "Danh sách nhân viên",
           },
           {
-            path: "/manager/employee/bonus-management",
-            name: "Quản lý hoa hồng",
-          },
-          {
             path: "/manager/client/client-list",
             name: "Danh sách khách hàng",
           },
           {
             path: "/manager/client/contact",
-            name: "Danh sách khách mới",
+            name: "Danh sách liên hệ",
+          },
+          {
+            path: "/manager/employee/bonus-order",
+            name: "Hoa hồng mua hộ",
+          },
+          {
+            path: "/manager/employee/bonus-deposit",
+            name: "Hoa hồng ký gửi",
+          },
+          {
+            path: "/manager/employee/bonus-payment",
+            name: "Hoa hồng thanh toán hộ",
           },
           // {
           // 	path: "manager/employee/decentralization-management",

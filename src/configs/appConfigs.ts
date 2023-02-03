@@ -1501,7 +1501,7 @@ export const rechargeStatusData = [
   {
     id: ERechargeStatusData.Cancel,
     name: "Đã huỷ",
-    color: "#E54C36",
+    color: "#000",
   },
 ];
 

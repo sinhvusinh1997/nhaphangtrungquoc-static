@@ -1,5 +1,6 @@
-import { Avatar } from "antd";
+import { Avatar, Tooltip } from "antd";
 import React from "react";
+import { _format } from "~/utils";
 
 export const InfoUserContact: React.FC<any> = ({ onOpenModal, data }) => {
   return (
@@ -12,7 +13,7 @@ export const InfoUserContact: React.FC<any> = ({ onOpenModal, data }) => {
       </div>
       <div className="w-full items-center text-center xl:p-8 p-4 rounded-3xl mt-[-106px] z-50 relative">
         <div className="bg-white rounded-3xl p-6 grid grid-cols-3 boxShadow">
-          <div className="md:col-span-3 xl:col-span-1 flex">
+          <div className="md:col-span-1 xl:col-span-1 flex">
             <div className="border-2 border-[#0c5963] rounded-full p-2 mr-4 border-unactive h-14 xl:h-full overflow-hidden relative">
               <Avatar
                 size={{ xxl: 100 }}
@@ -32,26 +33,38 @@ export const InfoUserContact: React.FC<any> = ({ onOpenModal, data }) => {
               </button>
             </div>
           </div>
-          <ul className="col-span-1 text-xs mt-4 mb-0">
-            <li className="flex text-base py-2">
-              <i className="far fa-user mr-8 pt-[2px] text-[#f14f04]"></i>
-              <span>{data?.Gender == 0 ? "Nam" : "Nữ"}</span>
-            </li>
-            <li className="flex text-base py-2">
-              <i className="far fa-phone-alt mr-8 pt-[2px] text-[#f14f04]"></i>
-              <span>{data?.Phone}</span>
-            </li>
-          </ul>
-          <ul className="col-span-1 text-xs lg:mt-4">
-            <li className="flex text-base py-2">
-              <i className="far fa-envelope mr-8 pt-[2px] text-[#f14f04]"></i>
-              <span>{data?.Email}</span>
-            </li>
-            <li className="flex text-base py-2">
-              <i className="far fa-map-marker-alt mr-8 pt-[2px] text-[#f14f04]"></i>
-              <span>{data?.Address}</span>
-            </li>
-          </ul>
+          <div className="xl:col-span-2 grid grid-cols-3">
+            <ul className="col-span-1 text-xs mt-4 mb-0">
+              <li className="flex text-base py-2">
+                <i className="far fa-user mr-8 pt-[2px] text-[#f14f04]"></i>
+                <span>{data?.Gender == 0 ? "Nam" : "Nữ"}</span>
+              </li>
+              <li className="flex text-base py-2">
+                <i className="far fa-phone-alt mr-8 pt-[2px] text-[#f14f04]"></i>
+                <span>{data?.Phone}</span>
+              </li>
+            </ul>
+            <ul className="col-span-1 text-xs lg:mt-4">
+              <li className="flex text-base py-2">
+                <i className="far fa-envelope mr-8 pt-[2px] text-[#f14f04]"></i>
+                <span>{data?.Email}</span>
+              </li>
+              <li className="flex text-base py-2">
+                <i className="far fa-map-marker-alt mr-8 pt-[2px] text-[#f14f04]"></i>
+                <span>{data?.Address}</span>
+              </li>
+            </ul>
+            <ul className="col-span-1 text-xs lg:mt-4">
+              <li className="flex text-base py-2">
+                <Tooltip title="Điểm tích luỹ">
+                  <i className="fas fa-star-half-alt mr-8 pt-[2px] text-[#f14f04]"></i>
+                </Tooltip>
+                <Tooltip title="Tổng tiền đã thanh toán">
+                  <span>{_format.getVND(data?.TransactionMoney)}</span>
+                </Tooltip>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
