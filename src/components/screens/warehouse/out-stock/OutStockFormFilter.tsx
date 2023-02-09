@@ -44,10 +44,10 @@ export const OutStockFormFilter: React.FC<TProps> = ({
 
   const componentRef = useRef<ReactToPrint>(null);
   const ComponentToPrint = React.forwardRef<{}, {}>((props, ref: any) => {
-    const orderTable = outStockSessionPackages.filter(
+    const orderTable = outStockSessionPackages?.filter(
       (item) => item?.SmallPackage?.OrderType === 1
     );
-    const transTable = outStockSessionPackages.filter(
+    const transTable = outStockSessionPackages?.filter(
       (item) => item?.SmallPackage?.OrderType === 2
     );
 
@@ -100,7 +100,7 @@ export const OutStockFormFilter: React.FC<TProps> = ({
           Số điện thoại người đến nhận:{" "}
           <p className="w-48">{user?.UserPhone}</p>
         </div>
-        {orderTable.length > 0 && (
+        {orderTable?.length > 0 && (
           <>
             <div className="text-black text-sm my-3">
               Danh sách kiện mua hộ:
@@ -144,7 +144,7 @@ export const OutStockFormFilter: React.FC<TProps> = ({
             </table>
           </>
         )}
-        {transTable.length > 0 && (
+        {transTable?.length > 0 && (
           <>
             <div className="text-black text-sm my-3">
               Danh sách kiện ký gửi:
@@ -161,7 +161,7 @@ export const OutStockFormFilter: React.FC<TProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {transTable.map((item, index) => {
+                {transTable?.map((item, index) => {
                   return (
                     <tr key={item.Id}>
                       <td>{++index}</td>

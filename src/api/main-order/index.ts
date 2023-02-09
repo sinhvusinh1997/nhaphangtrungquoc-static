@@ -14,7 +14,7 @@ type TFilterParams = {
   TypeSearch: ESearchData;
   /**
    * 1. Đơn mua hộ
-   * 2. Đơn vận chuyển hộ
+   * 2. Đơn ký gửi
    * 3. Không xác định
    */
   OrderType: 1 | 2 | 3;

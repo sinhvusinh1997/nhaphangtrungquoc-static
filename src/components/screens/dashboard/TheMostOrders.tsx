@@ -61,7 +61,7 @@ export const TheMostOrders = () => {
       render: (_, record) => _format.getVND(record?.TotalMainOrder, " "),
     },
     {
-      title: "Vận chuyển hộ",
+      title: "Ký gửi",
       dataIndex: "TotalTransportationOrder",
       align: "right",
       render: (_, record) =>

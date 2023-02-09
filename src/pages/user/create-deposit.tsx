@@ -57,7 +57,7 @@ const Index: TNextPageWithLayout = () => {
     (data: TUserCreateDeposit) => transportationOrder.create(data),
     {
       onSuccess: () => {
-        toast.success("Tạo đơn hàng vận chuyển hộ thành công");
+        toast.success("Tạo đơn hàng ký gửi thành công");
         reset({
           UID: user.UserId,
           smallPackages: [

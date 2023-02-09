@@ -17,8 +17,6 @@ import { TNextPageWithLayout } from "~/types/layout";
 
 const Index: TNextPageWithLayout = () => {
   const { current: newUser } = useAppSelector((state) => state.user);
-
-  if (!newUser) return null;
   const { query } = useRouter();
   const [numberOfOrder, setNumberOfOrder] = useState(orderStatus);
   const [filter, setFilter] = useState({

@@ -50,6 +50,7 @@ type TEmployee = TBaseReponseParams &
     TotalPaidPrice: number;
     TotalUnPaidPrice: number;
     OneSignalPlayerID: String;
+    ShippingType?: number;
   };
 
 type TBonus = {

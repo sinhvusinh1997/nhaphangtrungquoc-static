@@ -31,7 +31,7 @@ export const salerRouter = [
           {
             key: "TransportationOrder",
             path: "/manager/deposit/deposit-list",
-            name: "Đơn vận chuyển hộ",
+            name: "Đơn ký gửi",
           },
         ],
       },
@@ -52,7 +52,7 @@ export const salerRouter = [
           },
           {
             path: "/manager/order/buy-for/create-deposit",
-            name: "Tạo đơn vận chuyển hộ",
+            name: "Tạo đơn ký gửi",
           },
         ],
       },

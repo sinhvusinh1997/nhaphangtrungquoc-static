@@ -1,9 +1,110 @@
-import { Tag } from "antd";
+import { Modal, Tag } from "antd";
 import router from "next/router";
 import { ActionButton, DataTable } from "~/components";
-import { orderStatus2Data, transportStatus } from "~/configs";
+import { transportStatus } from "~/configs";
 import { TColumnsType } from "~/types/table";
 import { _format } from "~/utils";
+
+const DetailInfo = (record) => {
+  const divStyle = `flex justify-between items-center py-2 my-2 border-b border-[#e4e4e4]`;
+  const detailBox = `md:h-fit w-[60vw] grid grid-cols-2 gap-7 xl:mt-[30px]`;
+  const title = `text-[18px] font-bold`;
+  const color = transportStatus.find((x) => x.id === record?.record?.Status);
+
+  return (
+    <div className={detailBox}>
+      <div className="col-span-1">
+        <span className={title}>Thông tin</span>
+        <div className={divStyle}>
+          Mã vận đơn: <span>{record?.record?.OrderTransactionCode}</span>
+        </div>
+        <div className={divStyle}>
+          UserName: <span>{record?.record?.UserName}</span>
+        </div>
+        <div className={divStyle}>
+          Kho Trung Quốc: <span>{record?.record?.WareHouseFrom}</span>
+        </div>
+        <div className={divStyle}>
+          Kho Việt Nam: <span>{record?.record?.WareHouseTo}</span>
+        </div>
+        <div className={divStyle}>
+          Ngày tạo: <span>{_format.getVNDate(record?.record?.Created)}</span>
+        </div>
+        <div className={divStyle}>
+          Trạng thái:{" "}
+          <Tag color={color?.color}>{record?.record?.StatusName}</Tag>
+        </div>
+        <div className={divStyle}>
+          Phương thức vận chuyển:{" "}
+          <span>{record?.record?.ShippingTypeName}</span>
+        </div>
+        <div className={`${divStyle} flex-col items-baseline`}>
+          Ghi chú nhân viên:{" "}
+          <textarea
+            className="w-full border border-[#e4e4e4] px-3 py-2"
+            readOnly
+            disabled
+            value={record?.record?.StaffNote ?? "--"}
+          />
+        </div>
+        <div className={`${divStyle} flex-col items-baseline`}>
+          Ghi chú khách hàng (hủy nếu có):{" "}
+          <textarea
+            className="w-full border border-[#e4e4e4] px-3 py-2"
+            readOnly
+            disabled
+            value={
+              record?.record?.CancelReason === ""
+                ? record?.record?.Note
+                : record?.record?.CancelReason
+            }
+          />
+        </div>
+      </div>
+
+      <div className="col-span-1">
+        <span className={title}>Phí chi tiết</span>
+        <div className={divStyle}>
+          Cân nặng: <span>{record?.record?.PayableWeight ?? 0} kg</span>
+        </div>
+        <div className={divStyle}>
+          Phí cân nặng:{" "}
+          <span>{_format.getVND(record?.record?.FeeWeightPerKg)}</span>
+        </div>
+        <div className={divStyle}>
+          Số khối: <span>{record?.record?.VolumePayment ?? 0} m3</span>
+        </div>
+        <div className={divStyle}>
+          Phí khối: <span>{_format.getVND(record?.record?.FeePerVolume)}</span>
+        </div>
+        <div className={divStyle}>
+          Phí vận chuyển:{" "}
+          <span>{_format.getVND(record?.record?.DeliveryPrice)}</span>
+        </div>
+        <div className={divStyle}>
+          Phí COD Trung Quốc:{" "}
+          <span>{_format.getVND(record?.record?.CODFee)}</span>
+        </div>
+        <div className={divStyle}>
+          Phí đóng gỗ:{" "}
+          <span>{_format.getVND(record?.record?.IsPackedPrice)}</span>
+        </div>
+        <div className={divStyle}>
+          Phí bảo hiểm:{" "}
+          <span>{_format.getVND(record?.record?.InsuranceMoney)}</span>
+        </div>
+        <div className={divStyle}>
+          Phí kiểm hàng:{" "}
+          <span>{_format.getVND(record?.record?.IsCheckProductPrice)}</span>
+        </div>
+        <div className={divStyle}>
+          Tổng tiền:{" "}
+          <span>{_format.getVND(record?.record?.TotalPriceVND)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const UserTransfer = ({ data, isLoading, isFetching, pagination }) => {
   const columns: TColumnsType<TNewDeliveryOrders> = [
@@ -47,9 +148,19 @@ export const UserTransfer = ({ data, isLoading, isFetching, pagination }) => {
       align: "right",
       render: (_, record) => (
         <ActionButton
-          onClick={() => router.push({ pathname: "/user/deposit-list" })}
-          icon="fas fa-list"
-          title="Xem danh sách đơn hàng"
+          onClick={() =>
+            Modal.info({
+              title: (
+                <div className="text-[20px] font-bold">
+                  Thông tin chi tiết đơn #{record?.Id}
+                </div>
+              ),
+              className: "!w-fit",
+              content: <DetailInfo record={record} />,
+            })
+          }
+          icon="fas fa-info-square"
+          title="Chi tiết đơn"
         />
       ),
       responsive: ["xl"],
@@ -90,7 +201,7 @@ export const UserTransfer = ({ data, isLoading, isFetching, pagination }) => {
           data: data?.Items,
           loading: isFetching,
           bordered: true,
-          title: "Đơn hàng vận chuyển hộ",
+          title: "Đơn hàng ký gửi",
           // expandable: expandable,
           pagination,
         }}

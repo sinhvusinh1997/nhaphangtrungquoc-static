@@ -149,7 +149,7 @@ export const managerRouter = [
           },
           {
             path: "/manager/order/buy-for/create-deposit",
-            name: "Tạo đơn vận chuyển hộ",
+            name: "Tạo đơn ký gửi",
           },
         ],
       },

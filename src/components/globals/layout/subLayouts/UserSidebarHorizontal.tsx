@@ -112,22 +112,24 @@ export const UserLayout: FC<{}> = ({ children }) => {
           </Menu>
         </div>
       </div>
-      <Marquee
-        direction="right"
-        speed={70}
-        gradient={false}
-        style={{
-          height: "36px",
-          background: "#0c5964db",
-          color: "#fff",
-          fontSize: "20px",
-          fontWeight: "bold",
-          textTransform: "uppercase",
-        }}
-      >
-        <i className="fas fa-bullhorn mr-4 rotate-[-20deg]"></i>
-        {data?.data?.Data?.NotiRun}
-      </Marquee>
+      {data?.data?.Data?.NotiRun && (
+        <Marquee
+          direction="right"
+          speed={70}
+          gradient={false}
+          style={{
+            height: "36px",
+            background: "#0c5964db",
+            color: "#fff",
+            fontSize: "20px",
+            fontWeight: "bold",
+            textTransform: "uppercase",
+          }}
+        >
+          <i className="fas fa-bullhorn mr-4 rotate-[-20deg]"></i>
+          {data?.data?.Data?.NotiRun}
+        </Marquee>
+      )}
       <div className={`${styles.toolsExt}`}>
         <Link href={data?.data?.Data?.CocCocExtensionLink ?? "/"}>
           <a target="_blank" className={styles.icon}>

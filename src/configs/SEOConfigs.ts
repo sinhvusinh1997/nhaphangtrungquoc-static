@@ -33,8 +33,8 @@ export const SEOConfigs = {
   },
   handleComplaint: "Xử lý khiếu nại",
   deposit: {
-    listDeposit: "Danh sách vận chuyển hộ",
-    statisticalFeeDeposit: "Thống kê cước vận chuyển hộ",
+    listDeposit: "Danh sách ký gửi",
+    statisticalFeeDeposit: "Thống kê cước ký gửi",
     exportDepositRequest: "Xuất kho ký gửi đã yêu cầu",
     exportDeposit: "Xuất kho kiện chưa yêu cầu",
     detailRequest: "Chi tiết yêu cầu",

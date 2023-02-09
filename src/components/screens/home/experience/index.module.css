@@ -1,61 +1,61 @@
 .experience {
-	padding: 80px 0;
+  padding: 80px 0;
 }
 
 .experienceInner {
-	@apply grid grid-cols-2 gap-4;
+  @apply grid grid-cols-2 gap-4;
 }
 
 .left {
-	@apply col-span-1;
-	text-align: left;
-	padding-right: 100px;
+  @apply col-span-1;
+  text-align: left;
+  padding-right: 100px;
 }
 
 .right {
-	@apply col-span-1;
+  @apply col-span-1;
 }
 
 .innerRight {
-	@apply grid grid-cols-2 gap-4;
+  @apply grid grid-cols-2 gap-4;
 }
 
 .boxExp {
-	@apply col-span-1;
-	border: 1px solid #d9d9d9;
-	height: 136px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+  @apply col-span-1;
+  border: 1px solid #d9d9d9;
+  height: 136px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .value {
-	font-family: "Roboto";
-	font-style: normal;
-	font-weight: 700;
-	font-size: 48px;
-	line-height: 32px;
-	letter-spacing: 0.02em;
-	color: #f37021;
-	margin-bottom: 20px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 32px;
+  letter-spacing: 0.02em;
+  color: #f37021;
+  margin-bottom: 20px;
 }
 
 @media screen and (max-width: 860px) {
-	.experience {
-		display: flex;
-		flex-direction: column;
-		padding-left: 30px;
-		padding-right: 30px;
-	}
+  .experience {
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 }
 
 @media screen and (max-width: 680px) {
-	.experience .left {
-		@apply col-span-2;
-	}
+  .experience .left {
+    @apply col-span-2;
+  }
 
-	.experience .right {
-		@apply col-span-2;
-	}
+  .experience .right {
+    @apply col-span-2;
+  }
 }

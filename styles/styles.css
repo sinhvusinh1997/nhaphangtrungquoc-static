@@ -1,5 +1,6 @@
 body {
-  font-family: Roboto, sans-serif !important;
+  /* font-family: Roboto, sans-serif !important; */
+  font-family: "Inter", sans-serif !important;
 }
 
 .ant-pagination-prev.ant-pagination-disabled:focus-visible
@@ -1173,7 +1174,7 @@ tr:nth-child(even) {
 /* New styles */
 
 .mainTitle {
-  font-family: "Roboto";
+  /* font-family: "Inter"; */
   font-style: normal;
   font-weight: 700;
   font-size: 48px;
@@ -1181,7 +1182,7 @@ tr:nth-child(even) {
 }
 
 .secondTitle {
-  font-family: "Roboto";
+  /* font-family: "Inter"; */
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
@@ -1190,7 +1191,7 @@ tr:nth-child(even) {
 }
 
 .title {
-  font-family: "Roboto";
+  /* font-family: "Inter"; */
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -1199,7 +1200,7 @@ tr:nth-child(even) {
 }
 
 .mainDes {
-  font-family: "Roboto";
+  /* font-family: "Inter"; */
   font-style: normal;
   font-weight: 400;
   font-size: 16px;

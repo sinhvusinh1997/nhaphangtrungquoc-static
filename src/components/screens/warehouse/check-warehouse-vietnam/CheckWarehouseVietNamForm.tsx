@@ -72,7 +72,7 @@ export const CheckWarehouseVietNamForm = () => {
             toast.warning("Bạn đã quét bao hàng này rồi");
           } else if (newData.length === 1) {
             if (newData[0].OrderType === EOrderTypeStatusData.Transper) {
-              toast.warning("Bạn đã quét đơn hàng vận chuyển hộ này rồi");
+              toast.warning("Bạn đã quét đơn hàng ký gửi này rồi");
             } else if (newData[0].OrderType === EOrderTypeStatusData.Buy) {
               confirm({
                 title: "Thông báo!",

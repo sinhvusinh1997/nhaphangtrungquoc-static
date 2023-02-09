@@ -1,24 +1,36 @@
-import { Card, Image, Modal, Tooltip } from "antd";
-import React, { useState } from "react";
+import { Card, Modal, Tooltip } from "antd";
+import React from "react";
 
-export const BankCard = ({ item }) => {
+export const BankCard = ({ item, setSelectedBank, selectedBank }) => {
   return (
     <React.Fragment key={item?.Id}>
       <Card
-        className="md:col-span-2 xl:col-span-1"
-        title={""}
+        className={`md:col-span-2 xl:col-span-1 cursor-pointer transition-all ${
+          item?.Id === selectedBank?.Id && "shadow-xl"
+        }`}
+        title=""
+        onClick={() => {
+          setSelectedBank(item);
+        }}
+        style={{
+          border:
+            item?.Id === selectedBank?.Id
+              ? "3px solid #52c41a"
+              : "3px solid #ececec",
+          transform: item?.Id === selectedBank?.Id && "scale(1.02)",
+        }}
         extra={
           <div className="flex justify-between items-center w-full">
             <span className="flex items-center relative">
               <Tooltip title="Click để quét mã QR">
                 <i
                   className="fas fa-qrcode mr-4 text-[16px] text-red cursor-pointer"
-                  onClick={() =>
+                  onClick={() => {
                     Modal.info({
                       title: "Vui lòng kiểm tra kỹ thông tin!",
                       content: <img src={item?.IMGQR} />,
-                    })
-                  }
+                    });
+                  }}
                 ></i>
               </Tooltip>
               <p className="font-semibold text-[#595857]">{item?.BankName}</p>

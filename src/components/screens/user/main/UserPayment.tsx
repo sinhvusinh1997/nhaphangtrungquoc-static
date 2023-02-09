@@ -55,8 +55,8 @@ const columns: TColumnsType<TNewPaymentOrders> = [
             query: { id: record?.Id },
           })
         }
-        icon="fas fa-edit"
-        title="Chi Tiết"
+        icon="fas fa-info-square"
+        title="Chi tiết đơn"
       />
     ),
     responsive: ["xl"],

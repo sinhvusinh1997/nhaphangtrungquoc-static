@@ -98,12 +98,14 @@ const Index: TNextPageWithLayout = () => {
       ),
     {
       onSuccess: () => {
+        setModal(false);
         queryClient.invalidateQueries("orderList");
         queryClient.invalidateQueries("clientData");
         queryClient.invalidateQueries({ queryKey: "menuData" });
         toast.success("Đặt cọc thành công");
       },
       onError: (error) => {
+        setModal(false);
         showToast({
           title: "Đã xảy ra lỗi!",
           message: (error as any)?.response?.data?.ResultMessage,
@@ -121,12 +123,14 @@ const Index: TNextPageWithLayout = () => {
       ),
     {
       onSuccess: () => {
+        setModal(false);
         queryClient.invalidateQueries("orderList");
         queryClient.invalidateQueries("clientData");
         queryClient.invalidateQueries({ queryKey: "menuData" });
         toast.success("Thanh toán thành công");
       },
       onError: (error) => {
+        setModal(false);
         showToast({
           title: (error as any)?.response?.data?.ResultCode,
           message: (error as any)?.response?.data?.ResultMessage,

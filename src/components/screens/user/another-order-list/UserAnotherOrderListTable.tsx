@@ -721,7 +721,7 @@ export const UserAnotherOrderListTable: React.FC<
         columns,
         data,
         bordered: true,
-        // rowSelection,
+        rowSelection,
         loading,
         // pagination,
         // onChange: handlePagination,

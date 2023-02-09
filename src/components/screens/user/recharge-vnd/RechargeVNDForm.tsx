@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { adminSendUserWallet } from "~/api";
 import {
   BankCard,
+  FormInput,
   FormInputNumber,
   FormSelect,
   FormTextarea,
@@ -21,16 +22,16 @@ export const RechargeVNDForm: React.FC<TProps> = ({
   newUser,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [selectedBank, setSelectedBank] = useState(bankCatalogue[0]);
 
   const { control, handleSubmit, reset, resetField } =
     useForm<TUserHistoryRechargeVND>({
       mode: "onBlur",
+      defaultValues: {
+        TradeContent: `NAP ${newUser?.UserName} <sodienthoai>`,
+        Amount: 1,
+      },
     });
-
-  // useDeepEffect(
-  //   () => reset({ BankId: bankCatalogue?.[0]?.Id }),
-  //   [bankCatalogue]
-  // );
 
   const queryClient = useQueryClient();
   const mutationAdd = useMutation(adminSendUserWallet.create, {
@@ -38,8 +39,8 @@ export const RechargeVNDForm: React.FC<TProps> = ({
       queryClient.invalidateQueries("rechargeVNDList");
       toast.success("Gửi yêu cầu xác nhận chuyển khoản thành công");
       reset({
-        Amount: 0,
-        TradeContent: "",
+        Amount: 1,
+        TradeContent: `NAP ${newUser?.UserName} <sodienthoai>`,
         BankId: bankCatalogue?.[0]?.Id,
       });
       setLoading(false);
@@ -54,9 +55,15 @@ export const RechargeVNDForm: React.FC<TProps> = ({
       toast.warning("Số tiền yêu cầu nạp không được nhỏ hơn bằng 0 đồng!");
     } else {
       setLoading(true);
-      mutationAdd.mutateAsync({ ...data, UID: newUser?.UserId });
+      mutationAdd.mutateAsync({
+        ...data,
+        UID: newUser?.UserId,
+        BankId: selectedBank?.Id,
+      });
     }
   };
+
+  useEffect(() => {}, [selectedBank]);
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -64,9 +71,20 @@ export const RechargeVNDForm: React.FC<TProps> = ({
         <h3 className="text-xl font-bold uppercase text-[#595857] py-2 border-b border-[#f8dfd5]">
           THÔNG TIN NGÂN HÀNG
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div
+          className={`grid grid-cols-2 gap-4 max-h-[500px] pt-4 ${
+            bankCatalogue.length > 4 && "overflow-y-auto px-[5px] "
+          } `}
+        >
           {bankCatalogue.map((item) => {
-            return <BankCard item={item} key={item?.Id} />;
+            return (
+              <BankCard
+                item={item}
+                key={item?.Id}
+                setSelectedBank={setSelectedBank}
+                selectedBank={selectedBank}
+              />
+            );
           })}
         </div>
       </div>
@@ -78,25 +96,24 @@ export const RechargeVNDForm: React.FC<TProps> = ({
           opacity: loading ? "0.8" : "1",
         }}
       >
-        <div className="grid grid-cols-1 gap-4">
-          <p className="col-span-2 text-xl font-bold uppercase text-[#595857] py-2 border-b border-[#f8dfd5]">
+        <div className="grid grid-cols-1 gap-3">
+          <h3 className="col-span-2 text-xl font-bold uppercase text-[#595857] py-2 border-b border-[#f8dfd5]">
             XÁC NHẬN CHUYỂN KHOẢN
-          </p>
+          </h3>
           <div className="col-span-2">
             <div className="flex mb-4 items-center">
               <div className="w-full">
-                <FormSelect
+                <FormInput
                   control={control}
-                  name="BankId"
-                  data={bankCatalogue}
-                  defaultValue={{
-                    BankInfo: bankCatalogue?.[0]?.BankInfo,
-                    Id: bankCatalogue?.[0]?.Id,
-                  }}
-                  select={{ label: "BankInfo", value: "Id" }}
-                  placeholder=""
-                  rules={{ required: "This field is required" }}
-                  label={"Chuyển vào tài khoản?"}
+                  name="BankInfo"
+                  placeholder={
+                    selectedBank
+                      ? `${selectedBank?.BankInfo} - ${selectedBank?.Id}`
+                      : "Vui lòng chọn ngân hàng!"
+                  }
+                  required={false}
+                  label={"Thông tin ngân hàng đã chọn!"}
+                  disabled
                 />
               </div>
             </div>

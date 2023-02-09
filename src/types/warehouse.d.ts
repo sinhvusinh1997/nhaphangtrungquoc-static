@@ -160,7 +160,7 @@ type TMissingPackage = TTransactionCode & {
 
 type TCreateWareHouse = {
   Name: string;
-  IsChina: boolean;
+  IsChina: number;
   Address: string;
 };
 

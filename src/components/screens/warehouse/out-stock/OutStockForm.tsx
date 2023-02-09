@@ -104,7 +104,7 @@ export const OutStockForm = () => {
             }
             icon="fas fa-hand-holding-box"
             btnIconClass="!mr-2"
-            title="Lấy đơn vận chuyển hộ!"
+            title="Lấy đơn ký gửi!"
             toolip=""
           />
         </div>

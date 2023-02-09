@@ -265,12 +265,25 @@ export const orderStatus2Data = [
 
 // created order status data scope
 // ===== BEGIN =====
+
+/**
+ * Chưa đặt cọc = 0,
+    Hủy = 1,
+    Đã đặt cọc = 2,
+    Đã mua hàng = 5,
+    Đã về kho TQ = 6,
+    Đã về kho VN = 7,
+    Đã thanh toán = 9,
+    Đã hoàn thành = 10,
+    Đã khiếu nại = 11,
+    Chờ báo giá = 100
+ */
 export enum ECreatedOrderStatusData {
   All = null,
   Undeposited = 0,
   Canceled = 1,
   Deposited = 2,
-  WaitingForOrderApproval = 3,
+  WaitingForOrderApproval = 100,
   Approved = 4,
   BoughtForOrder = 5,
   ArrivedToChinaWarehouse = 6,
@@ -2052,7 +2065,7 @@ export const orderStatus = [
   {
     id: 11,
     name: "Đã khiếu nại",
-    color: "#008000",
+    color: "#601010",
     col: 1,
     money: null,
     value: null,

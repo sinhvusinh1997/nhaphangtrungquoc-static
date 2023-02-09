@@ -87,10 +87,10 @@ export const breadcrumb = {
   },
   deposit: {
     depositList: {
-      main: "Danh sách vận chuyển hộ",
+      main: "Danh sách ký gửi",
       detail: "Chi tiết vận chuyển",
     },
-    depositStatistic: "Thống kê cước vận chuyển hộ",
+    depositStatistic: "Thống kê cước ký gửi",
     nonRequestDepositOutstock: {
       main: "Xuất kho",
       detail: "Chi tiết xuất kho",

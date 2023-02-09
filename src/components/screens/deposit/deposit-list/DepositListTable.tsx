@@ -58,15 +58,15 @@ export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
       render: (_, record) => {
         return (
           <>
-            <div className="">
+            <div className="flex justify-between">
               <span className="font-semibold">Kho Trung Quốc: </span>
               <span>{record?.WareHouseFrom}</span>
             </div>
-            <div className="">
+            <div className="flex justify-between">
               <span className="font-semibold">Kho Việt Nam: </span>
               <span>{record?.WareHouseTo}</span>
             </div>
-            <div className="">
+            <div className="flex justify-between">
               <span className="font-semibold">Phương thức: </span>
               <span>{record?.ShippingTypeName}</span>
             </div>
@@ -82,16 +82,24 @@ export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
       render: (_, record) => {
         return (
           <>
-            <div className="">
-              <span className="font-semibold">Phí cần nặng: </span>
-              <span>{_format.getVND(record?.PayableWeight)}</span>
+            <div className="flex justify-between">
+              <span className="font-semibold">Phí cân nặng: </span>
+              <span>
+                {_format.getVND(record?.PayableWeight * record?.FeeWeightPerKg)}
+              </span>
             </div>
-            <div className="">
+            <div className="flex justify-between">
               <span className="font-semibold">Phí khối: </span>
-              <span>{_format.getVND(record?.VolumePayment)}</span>
+              <span>
+                {_format.getVND(record?.VolumePayment * record?.FeePerVolume)}
+              </span>
             </div>
-            <div className="">
+            <div className="flex justify-between">
               <span className="font-semibold">Phí vận chuyển: </span>
+              <span>{_format.getVND(record?.DeliveryPrice)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold">Tổng tiền: </span>
               <span>{_format.getVND(record?.TotalPriceVND)}</span>
             </div>
           </>

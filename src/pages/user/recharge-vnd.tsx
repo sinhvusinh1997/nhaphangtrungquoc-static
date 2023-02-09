@@ -123,8 +123,9 @@ const Index: TNextPageWithLayout = () => {
       <ModalDelete
         id={item.current?.Id}
         onCancel={() => handleModal(undefined)}
-        onConfirm={() =>
-          mutationDelete.mutateAsync({ ...item.current, Status: 3 })
+        onConfirm={
+          () => console.log("dataSend: ", { ...item.current, Status: 3 })
+          // mutationDelete.mutateAsync({ ...item.current, Status: 3 })
         }
         visible={modal}
         title="Bạn có chắc muốn huỷ yêu cầu"

@@ -17,14 +17,13 @@ export const InfoUserForm: React.FC<any> = ({
   oriEmail,
   oriPhone,
 }) => {
-  // const { warehouseVN, shippingTypeToWarehouse, warehouseTQ } = useCatalogue({
-  //   warehouseVNEnabled: true,
-  //   shippingTypeToWarehouseEnabled: true,
-  //   warehouseTQEnabled: true,
-  // });
+  const { warehouseVN, shippingTypeToWarehouse, warehouseTQ } = useCatalogue({
+    warehouseVNEnabled: true,
+    shippingTypeToWarehouseEnabled: true,
+    warehouseTQEnabled: true,
+  });
 
   const [changePass, setChangePass] = useState(false);
-
   return (
     <div
       className=""
@@ -47,7 +46,7 @@ export const InfoUserForm: React.FC<any> = ({
           />
         </div>
       </div>
-      <div className="grid grid-cols-3 xl:p-4 gap-4">
+      <div className="grid grid-cols-4 xl:p-4 gap-4">
         <div className="col-span-1 xl:mr-4">
           <div className="my-4">
             <FormInput
@@ -147,41 +146,53 @@ export const InfoUserForm: React.FC<any> = ({
               }}
             />
           </div>
-          {/* <div className="my-4">
-						<FormSelect
-							control={control}
-							name="WarehouseFrom"
-							label="Kho TQ"
-							placeholder=""
-							required={false}
-							data={warehouseTQ}
-							select={{label: "Name", value: "Id"}}
-							defaultValue={warehouseTQ?.[data?.WarehouseFrom]}
-						/>
-					</div>
-					<div className="my-4">
-						<FormSelect
-							control={control}
-							name="ShippingType"
-							label="Hình Thức VC"
-							placeholder=""
-							required={false}
-							data={shippingTypeToWarehouse}
-							select={{label: "Name", value: "Id"}}
-							defaultValue={shippingTypeToWarehouse?.[data?.ShippingType]}
-						/>
-					</div>
-					<div className="my-4">
-						<FormSelect
-							control={control}
-							label="Kho VN"
-							placeholder=""
-							select={{label: "Name", value: "Id"}}
-							name="WarehouseTo"
-							data={warehouseVN}
-							defaultValue={warehouseVN?.[data?.WarehouseTo]}
-						/>
-					</div> */}
+        </div>
+        <div className="col-span-1">
+          <div className="my-4">
+            <FormSelect
+              control={control}
+              name="WarehouseFrom"
+              label="Kho TQ"
+              placeholder=""
+              required={false}
+              isClearable
+              data={warehouseTQ}
+              select={{ label: "Name", value: "Id" }}
+              defaultValue={warehouseTQ?.find(
+                (x) => x.Id === data?.WarehouseFrom
+              )}
+            />
+          </div>
+          <div className="my-4">
+            <FormSelect
+              control={control}
+              label="Kho VN"
+              placeholder=""
+              isClearable
+              select={{ label: "Name", value: "Id" }}
+              name="WarehouseTo"
+              required={false}
+              data={warehouseVN}
+              defaultValue={warehouseVN?.find(
+                (x) => x.Id === data?.WarehouseTo
+              )}
+            />
+          </div>
+          <div className="my-4">
+            <FormSelect
+              control={control}
+              name="ShippingType"
+              label="Hình Thức VC"
+              placeholder=""
+              isClearable
+              required={false}
+              data={shippingTypeToWarehouse}
+              select={{ label: "Name", value: "Id" }}
+              defaultValue={shippingTypeToWarehouse?.find(
+                (x) => x.Id === data?.ShippingType
+              )}
+            />
+          </div>
         </div>
         <div className="col-span-1">
           <div className="my-4">

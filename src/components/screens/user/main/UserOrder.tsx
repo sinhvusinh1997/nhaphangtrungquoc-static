@@ -51,8 +51,8 @@ export const UserOrder = ({ data, isLoading, isFetching, pagination }) => {
       align: "right",
       render: (_, record) => (
         <ActionButton
-          icon={"fas fa-eye"}
-          title={""}
+          icon="fas fa-info-square"
+          title="Chi tiết đơn"
           onClick={() =>
             router.push({
               pathname: "/user/order-list/detail",

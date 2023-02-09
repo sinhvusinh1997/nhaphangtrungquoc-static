@@ -21,6 +21,7 @@ const Index: TNextPageWithLayout = () => {
   const oriEmail = useRef(null);
   const oriPhone = useRef(null);
   const [modal, setModal] = useState(false);
+
   const { control, reset, handleSubmit, getValues, setValue } = useForm<
     TUser & { PasswordAgain: string; PasswordNew: string }
   >({

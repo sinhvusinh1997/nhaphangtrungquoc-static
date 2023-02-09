@@ -2,8 +2,14 @@ import { Empty } from "antd";
 import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueries, useQueryClient } from "react-query";
-import { orderShopTemp } from "~/api";
+import { useMutation, useQueries, useQuery, useQueryClient } from "react-query";
+import {
+  orderShopTemp,
+  shipping,
+  user,
+  warehouseFrom,
+  warehouseTo,
+} from "~/api";
 import {
   CartSteps,
   ConfirmCompleteForm,
@@ -15,7 +21,7 @@ import {
   WareHouseInfo,
 } from "~/components";
 import { SEOHomeConfigs } from "~/configs/SEOConfigs";
-import { useDeepEffect } from "~/hooks";
+import { useCatalogue, useDeepEffect } from "~/hooks";
 import {
   deleteOrderShopTempById,
   useAppDispatch,
@@ -37,14 +43,6 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
     }))
   ).map((res) => res.data);
 
-  const { control, handleSubmit, reset, getValues, setValue } =
-    useForm<TUserPayment>({
-      mode: "onBlur",
-      defaultValues: {
-        ShopPayments: [],
-      },
-    });
-
   const {
     control: addressControl,
     getValues: getValuesAddress,
@@ -58,11 +56,63 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
     },
   });
 
-  // const {warehouseTQ, warehouseVN, shippingTypeToWarehouse} = useCatalogue({
-  // 	warehouseTQEnabled: !!ids,
-  // 	warehouseVNEnabled: !!ids,
-  // 	shippingTypeToWarehouseEnabled: !!ids,
-  // });
+  const { data: userPayment } = useQuery(
+    "userPayment",
+    () => user.getByID(orderShopTempsData[0]?.UID),
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!orderShopTempsData[0]?.UID,
+    }
+  );
+
+  const { refetch: refetchFrom, data: warehouseFromData } = useQuery(
+    ["warehouseFromData"],
+    () => warehouseFrom.getList().then((res) => res.Data.Items),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { refetch: refetchTo, data: warehouseToData } = useQuery(
+    ["warehouseToData"],
+    () => warehouseTo.getList().then((res) => res.Data.Items),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { refetch: refetchMethod, data: shippingType } = useQuery(
+    ["shippingType"],
+    () =>
+      shipping
+        .getList({
+          PageSize: 9999,
+          PageIndex: 1,
+        })
+        .then((res) => res.Data.Items),
+    {
+      refetchOnReconnect: false,
+    }
+  );
+
+  const { control, handleSubmit, reset, getValues, setValue } =
+    useForm<TUserPayment>({
+      mode: "onBlur",
+      defaultValues: {
+        ShopPayments: orderShopTempsData.map((data) => ({
+          ShopId: data?.Id,
+          ShippingType: shippingType?.find(
+            (x) => x.Id === Number(userPayment?.Data?.ShippingType)
+          )?.Id,
+          WarehouseTQ: warehouseFromData?.find(
+            (x) => x.Id === Number(userPayment?.Data?.WarehouseFrom)
+          )?.Id,
+          WarehouseVN: warehouseToData?.find(
+            (x) => x.Id === Number(userPayment?.Data?.WarehouseTo)
+          )?.Id,
+        })),
+      },
+    });
 
   useDeepEffect(() => {
     if (
@@ -84,9 +134,15 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
         Phone: Phone,
         ShopPayments: orderShopTempsData.map((data) => ({
           ShopId: data?.Id,
-          ShippingType: null,
-          WarehouseTQ: null,
-          WarehouseVN: null,
+          ShippingType: shippingType?.find(
+            (x) => x.Id === Number(userPayment?.Data?.ShippingType)
+          )?.Id,
+          WarehouseTQ: warehouseFromData?.find(
+            (x) => x.Id === Number(userPayment?.Data?.WarehouseFrom)
+          )?.Id,
+          WarehouseVN: warehouseToData?.find(
+            (x) => x.Id === Number(userPayment?.Data?.WarehouseTo)
+          )?.Id,
         })),
       });
     }
@@ -102,8 +158,6 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
         "city"
       )}, ${getValuesAddress("districts")}`
     );
-
-    console.log(getValues("Address"));
 
     if (!data?.IsAgreement) {
       toast.warning("Vui lòng xác nhận trước khi thanh toán");
@@ -161,9 +215,10 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
                     {...{
                       index,
                       orderShopTempData,
-                      // warehouseTQ,
-                      // warehouseVN,
-                      // shippingTypeToWarehouse,
+                      warehouseFromData,
+                      warehouseToData,
+                      shippingType,
+                      userPayment,
                       control,
                     }}
                   />

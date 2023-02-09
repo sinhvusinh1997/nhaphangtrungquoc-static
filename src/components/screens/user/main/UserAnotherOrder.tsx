@@ -57,7 +57,7 @@ export const UserAnotherOrder = ({
       align: "right",
       render: (_, record) => (
         <ActionButton
-          icon={"far fa-info-square"}
+          icon={"fas fa-info-square"}
           title={"Chi tiết đơn"}
           onClick={() => {
             router.push({

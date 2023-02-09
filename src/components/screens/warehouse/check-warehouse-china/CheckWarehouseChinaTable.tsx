@@ -55,7 +55,6 @@ export const CheckWarehouseChinaTable: React.FC<
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-  const [VolumePaymentView, setVolumePaymentView] = useState(0);
 
   // của trung quốc
   const columns: TColumnsType<TWarehouseCN> = [
@@ -171,9 +170,7 @@ export const CheckWarehouseChinaTable: React.FC<
       render: (_, record) => {
         return (
           <Input
-            value={
-              !VolumePaymentView ? record?.VolumePayment : VolumePaymentView
-            }
+            value={record?.VolumePayment}
             className="max-w-[60px] h-[30px] text-center"
             disabled
           />
@@ -210,13 +207,6 @@ export const CheckWarehouseChinaTable: React.FC<
                 defaultValue={_?.Length || 0}
                 inputClassName="max-w-[60px] h-[30px] text-center"
                 onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-                callback={(val) => {
-                  if (val !== _?.Length) {
-                    setVolumePaymentView(
-                      (__?.Length * __?.Width * __?.Height) / 1000000
-                    );
-                  }
-                }}
               />
             </div>
             <div className="flex items-center my-2">
@@ -228,13 +218,6 @@ export const CheckWarehouseChinaTable: React.FC<
                 defaultValue={_?.Width || 0}
                 inputClassName="max-w-[60px] h-[30px] text-center"
                 onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-                callback={(val) => {
-                  if (val !== _?.Width) {
-                    setVolumePaymentView(
-                      (__?.Length * __?.Width * __?.Height) / 1000000
-                    );
-                  }
-                }}
               />
             </div>
             <div className="flex items-center">
@@ -246,13 +229,6 @@ export const CheckWarehouseChinaTable: React.FC<
                 defaultValue={_?.Height || 0}
                 inputClassName="max-w-[60px] h-[30px] text-center"
                 onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-                callback={(val) => {
-                  if (val !== _?.Length) {
-                    setVolumePaymentView(
-                      (__?.Length * __?.Width * __?.Height) / 1000000
-                    );
-                  }
-                }}
               />
             </div>
           </React.Fragment>
@@ -685,9 +661,7 @@ export const CheckWarehouseChinaTable: React.FC<
       render: (_, record) => {
         return (
           <Input
-            value={
-              !VolumePaymentView ? record?.VolumePayment : VolumePaymentView
-            }
+            value={record?.VolumePayment}
             className="max-w-[60px] h-[30px] text-center"
             disabled
           />
@@ -724,13 +698,6 @@ export const CheckWarehouseChinaTable: React.FC<
               placeholder=""
               inputClassName="max-w-[60px] h-[30px] text-center"
               onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-              callback={(val) => {
-                if (val !== _?.Length) {
-                  setVolumePaymentView(
-                    (__?.Length * __?.Width * __?.Height) / 1000000
-                  );
-                }
-              }}
             />
           </div>
           <div className="flex items-center my-2">
@@ -741,13 +708,6 @@ export const CheckWarehouseChinaTable: React.FC<
               placeholder=""
               inputClassName="max-w-[60px] h-[30px] text-center"
               onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-              callback={(val) => {
-                if (val !== _?.Width) {
-                  setVolumePaymentView(
-                    (__?.Length * __?.Width * __?.Height) / 1000000
-                  );
-                }
-              }}
             />
           </div>
           <div className="flex items-center">
@@ -758,13 +718,6 @@ export const CheckWarehouseChinaTable: React.FC<
               placeholder=""
               inputClassName="max-w-[60px] h-[30px] text-center"
               onEnter={handleSubmit((data) => onPress([data[name][index]]))}
-              callback={(val) => {
-                if (val !== _?.Height) {
-                  setVolumePaymentView(
-                    (__?.Length * __?.Width * __?.Height) / 1000000
-                  );
-                }
-              }}
             />
           </div>
         </React.Fragment>

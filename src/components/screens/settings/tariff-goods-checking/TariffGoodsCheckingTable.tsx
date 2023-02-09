@@ -12,18 +12,17 @@ export const TariffGoodsCheckingTable: FC<TTable<any>> = ({
     {
       dataIndex: "Id",
       title: "ID",
-      align: "center",
     },
     {
       dataIndex: "AmountFrom",
       title: "Số lượng từ",
-      align: "center",
+      align: "right",
       sorter: (a, b) => a.Id - b.Id,
     },
     {
       dataIndex: "AmountTo",
       title: "Số lượng đến",
-      align: "center",
+      align: "right",
       render: (_, record) => {
         return <>{_format.getVND(record.AmountTo, "")}</>;
       },
@@ -50,7 +49,7 @@ export const TariffGoodsCheckingTable: FC<TTable<any>> = ({
     {
       dataIndex: "Fee",
       title: "Mức phí",
-      align: "center",
+      align: "right",
       render: (fee) => {
         return <>{_format.getVND(fee)}</>;
       },
@@ -59,7 +58,6 @@ export const TariffGoodsCheckingTable: FC<TTable<any>> = ({
       dataIndex: "action",
       key: "action",
       title: "Thao tác",
-      align: "center",
       render: (_, record) => (
         <ActionButton
           onClick={() => handleModal(record)}

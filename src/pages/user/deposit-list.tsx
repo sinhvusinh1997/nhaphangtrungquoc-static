@@ -135,7 +135,7 @@ const Index: TNextPageWithLayout = () => {
 
   return (
     <React.Fragment>
-      <div className="titlePageUser">Danh sách yêu cầu kiện ký gửi</div>
+      <div className="titlePageUser">Danh sách kiện ký gửi</div>
       <div className="tableBox py-2">
         <UserAnotherOrderInfo
           numberOfOrder={transportStatus}

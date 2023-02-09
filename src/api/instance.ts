@@ -70,7 +70,7 @@ instance.interceptors.response.use(
         ) ||
         response?.data?.ResultMessage ===
           "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại";
-      if (ResultMessageM) {
+      if (response?.data?.ResultCode === 401) {
         toast.error(response?.data?.ResultMessage, {
           position: "top-center",
           autoClose: 1000,
@@ -85,7 +85,10 @@ instance.interceptors.response.use(
           localStorage.removeItem("currentUser");
           localStorage.removeItem("token");
           Cookies.remove("mToken");
-          router.push("/");
+
+          router.asPath.includes("/")
+            ? window.location.reload()
+            : router.push("/");
         }, 1000);
         return null;
       }
