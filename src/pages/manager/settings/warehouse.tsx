@@ -44,9 +44,10 @@ const AddNewWareHouseForm = ({ onCancel, visible, refetchFrom, refetchTo }) => {
   const _onAddNew = async (data: TCreateWareHouse) => {
     const newData = { ...data, IsChina: Boolean(data.IsChina) };
     const id = toast.loading("Đang xử lý ...");
-    try {
-      if (data.IsChina) {
-        warehouseFrom.create(newData).then(() => {
+    if (data.IsChina) {
+      warehouseFrom
+        .create(newData)
+        .then(() => {
           toast.update(id, {
             render: "Thêm kho thành công!",
             type: "success",
@@ -54,9 +55,20 @@ const AddNewWareHouseForm = ({ onCancel, visible, refetchFrom, refetchTo }) => {
             autoClose: 1000,
           });
           refetchFrom();
+        })
+        .catch((error) => {
+          toast.update(id, {
+            render: (error as any)?.response?.data?.ResultMessage,
+            type: "error",
+            isLoading: false,
+            autoClose: 1000,
+          });
         });
-      } else {
-        warehouseTo.create(newData).then(() => {
+      onCancel();
+    } else {
+      warehouseTo
+        .create(newData)
+        .then(() => {
           toast.update(id, {
             render: "Thêm kho thành công!",
             type: "success",
@@ -64,16 +76,15 @@ const AddNewWareHouseForm = ({ onCancel, visible, refetchFrom, refetchTo }) => {
             autoClose: 1000,
           });
           refetchTo();
+        })
+        .catch((error) => {
+          toast.update(id, {
+            render: (error as any)?.response?.data?.ResultMessage,
+            type: "error",
+            isLoading: false,
+            autoClose: 1000,
+          });
         });
-      }
-      onCancel();
-    } catch (error) {
-      toast.update(id, {
-        render: "Xảy ra lỗi khi thêm kho!!",
-        type: "error",
-        isLoading: false,
-        autoClose: 1000,
-      });
       onCancel();
     }
   };

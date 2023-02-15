@@ -1,18 +1,19 @@
+import { Tag } from "antd";
 import router from "next/router";
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 import { transportationOrder } from "~/api";
 import {
-  DepositDetail,
+  FormCheckbox,
   FormInput,
   FormInputNumber,
   FormSelect,
   FormTextarea,
   IconButton,
-  toast,
 } from "~/components";
-import { orderStatusData } from "~/configs/appConfigs";
+import { orderStatusData, transportStatus } from "~/configs/appConfigs";
 import { useDeepEffect } from "~/hooks";
 import { useCatalogue } from "~/hooks/useCatalogue";
 
@@ -21,6 +22,7 @@ type TProps = {
   shippingTypeToWarehouseCatalogue: TBaseReponseParams[];
   loading: boolean;
   RoleID: number;
+  refetch: any;
 };
 
 export const DepositListForm: React.FC<TProps> = ({
@@ -28,27 +30,49 @@ export const DepositListForm: React.FC<TProps> = ({
   shippingTypeToWarehouseCatalogue,
   loading,
   RoleID,
+  refetch,
 }) => {
   const [canNote, setCanNote] = useState(null);
+  const [disabled, setDisabled] = useState(false);
+  const queryClient = useQueryClient();
   const { handleSubmit, reset, watch, setValue, control, getValues } =
     useForm<TUserDeposit>({
       mode: "onBlur",
       defaultValues,
     });
 
+  console.log("dis: ", disabled);
+
   useDeepEffect(() => {
     if (defaultValues) reset(defaultValues);
   }, [defaultValues]);
 
-  const mutationUpdate = useMutation(transportationOrder.update, {
-    onSuccess: () => {
-      toast.success("Cập nhật ký gửi thành công");
-    },
-    onError: toast.error,
-  });
+  const mutationUpdate = useMutation(transportationOrder.update);
 
   const _onPress = (data: TUserDeposit) => {
-    mutationUpdate.mutateAsync(data);
+    const id = toast.loading("Đang xử lý ...");
+    setDisabled(true);
+    mutationUpdate
+      .mutateAsync(data)
+      .then(() => {
+        toast.update(id, {
+          isLoading: false,
+          render: "Cập nhật thành công!",
+          type: "success",
+          autoClose: 0,
+        });
+        refetch();
+        setDisabled(false);
+      })
+      .catch((error) => {
+        toast.update(id, {
+          render: (error as any)?.response?.data?.ResultMessage,
+          isLoading: false,
+          type: "error",
+          autoClose: 0,
+        });
+        setDisabled(false);
+      });
   };
 
   const { warehouseTQ, warehouseVN } = useCatalogue({
@@ -99,6 +123,26 @@ export const DepositListForm: React.FC<TProps> = ({
             control={control}
             name="UserName"
             label="Username"
+            placeholder=""
+            disabled
+            required={false}
+          />
+        </div>
+        <div className="col-span-2 md:col-span-1 xl:pb-4">
+          <FormInput
+            control={control}
+            name="OrderTransactionCode"
+            label="Mã vận đơn"
+            placeholder=""
+            disabled
+            required={false}
+          />
+        </div>
+        <div className="col-span-2 md:col-span-1 xl:pb-4">
+          <FormInput
+            control={control}
+            name="Category"
+            label="Loại hàng hoá"
             placeholder=""
             disabled
             required={false}
@@ -191,6 +235,7 @@ export const DepositListForm: React.FC<TProps> = ({
             <IconButton
               onClick={handleSubmit(_onPress)}
               showLoading
+              disabled={disabled}
               icon="fas fa-edit"
               title="Cập nhật"
               toolip=""
@@ -209,16 +254,18 @@ export const DepositListForm: React.FC<TProps> = ({
 
       <div className="col-span-7 tableBoxPag gap-4 h-fit xl:ml-6 grid">
         <div className="tableBox grid p-5 gap-4">
-          <div className="col-span-10 text-base font-bold py-2 uppercase border-b border-main">
-            Danh sách sản phẩm
-          </div>
-          <div className="col-span-10 pb-4">
-            <DepositDetail data={[defaultValues]} />
-          </div>
-        </div>
-        <div className="tableBox grid p-5 gap-4">
-          <div className="col-span-2 text-base font-bold py-2 uppercase border-b border-main">
-            Chi tiết đơn hàng
+          <div className="col-span-2 text-base font-bold py-2 uppercase border-b border-main flex justify-between">
+            Chi tiết đơn hàng #{defaultValues?.Id}
+            <span>
+              <Tag
+                color={
+                  transportStatus.find((x) => x.id === defaultValues?.Status)
+                    ?.color
+                }
+              >
+                {defaultValues?.StatusName}
+              </Tag>
+            </span>
           </div>
           <div className="col-span-1 pb-2">
             <FormInputNumber
@@ -305,7 +352,13 @@ export const DepositListForm: React.FC<TProps> = ({
               required={false}
             />
           </div>
-          <div className="col-span-2 pb-2">
+          <div className="col-span-2 pb-2 relative">
+            <FormCheckbox
+              control={control}
+              name="IsCheckProduct"
+              label=""
+              checkBoxClassName="absolute z-[99] top-[-2px] left-[100px]"
+            />
             <FormInputNumber
               control={control}
               name="IsCheckProductPrice"
@@ -315,11 +368,17 @@ export const DepositListForm: React.FC<TProps> = ({
               required={false}
               callback={(val) => {
                 handleCount("IsCheckProductPrice", val);
-                handleSetValue("IsCheckProduct", val > 0 ? true : false);
+                handleSetValue("IsCheckProduct", val > 0 && true);
               }}
             />
           </div>
-          <div className="col-span-2 pb-2">
+          <div className="col-span-2 pb-2 relative">
+            <FormCheckbox
+              control={control}
+              name="IsPacked"
+              label=""
+              checkBoxClassName="absolute z-[99] top-[-2px] left-[100px]"
+            />
             <FormInputNumber
               control={control}
               name="IsPackedPrice"
@@ -329,11 +388,17 @@ export const DepositListForm: React.FC<TProps> = ({
               required={false}
               callback={(val) => {
                 handleCount("IsPackedPrice", val);
-                handleSetValue("IsPacked", val > 0 ? true : false);
+                handleSetValue("IsPacked", val > 0 && true);
               }}
             />
           </div>
-          <div className="col-span-2 pb-2">
+          <div className="col-span-2 pb-2 relative">
+            <FormCheckbox
+              control={control}
+              name="IsInsurance"
+              label=""
+              checkBoxClassName="absolute z-[99] top-[-2px] left-[100px]"
+            />
             <FormInputNumber
               control={control}
               name="InsuranceMoney"
@@ -343,7 +408,7 @@ export const DepositListForm: React.FC<TProps> = ({
               required={false}
               callback={(val) => {
                 handleCount("InsuranceMoney", val);
-                handleSetValue("IsInsurance", val > 0 ? true : false);
+                handleSetValue("IsInsurance", val > 0 && true);
               }}
             />
           </div>
@@ -380,16 +445,13 @@ export const DepositListForm: React.FC<TProps> = ({
             {(RoleID === 1 || RoleID === 3) && (
               <IconButton
                 onClick={handleSubmit(_onPress)}
-                showLoading
                 icon="fas fa-edit"
                 title="Cập nhật"
                 toolip=""
-                btnClass="!mr-4"
               />
             )}
             <IconButton
               onClick={() => router.back()}
-              showLoading
               icon="fas fa-reply-all"
               title="Trở về"
               toolip=""

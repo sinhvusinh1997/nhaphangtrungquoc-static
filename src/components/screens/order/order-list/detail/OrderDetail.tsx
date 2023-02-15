@@ -6,7 +6,7 @@ import React, { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { useMediaQuery } from "react-responsive";
 import { toast } from "react-toastify";
-import { mainOrder } from "~/api";
+import { mainOrder, order } from "~/api";
 import { FormSelect } from "~/components";
 import { IconButton } from "~/components/globals/button/IconButton";
 import { orderStatus, statusData } from "~/configs/appConfigs";
@@ -111,6 +111,12 @@ const ComponentAffix: React.FC<TProps> = ({
                 {_format.getVND(data?.Deposit)}
               </div>
             </div>
+            {/* <div className={clsx(contentItem)}>
+              <div className={clsx(nameContent)}>Tiền phải cọc</div>
+              <div className={clsx(contentValue, "text-[#008000]")}>
+                {_format.getVND(data?.AmountDeposit)}
+              </div>
+            </div> */}
             <div className={clsx(contentItem)}>
               <div className={clsx(nameContent)}>Còn lại</div>
               <div className={clsx(contentValue, "!text-warning")}>
@@ -125,8 +131,10 @@ const ComponentAffix: React.FC<TProps> = ({
                 name="Status"
                 label="Trang thái"
                 placeholder=""
-                data={orderStatus}
-                defaultValue={orderStatus.find((x) => x.id === data?.Status)}
+                data={orderStatus?.slice(1, orderStatus.length - 1)}
+                defaultValue={orderStatus
+                  ?.slice(1, orderStatus.length - 1)
+                  .find((x) => x.id === data?.Status)}
               />
             </div>
             <div className={clsx(contentItem, "border-none")}>
@@ -193,14 +201,45 @@ const ComponentAffix: React.FC<TProps> = ({
                   }}
                 >
                   <IconButton
-                    onClick={() =>
-                      router.push({
-                        pathname: "/manager/order/payment",
-                        query: { id: data?.Id },
-                      })
-                    }
+                    onClick={() => {
+                      const id = toast.loading("Đang xử lý ...");
+                      mainOrder
+                        .payment({
+                          Id: data?.Id,
+                          Note: undefined,
+                          PaymentMethod: data?.Status === 0 ? 2 : 1,
+                          PaymentType: 1,
+                          Amount:
+                            data?.Status === 0
+                              ? data?.AmountDeposit
+                              : data?.RemainingAmount,
+                        })
+                        .then(() => {
+                          toast.update(id, {
+                            render: `${
+                              data?.Status === 0
+                                ? "Đặt cọc thành công!"
+                                : "Thanh toán thành công!"
+                            }`,
+                            autoClose: 0,
+                            isLoading: false,
+                            type: "success",
+                          });
+                          refetch();
+                        })
+                        .catch((error) => {
+                          toast.update(id, {
+                            render: (error as any)?.response?.data
+                              ?.ResultMessage,
+                            autoClose: 0,
+                            isLoading: false,
+                            type: "error",
+                          });
+                        });
+                    }}
                     icon="fas fa-credit-card"
-                    title="Thanh toán"
+                    // title="Thanh toán"
+                    title={data?.Status === 0 ? "Đặt cọc" : "Thanh toán"}
                     showLoading
                     toolip=""
                     blue

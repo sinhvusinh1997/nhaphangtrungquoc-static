@@ -58,7 +58,7 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
           </>
         );
       },
-      width: 160,
+      width: 220,
     },
     {
       dataIndex: "MainOrderCodeId",
@@ -87,7 +87,7 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
           }}
         />
       ),
-      width: 160,
+      width: 250,
     },
     {
       dataIndex: "Weight",
@@ -152,6 +152,7 @@ export const OrderTransferCodeList: React.FC<TProps> = ({
           inputClassName="text-center"
         />
       ),
+      width: 120,
     },
     // {
     //   dataIndex: "Volume",

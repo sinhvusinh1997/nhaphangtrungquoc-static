@@ -3,8 +3,9 @@ import clsx from "clsx";
 import router from "next/router";
 import React, { Fragment } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 import { mainOrder } from "~/api";
-import { ActionButton, DataTable, toast } from "~/components";
+import { ActionButton, DataTable } from "~/components";
 import { FilterSelect } from "~/components/globals/filterBase";
 import { orderStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
@@ -33,16 +34,7 @@ export const OrderListTable: React.FC<
         Id: data.order.Id,
         StaffId: data.userId,
         Type: data.type,
-      }),
-    {
-      // refresh item + table data after updating successfully
-      onSuccess: (_, variables) => {
-        queryClient.invalidateQueries("orderList");
-        mutationUpdate.reset();
-        toast.success("Cập nhật thành công");
-      },
-      onError: toast.error,
-    }
+      })
   );
 
   const columns: TColumnsType<TOrder> = [
@@ -105,6 +97,13 @@ export const OrderListTable: React.FC<
                 _format.getVND(record?.TotalPriceVND, " Đ")}
             </p>
           </div>
+          <div className="flex items-end justify-between font-bold text-[#008000]">
+            <p className="mr-1">Tiền phải cọc:</p>
+            <p>
+              {record?.AmountDeposit &&
+                _format.getVND(record?.AmountDeposit, " Đ")}
+            </p>
+          </div>
           <div className="flex items-end justify-between font-bold text-[#2196F3]">
             <p className="mr-1">Đã trả:</p>
             <p>{record?.Deposit && _format.getVND(record?.Deposit, " Đ")}</p>
@@ -138,13 +137,33 @@ export const OrderListTable: React.FC<
                   }
                 }
                 disabled={!(RoleID === 1 || RoleID === 3)}
-                callback={async (value) =>
-                  await mutationUpdate.mutateAsync({
-                    order: record,
-                    userId: value,
-                    type: 1,
-                  })
-                }
+                callback={async (value) => {
+                  const id = toast.loading("Đang xử lý ...");
+                  mutationUpdate
+                    .mutateAsync({
+                      order: record,
+                      userId: value,
+                      type: 1,
+                    })
+                    .then(() => {
+                      queryClient.invalidateQueries("orderList");
+                      mutationUpdate.reset();
+                      toast.update(id, {
+                        render: "Cập nhật thành công",
+                        isLoading: false,
+                        autoClose: 0,
+                        type: "success",
+                      });
+                    })
+                    .catch((error) => {
+                      toast.update(id, {
+                        render: (error as any)?.response?.data?.ResultMessage,
+                        isLoading: false,
+                        autoClose: 0,
+                        type: "error",
+                      });
+                    });
+                }}
                 handleSearch={(val) => val}
                 menuPortalTarget={document.querySelector(
                   "div.ant-table-wrapper"
@@ -175,13 +194,34 @@ export const OrderListTable: React.FC<
                   }
                 }
                 disabled={!(RoleID === 1 || RoleID === 3)}
-                callback={async (value) =>
-                  await mutationUpdate.mutateAsync({
-                    order: record,
-                    userId: value,
-                    type: 2,
-                  })
-                }
+                callback={async (value) => {
+                  const id = toast.loading("Đang xử lý ...");
+
+                  mutationUpdate
+                    .mutateAsync({
+                      order: record,
+                      userId: value,
+                      type: 2,
+                    })
+                    .then(() => {
+                      queryClient.invalidateQueries("orderList");
+                      mutationUpdate.reset();
+                      toast.update(id, {
+                        render: "Cập nhật thành công",
+                        isLoading: false,
+                        autoClose: 0,
+                        type: "success",
+                      });
+                    })
+                    .catch((error) => {
+                      toast.update(id, {
+                        render: (error as any)?.response?.data?.ResultMessage,
+                        isLoading: false,
+                        autoClose: 0,
+                        type: "error",
+                      });
+                    });
+                }}
                 handleSearch={(val) => val}
                 menuPortalTarget={document.querySelector(
                   "div.ant-table-wrapper"
@@ -408,12 +448,40 @@ export const OrderListTable: React.FC<
             record?.Status !== 6 &&
             record?.Status !== 1 && (
               <ActionButton
-                onClick={() =>
-                  router.push({
-                    pathname: "/manager/order/payment",
-                    query: { id: record?.Id },
-                  })
-                }
+                onClick={() => {
+                  const id = toast.loading("Đang xử lý ...");
+                  mainOrder
+                    .payment({
+                      Id: record?.Id,
+                      Note: undefined,
+                      PaymentMethod: record?.Status === 0 ? 2 : 1,
+                      PaymentType: 1,
+                      Amount:
+                        record?.Status === 0
+                          ? record?.AmountDeposit
+                          : record?.RemainingAmount,
+                    })
+                    .then(() => {
+                      toast.update(id, {
+                        render: `${
+                          record?.Status === 0
+                            ? "Đặt cọc thành công!"
+                            : "Thanh toán thành công!"
+                        }`,
+                        autoClose: 0,
+                        isLoading: false,
+                        type: "success",
+                      });
+                    })
+                    .catch((error) => {
+                      toast.update(id, {
+                        render: (error as any)?.response?.data?.ResultMessage,
+                        autoClose: 0,
+                        isLoading: false,
+                        type: "error",
+                      });
+                    });
+                }}
                 icon="fas fa-wallet"
                 title={record?.Status === 0 ? "Đặt cọc" : "Thanh toán"}
                 btnBlue

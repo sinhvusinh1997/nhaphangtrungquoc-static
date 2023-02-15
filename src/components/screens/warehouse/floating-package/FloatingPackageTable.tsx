@@ -40,11 +40,11 @@ export const FloatingPackageTable: React.FC<TTable<TSmallPackage> & TProps> = ({
     // 	title: "Mã đơn hàng",
     // 	responsive: ["md"],
     // },
-    {
-      dataIndex: "ProductType",
-      title: "Loại hàng",
-      responsive: ["xl"],
-    },
+    // {
+    //   dataIndex: "ProductType",
+    //   title: "Loại hàng",
+    //   responsive: ["xl"],
+    // },
     {
       dataIndex: "FeeShip",
       title: "Phí ship tệ",
@@ -73,11 +73,11 @@ export const FloatingPackageTable: React.FC<TTable<TSmallPackage> & TProps> = ({
         </Tag>
       ),
     },
-    {
-      dataIndex: "FloatingUserName",
-      title: "Người nhận hàng",
-      responsive: ["xl"],
-    },
+    // {
+    //   dataIndex: "FloatingUserName",
+    //   title: "Người nhận hàng",
+    //   responsive: ["xl"],
+    // },
     {
       dataIndex: "Created",
       title: "Ngày tạo",

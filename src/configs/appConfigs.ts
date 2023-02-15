@@ -1888,10 +1888,10 @@ export const apiWithoutToken = [
 export const paymentStatus = [
   {
     id: 1,
-    name: "Chưa thanh toán",
+    name: "Chờ duyệt",
     col: 2,
     value: null,
-    color: "#ff4d4f",
+    color: "pink",
   },
   {
     id: 2,

@@ -76,6 +76,8 @@ type TConfig6 = {
   WebmasterTools: string;
   HeaderScriptCode: string;
   FooterScriptCode: string;
+  GoogleSiteVerification: string;
+  OGLocale: string;
 };
 
 type TConfig = TConfig1 &

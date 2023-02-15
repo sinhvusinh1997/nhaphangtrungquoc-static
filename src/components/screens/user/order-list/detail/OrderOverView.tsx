@@ -1,9 +1,8 @@
 import { Tag } from "antd";
 import router from "next/router";
 import React, { useEffect, useState } from "react";
-import { mainOrder } from "~/api";
 import { IconButton } from "~/components";
-import { createdOrderStatusDataDetail, orderStatus } from "~/configs";
+import { orderStatus } from "~/configs";
 import { _format } from "~/utils";
 
 type TProps = {
@@ -227,14 +226,12 @@ export const OrderOverView: React.FC<TProps> = ({ data, updatePaid }) => {
                         x.key.includes("Price") ||
                         x.key.includes("FeeShip")
                       ) {
-                        return ` - (${_format
-                          .getVND(x.value, " ¥")
-                          .toString()})`;
+                        return ` - (${_format.getVND(x?.value, " ¥")})`;
                       } else {
-                        return ` - (${x.value} kg)`;
+                        return ` - (${x?.value} kg)`;
                       }
                     } else {
-                      return _format.getVND(x.value, " VNĐ");
+                      return _format.getVND(x?.value, " VNĐ");
                     }
                   })}
                 {item?.value.length === 1 &&

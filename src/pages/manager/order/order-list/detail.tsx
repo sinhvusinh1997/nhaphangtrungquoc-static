@@ -230,7 +230,7 @@ const Index: TNextPageWithLayout = () => {
                   <OrderInfo data={data?.Data} loading={isLoading} />
                 </div>
               </Panel>
-              <Panel header="Lịch sử" key="8">
+              <Panel header="Lịch sử" key="7">
                 <div
                   id="history"
                   className={clsx(className, active === 7 && "")}

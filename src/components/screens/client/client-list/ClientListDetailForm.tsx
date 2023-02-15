@@ -4,6 +4,7 @@ import router from "next/router";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
+import { toast } from "react-toastify";
 import { user } from "~/api";
 import {
   FormDate,
@@ -13,9 +14,8 @@ import {
   FormSelect,
   IconButton,
 } from "~/components";
-import { toast } from "~/components/toast";
 import { activeData, genderData } from "~/configs/appConfigs";
-import { useDeepEffect } from "~/hooks";
+import { useCatalogue, useDeepEffect } from "~/hooks";
 import { _format } from "~/utils";
 import { checkUnique, createComplain, EUnique } from "../../auth/method";
 
@@ -45,6 +45,12 @@ export const ClientListDetailForm: React.FC<TProps> = ({
   oriEmail,
   oriPhone,
 }) => {
+  const { warehouseVN, shippingTypeToWarehouse, warehouseTQ } = useCatalogue({
+    warehouseVNEnabled: true,
+    warehouseTQEnabled: true,
+    shippingTypeToVNEnabled: true,
+  });
+
   const {
     handleSubmit,
     getValues,
@@ -55,8 +61,8 @@ export const ClientListDetailForm: React.FC<TProps> = ({
     mode: "onBlur",
   });
   const UserGroupNameCur = useRef(null);
-
   const [changePass, setChangePass] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   useDeepEffect(() => {
     reset({
@@ -65,34 +71,57 @@ export const ClientListDetailForm: React.FC<TProps> = ({
     });
   }, [defaultValues]);
 
-  const mutationUpdate = useMutation(user.update, {
-    onSuccess: () => {
-      toast.success("Cập nhật khách hàng thành công");
-    },
-    onError: toast.error,
-  });
+  const mutationUpdate = useMutation(user.update);
 
   const _onPress = (data: TForm) => {
+    const id = toast.loading("Đang xử lý ...");
+    setDisabled(true);
+    let newData = data;
+
     if (data?.PasswordNew) {
       if (data?.PasswordAgain !== data?.PasswordNew) {
-        toast.error("Mật khẩu nhập lại sai rồi nè!");
-      } else {
-        const newData = {
-          ...data,
-          IsResetPassword: true,
-          PasswordNew: data.PasswordNew.trim(),
-          PasswordAgain: data.PasswordAgain.trim(),
-        };
-        mutationUpdate.mutateAsync(newData);
+        toast.update(id, {
+          render: "Mật khẩu nhập lại sai!",
+          autoClose: 0,
+          type: "error",
+          isLoading: false,
+        });
+        setDisabled(false);
+        return;
       }
-    } else {
-      mutationUpdate.mutateAsync(data);
+      newData = {
+        ...data,
+        IsResetPassword: true,
+        PasswordNew: data.PasswordNew.trim(),
+        PasswordAgain: data.PasswordAgain.trim(),
+      };
     }
+
+    mutationUpdate
+      .mutateAsync(newData)
+      .then(() => {
+        toast.update(id, {
+          render: "Cập nhật thành công!",
+          autoClose: 0,
+          type: "success",
+          isLoading: false,
+        });
+      })
+      .catch((error) => {
+        toast.update(id, {
+          render: (error as any)?.response?.data?.ResultMessage,
+          autoClose: 0,
+          type: "error",
+          isLoading: false,
+        });
+      });
+    setDisabled(false);
   };
 
   return (
     <div className="grid-cols-1 w-full">
       <div className="grid grid-cols-2 gap-4">
+        {/* User information */}
         <div className="tableBox span-col-1 h-fit">
           <div className="grid grid-cols-4 gap-4">
             <div className="col-span-4 font-bold text-[22px]">
@@ -247,12 +276,14 @@ export const ClientListDetailForm: React.FC<TProps> = ({
                 }
               />
             </div>
+            <div className="col-span-2"></div>
           </div>
         </div>
 
+        {/* Fee's user */}
         <div className="tableBox span-col-1">
           <div className="grid grid-cols-1 gap-4">
-            <div className="col-span-1 font-bold text-[22px]">Cấu hình giá</div>
+            <div className="col-span-1 font-bold text-[22px]">Cấu hình</div>
             <div className="col-span-1 grid grid-cols-2 gap-4">
               <div className="col-span-1">
                 <div className="mb-3">
@@ -305,6 +336,21 @@ export const ClientListDetailForm: React.FC<TProps> = ({
                     required={false}
                   />
                 </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    name="Status"
+                    data={activeData.slice(1)}
+                    defaultValue={{
+                      id: defaultValues?.Status,
+                      name: defaultValues?.StatusName,
+                    }}
+                    label="Trạng thái tài khoản"
+                    placeholder="Chọn trạng thái tài khoản"
+                    required={false}
+                    menuPlacement="bottom"
+                  />
+                </div>
               </div>
               <div className="col-span-1">
                 <div className="mb-3">
@@ -354,6 +400,51 @@ export const ClientListDetailForm: React.FC<TProps> = ({
                 <div className="mb-3">
                   <FormSelect
                     control={control}
+                    name="WarehouseFrom"
+                    label="Kho Trung Quốc"
+                    placeholder=""
+                    required={false}
+                    isClearable
+                    data={warehouseTQ}
+                    select={{ label: "Name", value: "Id" }}
+                    defaultValue={warehouseTQ?.find(
+                      (x) => x.Id === Number(defaultValues?.WarehouseFrom)
+                    )}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    label="Kho Việt Nam"
+                    placeholder=""
+                    isClearable
+                    select={{ label: "Name", value: "Id" }}
+                    name="WarehouseTo"
+                    required={false}
+                    data={warehouseVN}
+                    defaultValue={warehouseVN?.find(
+                      (x) => x.Id === Number(defaultValues?.WarehouseTo)
+                    )}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
+                    label="Phương thức vận chuyển"
+                    placeholder=""
+                    isClearable
+                    select={{ label: "Name", value: "Id" }}
+                    name="WarehouseTo"
+                    required={false}
+                    data={shippingTypeToWarehouse}
+                    defaultValue={shippingTypeToWarehouse?.find(
+                      (x) => x.Id === Number(defaultValues?.ShippingType)
+                    )}
+                  />
+                </div>
+                <div className="mb-3">
+                  <FormSelect
+                    control={control}
                     placeholder=""
                     name="LevelId"
                     required={false}
@@ -378,32 +469,17 @@ export const ClientListDetailForm: React.FC<TProps> = ({
                     placeholder=""
                     name="UserGroupId"
                     label="Quyền hạn"
-                    data={userGroupCatalogue.filter((x) => x.Id !== 1)}
+                    data={userGroupCatalogue?.filter((x) => x.Id !== 1)}
                     select={{ label: "Name", value: "Id" }}
                     defaultValue={{
                       Name: defaultValues?.UserGroupName,
                       Id: defaultValues?.UserGroupId,
                     }}
                     callback={(val) => {
-                      UserGroupNameCur.current = userGroupCatalogue.find(
+                      UserGroupNameCur.current = userGroupCatalogue?.find(
                         (item) => item.Id === val
                       )?.Name;
                     }}
-                  />
-                </div>
-                <div className="mb-3">
-                  <FormSelect
-                    control={control}
-                    name="Status"
-                    data={activeData.slice(1)}
-                    defaultValue={{
-                      id: defaultValues?.Status,
-                      name: defaultValues?.StatusName,
-                    }}
-                    label="Trạng thái tài khoản"
-                    placeholder="Chọn trạng thái tài khoản"
-                    required={false}
-                    menuPlacement="bottom"
                   />
                 </div>
               </div>
@@ -417,6 +493,7 @@ export const ClientListDetailForm: React.FC<TProps> = ({
                 btnClass="!mr-2"
                 btnIconClass="!mr-2"
                 showLoading
+                disabled={disabled}
                 toolip=""
               />
               <IconButton

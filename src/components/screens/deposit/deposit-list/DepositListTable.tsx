@@ -57,7 +57,7 @@ export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
       width: 250,
       render: (_, record) => {
         return (
-          <>
+          <div className="h-full flex flex-col">
             <div className="flex justify-between">
               <span className="font-semibold">Kho Trung Quốc: </span>
               <span>{record?.WareHouseFrom}</span>
@@ -70,7 +70,7 @@ export const DepositListTable: React.FC<TTable<TUserDeposit> & TProps> = ({
               <span className="font-semibold">Phương thức: </span>
               <span>{record?.ShippingTypeName}</span>
             </div>
-          </>
+          </div>
         );
       },
     },

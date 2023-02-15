@@ -352,7 +352,7 @@ const Header: React.FC<TProps> = ({
                           ));
                         router.push("/");
                         localStorage.removeItem("currentUser");
-                        localStorage.removeItem("token");
+                        Cookies.remove("token");
                         Cookies.remove("mToken");
                       }}
                     >

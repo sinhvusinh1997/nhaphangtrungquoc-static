@@ -1,6 +1,6 @@
 import { InputNumber, Tooltip } from "antd";
 import React, { useState } from "react";
-import { ActionButton } from "~/components";
+import { ActionButton, toast } from "~/components";
 import { _format } from "~/utils";
 
 type TProps = {
@@ -150,7 +150,7 @@ export const OrderProductItem: React.FC<TProps> = ({
                 disabled={!(RoleID === 1 || RoleID === 3 || RoleID === 4)}
                 width={"100%"}
                 size="middle"
-                min={1}
+                min={0}
                 max={100000}
                 value={quantity}
                 onChange={handleQuantity}

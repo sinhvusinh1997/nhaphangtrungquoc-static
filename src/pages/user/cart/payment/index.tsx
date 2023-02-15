@@ -65,7 +65,7 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
     }
   );
 
-  const { refetch: refetchFrom, data: warehouseFromData } = useQuery(
+  const { data: warehouseFromData } = useQuery(
     ["warehouseFromData"],
     () => warehouseFrom.getList().then((res) => res.Data.Items),
     {
@@ -73,7 +73,7 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
     }
   );
 
-  const { refetch: refetchTo, data: warehouseToData } = useQuery(
+  const { data: warehouseToData } = useQuery(
     ["warehouseToData"],
     () => warehouseTo.getList().then((res) => res.Data.Items),
     {
@@ -81,7 +81,7 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
     }
   );
 
-  const { refetch: refetchMethod, data: shippingType } = useQuery(
+  const { data: shippingType } = useQuery(
     ["shippingType"],
     () =>
       shipping
@@ -116,9 +116,9 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
 
   useDeepEffect(() => {
     if (
-      // !!warehouseTQ?.length &&
-      // !!warehouseVN?.length &&
-      // !!shippingTypeToWarehouse?.length &&
+      !!warehouseToData?.length &&
+      !!warehouseFromData?.length &&
+      !!shippingType?.length &&
       !!orderShopTempsData.length &&
       !!orderShopTempsData?.[0]
     ) {
@@ -146,8 +146,7 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
         })),
       });
     }
-    // }, [warehouseTQ, warehouseVN, shippingTypeToWarehouse, orderShopTempsData]);
-  }, [orderShopTempsData]);
+  }, [[warehouseFromData, warehouseToData, shippingType, orderShopTempsData]]);
 
   const mutationPayment = useMutation(orderShopTemp.payment);
 
@@ -172,6 +171,19 @@ const Index: TNextPageWithLayout & React.FC<{}> = () => {
       toast.warning("Vui lòng chọn địa chỉ nhân hàng!");
       return;
     }
+
+    const shopPayments = getValues("ShopPayments");
+    for (let i in shopPayments) {
+      if (
+        !shopPayments[i].ShippingType ||
+        !shopPayments[i].WarehouseTQ ||
+        !shopPayments[i].WarehouseVN
+      ) {
+        toast.warning("Không thể load ... vui lòng reload page!");
+        return;
+      }
+    }
+
     setLoadingPayment(true);
 
     mutationPayment

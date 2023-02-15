@@ -106,6 +106,7 @@ const Index: TNextPageWithLayout = () => {
       },
       onError: (error) => {
         setModal(false);
+        setItems([]);
         showToast({
           title: "Đã xảy ra lỗi!",
           message: (error as any)?.response?.data?.ResultMessage,
@@ -136,6 +137,7 @@ const Index: TNextPageWithLayout = () => {
           message: (error as any)?.response?.data?.ResultMessage,
           type: "error",
         });
+        setItems([]);
       },
     }
   );

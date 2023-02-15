@@ -186,37 +186,39 @@ export const UserAnotherOrderListTable: React.FC<
               }}
               className="justify-end flex-wrap"
             >
-              <ActionButton
-                onClick={() =>
-                  Modal.confirm({
-                    title: "Xác nhận muốn mua lại đơn hàng này?",
-                    onOk: () => {
-                      const id = toast.loading("Đang thêm ...");
-                      orderShopTemp
-                        .addSame({ Id: record?.Id })
-                        .then((res) => {
-                          toast.update(id, {
-                            render:
-                              "Thêm đơn thành công, vui lòng kiểm tra giỏ hàng!",
-                            type: "success",
-                            autoClose: 1000,
-                            closeOnClick: true,
-                            isLoading: false,
+              {Number(q) !== 3 && (
+                <ActionButton
+                  onClick={() =>
+                    Modal.confirm({
+                      title: "Xác nhận muốn mua lại đơn hàng này?",
+                      onOk: () => {
+                        const id = toast.loading("Đang thêm ...");
+                        orderShopTemp
+                          .addSame({ Id: record?.Id })
+                          .then((res) => {
+                            toast.update(id, {
+                              render:
+                                "Thêm đơn thành công, vui lòng kiểm tra giỏ hàng!",
+                              type: "success",
+                              autoClose: 1000,
+                              closeOnClick: true,
+                              isLoading: false,
+                            });
+                          })
+                          .catch((error) => {
+                            toast.update(id, {
+                              render: "Thêm đơn thất bại!",
+                              type: "error",
+                              isLoading: false,
+                            });
                           });
-                        })
-                        .catch((error) => {
-                          toast.update(id, {
-                            render: "Thêm đơn thất bại!",
-                            type: "error",
-                            isLoading: false,
-                          });
-                        });
-                    },
-                  })
-                }
-                icon="fas fa-cart-arrow-down"
-                title="Mua lại đơn hàng này"
-              />
+                      },
+                    })
+                  }
+                  icon="fas fa-cart-arrow-down"
+                  title="Mua lại đơn hàng này"
+                />
+              )}
 
               <ActionButton
                 onClick={() =>

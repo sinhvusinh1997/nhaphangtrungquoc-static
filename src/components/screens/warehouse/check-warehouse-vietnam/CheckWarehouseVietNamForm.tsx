@@ -27,8 +27,11 @@ type TForm = {
 };
 
 export const CheckWarehouseVietNamForm = () => {
-  const { handleSubmit, control, reset } = useForm<TWarehouseVN>({
+  const { handleSubmit, control, reset, resetField } = useForm<TWarehouseVN>({
     mode: "onBlur",
+    defaultValues: {
+      OrderTransactionCode: "",
+    },
   });
   const { confirm }: any = Modal;
 
@@ -115,8 +118,9 @@ export const CheckWarehouseVietNamForm = () => {
         showToast({
           title: "Không thể quét mã này!",
           message: "Kiện này chưa về kho TQ!",
-          type: "error",
+          type: "warning",
         });
+        resetField("OrderTransactionCode");
         return;
       }
 
@@ -126,6 +130,7 @@ export const CheckWarehouseVietNamForm = () => {
           message: "Đơn nãy đã hủy!",
           type: "error",
         });
+        resetField("OrderTransactionCode");
         return;
       }
 
@@ -135,6 +140,7 @@ export const CheckWarehouseVietNamForm = () => {
           message: "Đơn nãy đã giao khách!",
           type: "error",
         });
+        resetField("OrderTransactionCode");
         return;
       }
 
@@ -149,14 +155,13 @@ export const CheckWarehouseVietNamForm = () => {
         })),
         key
       );
-      return;
       // ===== end =====
     } catch (error) {
       toast.error("Không tìm thấy thông tin kiện này");
     } finally {
       setLoading(false);
     }
-    reset();
+    resetField("OrderTransactionCode");
   };
 
   const mutationUpdate = useMutation(smallPackage.update, {
@@ -300,7 +305,7 @@ export const CheckWarehouseVietNamForm = () => {
         )}
         btnClass="mt-4"
         icon="fas fa-pencil"
-        title="Cập nhật tất cả kiện (Ctr + Q)"
+        title="Cập nhật tất cả kiện (Ctrl + Q)"
         toolip=""
       />
       {!!Object.keys(watchArray()).length &&

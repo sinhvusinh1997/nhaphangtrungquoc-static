@@ -261,9 +261,11 @@ type TOrder = Omit<TBaseReponseParams, "Name" | "Code" | "Description"> & {
   Phone: string;
   PriceCNY: number;
   PriceVND: number;
+  PriceOrigin: number;
   ProductLists: unknown; // chưa biết
   QuantityMDH: unknown; // chưa biết
   QuantityMVD: unknown; // chưa biết
+  Quantity: number;
   ReceivePlace: number;
   ReceivePlaceName: string;
   ReceiverEmail: string;

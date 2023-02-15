@@ -34,7 +34,7 @@ const Index: TNextPageWithLayout = () => {
     setFilter({ ...filter, ...newFilter });
   };
 
-  const { isFetching, data, isLoading } = useQuery(
+  const { isFetching, data, isLoading, refetch } = useQuery(
     ["requestPaymentData", { ...filter }],
     () => payHelp.getList(filter).then((res) => res.Data),
     {
@@ -75,6 +75,7 @@ const Index: TNextPageWithLayout = () => {
         data={data?.Items}
         filter={filter}
         handleFilter={handleFilter}
+        refetch={refetch}
       />
     </div>
   );

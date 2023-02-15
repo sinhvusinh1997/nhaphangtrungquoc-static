@@ -48,7 +48,9 @@ export const DepositDetail: React.FC<TTable<TUserDeposit>> = ({ data }) => {
         </>
       ),
       align: "right",
-      render: (weight) => _format.getVND(weight, " "),
+      render: (VolumePayment) => {
+        return _format.getVND(VolumePayment, " ");
+      },
     },
     {
       dataIndex: "IsCheckProduct",

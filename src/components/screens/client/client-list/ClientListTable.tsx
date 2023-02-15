@@ -4,6 +4,7 @@ import router from "next/router";
 import React from "react";
 import { ActionButton, DataTable, Menu } from "~/components";
 import { activeData, getLevelId } from "~/configs/appConfigs";
+import { useCatalogue } from "~/hooks";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 
@@ -26,6 +27,12 @@ export const ClientListTable: React.FC<TTable<TClient> & TProps> = ({
   dathangList,
   saleList,
 }) => {
+  const { warehouseVN, warehouseTQ, shippingTypeToWarehouse } = useCatalogue({
+    warehouseVNEnabled: true,
+    warehouseTQEnabled: true,
+    shippingTypeToWarehouseEnabled: true,
+  });
+
   const columns: TColumnsType<TClient> = [
     {
       dataIndex: "Id",
@@ -34,6 +41,10 @@ export const ClientListTable: React.FC<TTable<TClient> & TProps> = ({
     {
       dataIndex: "UserName",
       title: "Username",
+    },
+    {
+      dataIndex: "FullName",
+      title: "Họ và tên",
     },
     {
       dataIndex: "LevelId",
@@ -52,37 +63,6 @@ export const ClientListTable: React.FC<TTable<TClient> & TProps> = ({
       },
     },
     {
-      dataIndex: "FullName",
-      title: "Họ và tên",
-    },
-    {
-      dataIndex: "Email",
-      title: "Email",
-    },
-    {
-      dataIndex: "DatHangId",
-      title: "Nhân viên đặt hàng",
-      render: (_, record) => {
-        const getName = dathangList?.Data?.Items.filter(
-          (item) => item.Id === record?.DatHangId
-        )[0];
-        return <>{getName?.UserName ?? "--"}</>;
-      },
-      responsive: ["xl"],
-    },
-    {
-      dataIndex: "SaleId",
-      title: "Nhân viên kinh doanh",
-      className: `${RoleID === 7 ? "hidden" : ""}`,
-      render: (_, record) => {
-        const getName = saleList?.Data?.Items.filter(
-          (item) => item.Id === record?.SaleId
-        )[0];
-        return <>{getName?.UserName ?? "--"}</>;
-      },
-      responsive: ["xl"],
-    },
-    {
       dataIndex: "Phone",
       title: "Số điện thoại",
       align: "right",
@@ -92,6 +72,66 @@ export const ClientListTable: React.FC<TTable<TClient> & TProps> = ({
       title: "Số dư VNĐ",
       align: "right",
       render: (_, record) => _format.getVND(record?.Wallet, " "),
+    },
+    {
+      dataIndex: "Email",
+      title: "Email",
+    },
+    {
+      dataIndex: "DatHangId",
+      title: "Nhân viên",
+      render: (_, record) => {
+        const orderEm = dathangList?.Data?.Items.filter(
+          (item) => item.Id === record?.DatHangId
+        )[0];
+        const salerEm = saleList?.Data?.Items.filter(
+          (item) => item.Id === record?.SaleId
+        )[0];
+        return (
+          <div className="flex flex-col">
+            <span className="flex justify-between">
+              Đặt hàng:
+              <span className="font-bold">{orderEm?.UserName ?? "--"}</span>
+            </span>
+            <span className="flex justify-between">
+              Kinh doanh:
+              <span className="font-bold">{salerEm?.UserName ?? "--"}</span>
+            </span>
+          </div>
+        );
+      },
+      responsive: ["xl"],
+    },
+    {
+      dataIndex: "WarehouseFrom",
+      title: "Thông tin kho",
+      className: `${RoleID === 7 ? "hidden" : ""}`,
+      render: (_, record) => {
+        return (
+          <div className="flex flex-col">
+            <span className="font-bold">
+              {
+                warehouseTQ?.find((x) => x.Id === Number(record?.WarehouseFrom))
+                  ?.Name
+              }
+            </span>
+            <span className="font-bold">
+              {
+                warehouseVN?.find((x) => x.Id === Number(record?.WarehouseTo))
+                  ?.Name
+              }
+            </span>
+            <span className="font-bold">
+              {
+                shippingTypeToWarehouse?.find(
+                  (x) => x.Id === Number(record?.ShippingType)
+                )?.Name
+              }
+            </span>
+          </div>
+        );
+      },
+      responsive: ["xl"],
     },
     {
       dataIndex: "Status",

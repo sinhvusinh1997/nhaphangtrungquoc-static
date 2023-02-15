@@ -358,6 +358,9 @@ type TUserPayment = {
   Address: string;
   ShopPayments: TUserPaymentShopPayment[];
   IsAgreement: boolean;
+  ShippingType: number;
+  WarehouseFrom: number;
+  WarehouseTo: number;
 };
 
 type TUserHistoryTransactionVND = Omit<

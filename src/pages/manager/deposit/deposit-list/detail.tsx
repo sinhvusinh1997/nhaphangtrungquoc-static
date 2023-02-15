@@ -43,7 +43,7 @@ const Index: TNextPageWithLayout = ({ connection }) => {
   }, [connection]);
 
   // ===== end =====
-  const { data, isError, isLoading } = useQuery(
+  const { data, isError, isLoading, refetch } = useQuery(
     ["depositList", +query?.id],
     () => transportationOrder.getByID(+query?.id),
     {
@@ -67,6 +67,7 @@ const Index: TNextPageWithLayout = ({ connection }) => {
           defaultValues={data?.Data}
           shippingTypeToWarehouseCatalogue={shippingTypeToWarehouse}
           loading={isLoading}
+          refetch={refetch}
           RoleID={user?.UserGroupId}
         />
       </div>

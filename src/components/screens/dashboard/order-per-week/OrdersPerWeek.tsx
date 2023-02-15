@@ -103,12 +103,13 @@ export const OrdersPerWeek = () => {
         setBoxData(newBoxData);
         return res.Data[0];
       },
-      onError: (error) =>
+      onError: (error) => {
         showToast({
           title: "Đã xảy ra lỗi!",
           message: (error as any)?.response?.data?.ResultMessage,
           type: "error",
-        }),
+        });
+      },
       refetchOnWindowFocus: false,
       retry: false,
     }

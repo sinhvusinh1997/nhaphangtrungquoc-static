@@ -11,7 +11,7 @@ export const OrderIDPaymentHistory: React.FC<TTable<TPayOrderHistory>> = ({
   const columns: TColumnsType<TPayOrderHistory> = [
     {
       dataIndex: "Id",
-      title: "ID đơn",
+      title: "ID",
     },
     {
       dataIndex: "Type",

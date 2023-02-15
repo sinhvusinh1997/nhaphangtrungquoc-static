@@ -41,11 +41,11 @@ instance.interceptors.request.use(
         Accept: "application/json",
       };
     }
-    console.log(
-      `%c ${config?.method.toUpperCase()} - ${getUrl(config)}:`,
-      "color: #0086b3; font-weight: bold",
-      config
-    );
+    // console.log(
+    //   `%c ${config?.method.toUpperCase()} - ${getUrl(config)}:`,
+    //   "color: #0086b3; font-weight: bold",
+    //   config
+    // );
     return config;
   },
   (error) => {
@@ -56,50 +56,46 @@ instance.interceptors.request.use(
 // Intercept all responses
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(
-      `%c ${response?.status} - ${getUrl(response?.config)}:`,
-      "color: #008000; font-weight: bold",
-      response
-    );
-    const ResultCodeM = response?.data?.ResultCode === 401;
+    // console.log(
+    //   `%c ${response?.status} - ${getUrl(response?.config)}:`,
+    //   "color: #008000; font-weight: bold",
+    //   response
+    // );
+
+    const ResultCodeM =
+      response?.data?.ResultCode === 401 &&
+      response?.data?.ResultMessage === "Unauthorized";
 
     if (ResultCodeM) {
-      const ResultMessageM =
-        response?.data?.ResultMessage.includes(
-          "IDX10223: Lifetime validation failed. The token is expired. ValidTo: 'System.DateTime', Current time: 'System.DateTime'."
-        ) ||
-        response?.data?.ResultMessage ===
-          "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại";
-      if (response?.data?.ResultCode === 401) {
-        toast.error(response?.data?.ResultMessage, {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-        setTimeout(() => {
-          localStorage.removeItem("currentUser");
-          localStorage.removeItem("token");
-          Cookies.remove("mToken");
+      toast.error("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      setTimeout(() => {
+        localStorage.removeItem("currentUser");
+        Cookies.remove("token");
+        Cookies.remove("mToken");
 
-          router.asPath.includes("/")
-            ? window.location.reload()
-            : router.push("/");
-        }, 1000);
-        return null;
-      }
+        router.asPath.includes("/")
+          ? window.location.reload()
+          : router.push("/");
+      }, 1000);
+      return null;
     }
     return response;
   },
   (error) => {
+    const originalRequest = error.config;
+
     // Phản hồi rồi mà bị lỗi từ phía server ...
     if (error?.response) {
       console.log("====== LỖI PHÍA SERVER =====");
-      // console.log(error?.response);
     }
     // Lỗi request mãi mà không thấy
     else if (error?.request) {
@@ -110,13 +106,16 @@ instance.interceptors.response.use(
       console.log("====== LỖI CHƯA XÁC ĐỊNH =====");
     }
 
-    console.log(
-      `%c ${error?.response?.status} - ${getUrl(error?.response?.config)}:`,
-      "color: #a71d5d; font-weight: bold",
-      error?.response
-    );
+    // console.log(
+    //   `%c ${error?.response?.status} - ${getUrl(error?.response?.config)}:`,
+    //   "color: #a71d5d; font-weight: bold",
+    //   error?.response
+    // );
     return Promise.reject(error);
   }
 );
 
 export default instance;
+function parseHttpHeaders(arg0: string) {
+  throw new Error("Function not implemented.");
+}

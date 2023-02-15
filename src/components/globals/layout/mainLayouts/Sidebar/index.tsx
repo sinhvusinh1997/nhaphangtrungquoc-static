@@ -186,7 +186,7 @@ const Sidebar: FC<TProps> = ({ handleHover, hover, tabbar }) => {
                         ));
                       router.push("/");
                       localStorage.removeItem("currentUser");
-                      localStorage.removeItem("token");
+                      Cookies.remove("token");
                       Cookies.remove("mToken");
                     }}
                   >
@@ -227,7 +227,7 @@ const Sidebar: FC<TProps> = ({ handleHover, hover, tabbar }) => {
                     ));
                   router.push("/");
                   localStorage.removeItem("currentUser");
-                  localStorage.removeItem("token");
+                  Cookies.remove("token");
                   Cookies.remove("mToken");
                 }}
               >

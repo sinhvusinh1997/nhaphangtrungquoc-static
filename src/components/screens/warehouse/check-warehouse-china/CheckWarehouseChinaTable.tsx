@@ -245,11 +245,12 @@ export const CheckWarehouseChinaTable: React.FC<
             control={control}
             name={`${name}.${index}.BigPackageId` as any}
             data={bigPackageList}
-            defaultValue={
-              bigPackageList.filter(
+            defaultValue={{
+              Name: bigPackageList?.filter(
                 (x) => x?.Id === defaultIdBigPackageSelected
-              )[0]
-            }
+              )[0]?.Name,
+              Id: defaultIdBigPackageSelected,
+            }}
             menuPlacement="bottom"
             placeholder=""
             select={{ label: "Name", value: "Id" }}
@@ -1224,21 +1225,14 @@ export const CheckWarehouseChinaTable: React.FC<
             icon="fas fa-eye-slash"
             toolip=""
           />
-          <Popconfirm
-            placement="topLeft"
-            title="Bạn có muốn cập nhật tất cả kiện này?"
-            onConfirm={handleSubmit((dataSubmit) => {
+          <IconButton
+            icon="fas fa-pencil"
+            title="Cập nhật tất cả"
+            toolip=""
+            onClick={handleSubmit((dataSubmit) => {
               onPress(dataSubmit[name]);
             })}
-            okText="Yes"
-            cancelText="No"
-          >
-            <IconButton
-              icon="fas fa-pencil"
-              title="Cập nhật tất cả"
-              toolip=""
-            />
-          </Popconfirm>
+          />
         </div>
         <div className="flex justify-center min-w-[250px] mb-4 lg:mb-0 bg-[#f14f042b] text-[#f14f04] text-center px-[20px] py-[10px] text-sm font-bold uppercase">
           <div className="mr-2">

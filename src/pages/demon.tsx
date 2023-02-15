@@ -23,13 +23,14 @@ const Index = () => {
       .loginDemon(data)
       .then((res) => {
         Cookie.set("mtoken", res?.Data?.token);
-        localStorage.setItem("token", res?.Data?.token);
+        Cookie.set("token", res?.Data?.token);
         try {
           const user: TUser = JSON.parse(
             _format.getJWTDecode(res?.Data?.token)[
               "http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata"
             ]
           );
+          localStorage.setItem("currentUser", JSON.stringify(user));
 
           dispatch(getCartInfoByUserId(user?.UserId));
           dispatch(setUser(user));
@@ -140,7 +141,14 @@ const Index = () => {
           Login
         </button>
       </div>
-      <div id="dataList" style={{ margin: "20px" }}></div>
+      <div
+        id="dataList"
+        style={{
+          margin: "20px",
+          height: "800px",
+          overflowY: "auto",
+        }}
+      ></div>
     </form>
   );
 };

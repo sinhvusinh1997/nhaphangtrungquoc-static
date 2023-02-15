@@ -72,13 +72,10 @@ export const CheckWarehouseChinaForm = () => {
 
   const handleData = (newData: TWarehouseCN[], key: string) => {
     key = !!key.length ? key : newKey;
+
     if (!Object.keys(watchArray()).length) {
       setValueArray(key, newData);
     } else {
-      console.log(
-        "watchArray().hasOwnProperty(key): ",
-        watchArray().hasOwnProperty(key)
-      );
       if (watchArray().hasOwnProperty(key)) {
         const diffData = differenceWith(
           [...newData.map((item) => item.Id)],
@@ -131,6 +128,7 @@ export const CheckWarehouseChinaForm = () => {
             handleData(
               res.Data.map((item) => ({
                 ...item,
+                BigPackageId: getValues("BigPackageId"),
                 Status:
                   item.Status <= ESmallPackageStatusData.ArrivedToChinaWarehouse
                     ? ESmallPackageStatusData.ArrivedToChinaWarehouse
@@ -247,34 +245,61 @@ export const CheckWarehouseChinaForm = () => {
           }}
         />
       </div>
-      <div className="flex items-end mt-4 mx-4">
-        <FormInput
-          control={control}
-          label="Mã vận đơn"
-          name="OrderTransactionCode"
-          placeholder="Nhập mã vận đơn"
-          inputContainerClassName="max-w-[500px] mr-4"
-          inputClassName="barcode mb-4 mb-0"
-          prefix={
-            <Tooltip placement="topLeft" title={"Open barcode!"}>
-              <div className="min-w-[50px] px-2 text-center translate-y-[4px]">
-                <i className="fas fa-barcode text-2xl"></i>
-              </div>
-            </Tooltip>
-          }
-          onEnter={handleSubmit(_onCreate)}
-          rules={{
-            required: "Vui lòng nhập mã vận đơn!",
-          }}
-        />
-        <IconButton
-          onClick={handleSubmit(_onCreate)}
-          btnClass="order-last"
-          icon="fas fa-barcode-read"
-          title="Quét mã (Enter)"
-          toolip=""
-          btnIconClass="!mr-4"
-        />
+      <div className="flex items-end mx-4">
+        <div className="flex-1 flex items-end">
+          <FormInput
+            control={control}
+            label="Mã vận đơn"
+            name="OrderTransactionCode"
+            placeholder="Nhập mã vận đơn"
+            inputContainerClassName="max-w-[500px] mr-4"
+            inputClassName="barcode mb-4 mb-0"
+            prefix={
+              <Tooltip placement="topLeft" title={"Open barcode!"}>
+                <div className="min-w-[50px] px-2 text-center translate-y-[4px]">
+                  <i className="fas fa-barcode text-2xl"></i>
+                </div>
+              </Tooltip>
+            }
+            onEnter={handleSubmit(_onCreate)}
+            rules={{
+              required: "Vui lòng nhập mã vận đơn!",
+            }}
+          />
+          {/* <IconButton
+            onClick={handleSubmit(_onCreate)}
+            btnClass=""
+            icon="fas fa-barcode-read"
+            title="Quét mã (Enter)"
+            toolip=""
+            btnIconClass="!mr-4"
+          /> */}
+        </div>
+        <div className="order-last ">
+          <HookWrapper
+            hookList={[
+              () => {
+                usePressKeyboard(
+                  [
+                    {
+                      keyList: ["Control", "b"],
+                      cb: () => setModalPackage(true),
+                    },
+                  ],
+                  {}
+                );
+              },
+            ]}
+          >
+            <IconButton
+              onClick={() => setModalPackage(true)}
+              btnClass="mb-4 mb-0"
+              icon="fas fa-plus"
+              title="Tạo bao mới (Ctrl + B)"
+              toolip=""
+            />
+          </HookWrapper>
+        </div>
       </div>
       <div className="xl:flex mt-4 mx-4">
         <HookWrapper
@@ -301,7 +326,7 @@ export const CheckWarehouseChinaForm = () => {
         >
           <IconButton
             icon="fas fa-edit"
-            title="Cập nhật tất cả kiện (Ctr + Q)"
+            title="Cập nhật tất cả kiện (Ctrl + Q)"
             btnClass="mr-4 mb-4 xl:mb-0"
             onClick={handleSubmitArray((data) =>
               _onPress(

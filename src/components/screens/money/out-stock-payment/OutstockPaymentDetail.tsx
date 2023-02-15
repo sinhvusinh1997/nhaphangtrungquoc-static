@@ -167,7 +167,7 @@ export const OutstockPaymentDetail: React.FC<
             Tổng cân nặng
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} align="right">
-            {item.PayableWeight ? `${item.PayableWeight} kg` : "--"}
+            {item?.PayableWeight ? `${item?.PayableWeight} kg` : "--"}
           </Table.Summary.Cell>
         </Table.Summary.Row>
         {/* <Table.Summary.Row>
@@ -175,7 +175,7 @@ export const OutstockPaymentDetail: React.FC<
 						Tổng tiền lưu kho
 					</Table.Summary.Cell>
 					<Table.Summary.Cell index={1} align="right">
-						{_format.getVND(item.TotalWarehouseFee)}
+						{_format.getVND(item?.TotalWarehouseFee)}
 					</Table.Summary.Cell>
 				</Table.Summary.Row> */}
         <Table.Summary.Row>
@@ -183,7 +183,7 @@ export const OutstockPaymentDetail: React.FC<
             Tiền cần thanh toán
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} align="right">
-            <b className="text-warning">{_format.getVND(item.TotalPay)}</b>
+            <b className="text-warning">{_format.getVND(item?.TotalPay)}</b>
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </React.Fragment>

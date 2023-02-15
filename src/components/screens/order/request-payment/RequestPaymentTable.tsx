@@ -1,6 +1,8 @@
-import { Pagination, Tag } from "antd";
+import { Pagination, Space, Tag } from "antd";
 import router from "next/router";
 import React from "react";
+import { toast } from "react-toastify";
+import { payHelp } from "~/api";
 import { ActionButton, DataTable } from "~/components";
 import { paymentStatus } from "~/configs/appConfigs";
 import { TColumnsType, TTable } from "~/types/table";
@@ -10,11 +12,12 @@ type TProps = {
   filter;
   handleFilter: (newFilter) => void;
   userSale;
+  refetch: () => void;
 };
 
 export const RequestPaymentTable: React.FC<
   TTable<TRequestPaymentOrder> & TProps
-> = ({ data, filter, handleFilter, loading, userSale }) => {
+> = ({ data, filter, handleFilter, loading, userSale, refetch }) => {
   const columns: TColumnsType<TRequestPaymentOrder> = [
     {
       dataIndex: "Id",
@@ -32,7 +35,7 @@ export const RequestPaymentTable: React.FC<
         </>
       ),
       render: (_, record) => {
-        const salerName = userSale.find(
+        const salerName = userSale?.find(
           (x) => x.Id === record?.SalerID
         )?.UserName;
         return <>{salerName || "-"}</>;
@@ -64,7 +67,7 @@ export const RequestPaymentTable: React.FC<
       dataIndex: "Status",
       title: "Trạng thái",
       render: (status, record) => {
-        const color = paymentStatus.find((x) => x.id === status);
+        const color = paymentStatus?.find((x) => x.id === status);
         return <Tag color={color?.color}>{record?.StatusName}</Tag>;
       },
       sorter: (a, b) => a.Status - b.Status,
@@ -81,16 +84,46 @@ export const RequestPaymentTable: React.FC<
       title: "Thao tác",
       align: "right",
       render: (_, record) => (
-        <ActionButton
-          onClick={() =>
-            router.push({
-              pathname: "/manager/order/request-payment/detail",
-              query: { id: record?.Id },
-            })
-          }
-          icon="fas fa-edit"
-          title="Cập nhật"
-        />
+        <Space>
+          {record?.Status === 1 && (
+            <ActionButton
+              onClick={() => {
+                const id = toast.loading("Đang xử lý ...");
+                payHelp
+                  .confirm(record?.Id)
+                  .then(() => {
+                    toast.update(id, {
+                      render: "Duyệt thành công!",
+                      type: "success",
+                      isLoading: false,
+                      autoClose: 0,
+                    });
+                    refetch();
+                  })
+                  .catch((error) => {
+                    toast.update(id, {
+                      render: (error as any)?.response?.data?.ResultMessage,
+                      type: "success",
+                      isLoading: false,
+                      autoClose: 0,
+                    });
+                  });
+              }}
+              icon="fas fa-check"
+              title="Duyệt đơn này"
+            />
+          )}
+          <ActionButton
+            onClick={() =>
+              router.push({
+                pathname: "/manager/order/request-payment/detail",
+                query: { id: record?.Id },
+              })
+            }
+            icon="fas fa-edit"
+            title="Cập nhật"
+          />
+        </Space>
       ),
       // responsive: ["xl"],
     },

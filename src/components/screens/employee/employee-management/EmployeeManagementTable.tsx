@@ -3,6 +3,7 @@ import router from "next/router";
 import { FC } from "react";
 import { ActionButton, DataTable } from "~/components";
 import { activeData, getLevelId } from "~/configs/appConfigs";
+import { useCatalogue } from "~/hooks";
 import { TColumnsType, TTable } from "~/types/table";
 import { _format } from "~/utils";
 type TProps = {
@@ -24,6 +25,10 @@ export const EmployeeManagementTable: FC<TTable<TEmployee> & TProps> = ({
   handleFilter,
   UserGroupId,
 }) => {
+  // const { warehouseVN, warehouseTQ } = useCatalogue({
+  //   warehouseVNEnabled: true,
+  //   warehouseTQEnabled: true,
+  // });
   const columns: TColumnsType<TEmployee> = [
     {
       dataIndex: "Id",
@@ -38,22 +43,9 @@ export const EmployeeManagementTable: FC<TTable<TEmployee> & TProps> = ({
       title: "Họ và tên",
     },
     {
-      dataIndex: "Phone",
-      title: "Số điện thoại",
-      align: "right",
-    },
-    {
-      dataIndex: "Wallet",
-      title: "Số dư (VNĐ)",
-      align: "right",
-      render: (money: number) => _format.getVND(money, " "),
-    },
-    {
-      dataIndex: "Status",
-      title: "Trạng thái",
-      render: (status: number) => (
-        <Tag color={activeData[status]?.color}>{activeData[status]?.name}</Tag>
-      ),
+      dataIndex: "UserGroupName",
+      title: "Quyền hạn",
+      key: "UserGroupName",
     },
     {
       dataIndex: "LevelId",
@@ -72,9 +64,84 @@ export const EmployeeManagementTable: FC<TTable<TEmployee> & TProps> = ({
       },
     },
     {
-      dataIndex: "UserGroupName",
-      title: "Quyền hạn",
-      key: "UserGroupName",
+      dataIndex: "Phone",
+      title: "Số điện thoại",
+      align: "right",
+    },
+    {
+      dataIndex: "Wallet",
+      title: "Số dư VNĐ",
+      align: "right",
+      render: (_, record) => _format.getVND(record?.Wallet, " "),
+    },
+    {
+      dataIndex: "Email",
+      title: "Email",
+    },
+    // {
+    //   dataIndex: "DatHangId",
+    //   title: "Nhân viên",
+    //   render: (_, record) => {
+    //     const orderEm = dathangList?.Data?.Items.filter(
+    //       (item) => item.Id === record?.DatHangId
+    //     )[0];
+    //     const salerEm = saleList?.Data?.Items.filter(
+    //       (item) => item.Id === record?.SaleId
+    //     )[0];
+    //     return (
+    //       <div className="flex flex-col">
+    //         <span className="flex justify-between">
+    //           Đặt hàng:
+    //           <span className="font-bold">{orderEm?.UserName ?? "--"}</span>
+    //         </span>
+    //         <span className="flex justify-between">
+    //           Kinh doanh:
+    //           <span className="font-bold">{salerEm?.UserName ?? "--"}</span>
+    //         </span>
+    //       </div>
+    //     );
+    //   },
+    //   responsive: ["xl"],
+    // },
+    // {
+    //   dataIndex: "WarehouseFrom",
+    //   title: "Thông tin kho",
+    //   render: (_, record) => {
+    //     return (
+    //       <div>
+    //         <div className="flex flex-col">
+    //           <span className="flex justify-between">
+    //             Trung Quốc:
+    //             <span className="font-bold">
+    //               {
+    //                 warehouseTQ?.find(
+    //                   (x) => x.Id === Number(record?.WarehouseFrom)
+    //                 )?.Name
+    //               }
+    //             </span>
+    //           </span>
+    //           <span className="flex justify-between">
+    //             Việt Nam:
+    //             <span className="font-bold">
+    //               {
+    //                 warehouseVN?.find(
+    //                   (x) => x.Id === Number(record?.WarehouseTo)
+    //                 )?.Name
+    //               }
+    //             </span>
+    //           </span>
+    //         </div>
+    //       </div>
+    //     );
+    //   },
+    //   responsive: ["xl"],
+    // },
+    {
+      dataIndex: "Status",
+      title: "Trạng thái",
+      render: (status: number) => (
+        <Tag color={activeData[status].color}>{activeData[status].name}</Tag>
+      ),
     },
     {
       dataIndex: "Created",

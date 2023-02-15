@@ -2,7 +2,7 @@ import router from "next/router";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { order } from "~/api";
-import { IconButton, toast } from "~/components";
+import { IconButton, showToast, toast } from "~/components";
 import { _format } from "~/utils";
 import { OrderProductItem } from "./OrderProductItem";
 
@@ -30,15 +30,24 @@ export const OrderProductList: React.FC<TProps> = ({
       refetch();
       setLoadingUpdate(false);
     },
-    onError: () => {
-      toast.error, setLoadingUpdate(false);
+    onError: (error) => {
+      setLoadingUpdate(false);
+      showToast({
+        message: (error as any)?.response?.data?.ResultMessage,
+        type: "error",
+        title: "Lỗi",
+      });
     },
   });
 
   const handleUpdateProduct = (dataProduct: TOrder, Id?: number) => {
+    if (dataProduct?.Quantity === null || dataProduct?.Quantity === undefined) {
+      toast.error("Vui lòng nhập số lượng sản phẩm ");
+      return;
+    }
     setLoadingUpdate(true);
     mutationUpdate.mutateAsync(dataProduct);
-    // localStorage.removeItem("changeProduct")
+    localStorage.removeItem("changeProduct");
   };
 
   const onExportExcel = async () => {
