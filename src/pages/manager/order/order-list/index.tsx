@@ -14,6 +14,24 @@ import { SEOConfigs } from "~/configs/SEOConfigs";
 import { useCatalogue } from "~/hooks/useCatalogue";
 import { useAppSelector } from "~/store";
 import { TNextPageWithLayout } from "~/types/layout";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
+import { exportHead } from "~/configs";
+const reader = require("xlsx");
+
+const ExportExcel = (data, heading) => {
+  //Had to create a new workbook and then add the header
+  const wb = XLSX.utils.book_new();
+  const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+  XLSX.utils.sheet_add_aoa(ws, heading);
+
+  //Starting in the second row to avoid overriding and skipping headers
+  XLSX.utils.sheet_add_json(ws, data, { origin: "A2", skipHeader: true });
+
+  XLSX.utils.book_append_sheet(wb, ws, "siinh");
+
+  XLSX.writeFile(wb, "filename.xlsx");
+};
 
 const Index: TNextPageWithLayout = () => {
   const { current: newUser } = useAppSelector((state) => state.user);
@@ -93,8 +111,11 @@ const Index: TNextPageWithLayout = () => {
 
   const handleExportExcel = async () => {
     try {
-      const res = await mainOrder.exportExcel({ ...filter, PageSize: 99999 });
-      router.push(res.Data);
+      // const res = await mainOrder.getList({ ...filter, PageSize: 99999 });
+      // console.log("res?.Data?.Items: ", res?.Data?.Items[0]);
+      const newData = [];
+
+      // router.push(MainOrderTemplate);
     } catch (error) {
       showToast({
         title: "Đã xảy ra lỗi!",
