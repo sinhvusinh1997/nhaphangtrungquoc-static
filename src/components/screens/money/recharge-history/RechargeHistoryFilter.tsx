@@ -58,7 +58,7 @@ export const RechargeHistoryFilter: React.FC<TProps> = ({
           format="DD/MM/YYYY"
         />
       </div>
-      <div className="md:col-span-3 xl:col-span-1 flex items-end md:justify-end xl:justify-between xl:mb-0 xl:mb-8">
+      <div className="md:col-span-3 items-end xl:col-span-1 flex md:justify-end xl:justify-between xl:mb-0">
         <IconButton
           onClick={() =>
             handleFilter({

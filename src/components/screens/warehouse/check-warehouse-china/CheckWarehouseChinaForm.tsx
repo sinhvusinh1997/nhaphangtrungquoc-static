@@ -169,7 +169,7 @@ export const CheckWarehouseChinaForm = () => {
         })
         .catch((error) => {
           showToast({
-            title: "Lỗi server!",
+            title: "Lỗi!",
             message: (error as any)?.response?.data?.ResultMessage,
             type: "error",
           });
@@ -266,16 +266,16 @@ export const CheckWarehouseChinaForm = () => {
               required: "Vui lòng nhập mã vận đơn!",
             }}
           />
-          {/* <IconButton
+          <IconButton
             onClick={handleSubmit(_onCreate)}
             btnClass=""
             icon="fas fa-barcode-read"
             title="Quét mã (Enter)"
             toolip=""
             btnIconClass="!mr-4"
-          /> */}
+          />
         </div>
-        <div className="order-last ">
+        {/* <div className="order-last ">
           <HookWrapper
             hookList={[
               () => {
@@ -299,7 +299,7 @@ export const CheckWarehouseChinaForm = () => {
               toolip=""
             />
           </HookWrapper>
-        </div>
+        </div> */}
       </div>
       <div className="xl:flex mt-4 mx-4">
         <HookWrapper

@@ -6,6 +6,7 @@ import {
   Layout,
   RequestPaymentFilter,
   RequestPaymentTable,
+  showToast,
   toast,
 } from "~/components";
 import { breadcrumb } from "~/configs";
@@ -52,12 +53,18 @@ const Index: TNextPageWithLayout = () => {
   );
 
   const handleExporTExcel = async () => {
-    try {
-      const res = await payHelp.exportExcel({ ...filter, PageSize: 99999 });
-      router.push(`${res.Data}`);
-    } catch (error) {
-      toast.error(error);
-    }
+    payHelp
+      .exportExcel({ ...filter, PageSize: 99999 })
+      .then((res) => {
+        router.push(`${res.Data}`);
+      })
+      .catch((error) => {
+        showToast({
+          title: "Đã xảy ra lỗi!",
+          message: (error as any)?.response?.data?.ResultMessage,
+          type: "error",
+        });
+      });
   };
 
   return (

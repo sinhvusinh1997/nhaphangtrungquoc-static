@@ -61,6 +61,8 @@ const Index: TNextPageWithLayout = () => {
   const _onExportExcel = async () => {
     try {
       const res = await staffIncome.exportExcel({
+        ...filter,
+        PageSize: 99999,
         RoleID: newUser?.UserGroupId,
         UID: newUser?.UserId,
       });

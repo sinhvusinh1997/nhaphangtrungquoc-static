@@ -76,6 +76,7 @@ const Index: TNextPageWithLayout = () => {
         RoleID: newUser?.UserGroupId,
         UID: newUser?.UserId,
         IsEmployee: 1,
+        PageSize: 99999,
       });
       router.push(`${res.Data}`);
     } catch (error) {

@@ -41,7 +41,7 @@ export const SurplusTable: React.FC<TTable<TStatisticalSurplus>> = ({
       key: "Created",
       title: "Ngày tạo",
       render: (date) => _format.getVNDate(date),
-      width: 120,
+      width: 200,
       responsive: ["xl"],
     },
     {

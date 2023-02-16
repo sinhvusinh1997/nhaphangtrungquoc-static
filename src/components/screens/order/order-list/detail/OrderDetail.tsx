@@ -315,8 +315,12 @@ const ComponentAffix: React.FC<TProps> = ({
       </div>
 
       <IconButton
-        // onClick={() => router.push(`/manager/order/order-list${data?.OrderType === 3 ? "?q=3" : ""}`)}
-        onClick={() => router.back()}
+        onClick={() =>
+          router.push(
+            `/manager/order/order-list${data?.OrderType === 3 ? "?q=3" : ""}`
+          )
+        }
+        // onClick={() => router.back()}
         icon="fas fa-undo-alt"
         title="Về danh sách"
         btnClass="mr-2 !bg-orange !text-white md:hidden xl:block"
