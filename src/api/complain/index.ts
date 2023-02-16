@@ -1,18 +1,20 @@
 import BaseAPI from "../methods";
 
 type TFilterParams = {
-	UID: number;
-	Status: number;
-	FromDate: string;
-	ToDate: string;
+  UID: number;
+  Status: number;
+  FromDate: string;
+  ToDate: string;
 };
 
-const {put, globalCRUD, post} = new BaseAPI<TReport, TFilterParams>("complain");
+const { put, globalCRUD, post } = new BaseAPI<TReport, TFilterParams>(
+  "complain"
+);
 
 export const complain = {
-	...globalCRUD,
+  ...globalCRUD,
 
-	updateComplain: (data) => put(`/update-complain`, data),
+  updateComplain: (data) => put(`/update-complain`, data),
 
-	exportExcel: (params?: {UID: number}) => post("/export-excel", {params}),
+  exportExcel: (params) => post("/export-excel", undefined, { params }),
 };

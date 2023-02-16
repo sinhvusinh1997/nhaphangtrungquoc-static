@@ -68,18 +68,19 @@ const Index: TNextPageWithLayout = () => {
     }
   );
 
-  const handleExportExcel = async () => {
-    try {
-      reportMainOrder.exportExcel({ Status: 5 }).then((res) => {
+  const handleExportExcel = () => {
+    reportMainOrder
+      .exportExcel({ Status: 5, ...filter, PageSize: 99999 })
+      .then((res) => {
         router.push(res?.Data);
+      })
+      .catch((error) => {
+        showToast({
+          title: "Đã xảy ra lỗi!",
+          message: (error as any)?.response?.data?.ResultMessage,
+          type: "error",
+        });
       });
-    } catch (error) {
-      showToast({
-        title: "Đã xảy ra lỗi!",
-        message: (error as any)?.response?.data?.ResultMessage,
-        type: "error",
-      });
-    }
   };
 
   return (

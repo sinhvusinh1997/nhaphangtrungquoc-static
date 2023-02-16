@@ -1,5 +1,6 @@
 import { Space, Tag } from "antd";
 import clsx from "clsx";
+import Link from "next/link";
 import router from "next/router";
 import React, { Fragment } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -487,16 +488,15 @@ export const OrderListTable: React.FC<
                 btnBlue
               />
             )}
-          <ActionButton
-            onClick={() =>
-              router.push({
-                pathname: "/manager/order/order-list/detail",
-                query: { id: record?.Id },
-              })
-            }
-            icon="fas fa-edit"
-            title="Cập nhật"
-          />
+          <Link href={`/manager/order/order-list/detail/?id=${record?.Id}`}>
+            <a target="_blank">
+              <ActionButton
+                onClick={() => undefined}
+                icon="fas fa-edit"
+                title="Cập nhật"
+              />
+            </a>
+          </Link>
         </Space>
       ),
       fixed: "right",

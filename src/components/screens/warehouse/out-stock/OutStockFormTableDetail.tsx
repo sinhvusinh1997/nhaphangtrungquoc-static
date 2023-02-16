@@ -120,6 +120,22 @@ export const OutStockFormTableDetail: React.FC<
         </Table.Summary.Row>
         <Table.Summary.Row>
           <Table.Summary.Cell index={0} colSpan={7}>
+            <b>Tổng số khối</b>
+          </Table.Summary.Cell>
+          <Table.Summary.Cell index={1} colSpan={1} align="right">
+            <Text type="danger">
+              {_format.getVND(
+                data.reduce(
+                  (prev, cur) => prev + cur?.SmallPackage?.VolumePayment,
+                  0
+                ),
+                " m3"
+              ) || "0 KG"}
+            </Text>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+        <Table.Summary.Row>
+          <Table.Summary.Cell index={0} colSpan={7}>
             <b>Tổng tiền cần thanh toán</b>
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} colSpan={1} align="right">

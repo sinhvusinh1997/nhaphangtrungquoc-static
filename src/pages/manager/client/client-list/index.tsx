@@ -102,9 +102,11 @@ const Index: TNextPageWithLayout = () => {
   const _onExportExcel = async () => {
     try {
       const res = await user.exportExcel({
+        ...filter,
         UID: newUser.UserId,
         RoleID: newUser.UserGroupId,
         UserGroupId: 2,
+        PageSize: 99999,
       });
       router.push(`${res.Data}`);
     } catch (error) {

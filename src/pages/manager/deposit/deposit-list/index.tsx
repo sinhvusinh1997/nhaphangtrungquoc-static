@@ -63,19 +63,21 @@ const Index: TNextPageWithLayout = () => {
   );
 
   const handleExporTExcel = async () => {
-    try {
-      const res = await transportationOrder.exportExcel({
+    transportationOrder
+      .exportExcel({
         ...filter,
         PageSize: 99999,
+      })
+      .then((res) => {
+        router.push(`${res.Data}`);
+      })
+      .catch((error) => {
+        showToast({
+          title: "Lỗi!",
+          message: "Đường truyền kết nối server bị lỗi! Vui lòng thử lại!",
+          type: "error",
+        });
       });
-      router.push(`${res.Data}`);
-    } catch (error) {
-      showToast({
-        title: "Lỗi!",
-        message: "Đường truyền kết nối server bị lỗi! Vui lòng thử lại!",
-        type: "error",
-      });
-    }
   };
 
   useQuery(

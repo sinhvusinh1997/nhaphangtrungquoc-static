@@ -159,28 +159,42 @@ export const OutstockPaymentDetail: React.FC<
   //   ),
   // };
 
+  console.log("item: ", item);
+
   const summary = () => {
     return (
       <React.Fragment>
         <Table.Summary.Row>
           <Table.Summary.Cell index={0} colSpan={7}>
-            Tổng cân nặng
+            <b>Tổng cân nặng</b>
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} align="right">
-            {item?.PayableWeight ? `${item?.PayableWeight} kg` : "--"}
+            {_format.getVND(
+              item?.OutStockSessionPackages?.reduce(
+                (prev, cur) => prev + cur?.SmallPackage?.PayableWeight,
+                0
+              ),
+              " KG"
+            ) || "0 KG"}
           </Table.Summary.Cell>
         </Table.Summary.Row>
-        {/* <Table.Summary.Row>
-					<Table.Summary.Cell index={0} colSpan={8}>
-						Tổng tiền lưu kho
-					</Table.Summary.Cell>
-					<Table.Summary.Cell index={1} align="right">
-						{_format.getVND(item?.TotalWarehouseFee)}
-					</Table.Summary.Cell>
-				</Table.Summary.Row> */}
         <Table.Summary.Row>
           <Table.Summary.Cell index={0} colSpan={7}>
-            Tiền cần thanh toán
+            <b>Tổng số khối</b>
+          </Table.Summary.Cell>
+          <Table.Summary.Cell index={1} colSpan={1} align="right">
+            {_format.getVND(
+              item?.OutStockSessionPackages?.reduce(
+                (prev, cur) => prev + cur?.SmallPackage?.VolumePayment,
+                0
+              ),
+              " m3"
+            ) || "0 KG"}
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+        <Table.Summary.Row>
+          <Table.Summary.Cell index={0} colSpan={7}>
+            <b>Tiền cần thanh toán</b>
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} align="right">
             <b className="text-warning">{_format.getVND(item?.TotalPay)}</b>

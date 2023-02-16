@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { smallPackage } from "~/api";
 import {
   Layout,
+  showToast,
   toast,
   TransactionCodeManagementFilter,
   TransactionCodeManagementTable,
@@ -52,13 +53,19 @@ const Index: TNextPageWithLayout = () => {
     }
   );
 
-  const handleExporTExcel = async () => {
-    try {
-      const res = await smallPackage.exportExcel({});
-      router.push(`${res.Data}`);
-    } catch (error) {
-      toast.error(error);
-    }
+  const handleExporTExcel = () => {
+    smallPackage
+      .exportExcel({ ...filter, PageSize: 99999 })
+      .then((res) => {
+        router.push(`${res.Data}`);
+      })
+      .catch((error) => {
+        showToast({
+          title: "Đã xảy ra lỗi!",
+          message: (error as any)?.response?.data?.ResultMessage,
+          type: "error",
+        });
+      });
   };
 
   return (
