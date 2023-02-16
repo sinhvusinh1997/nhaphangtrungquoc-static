@@ -8,6 +8,10 @@
   }
 }
 
+.siinh {
+  font-size: 20p;
+}
+
 @layer base {
   p {
     margin-bottom: 0 !important;
